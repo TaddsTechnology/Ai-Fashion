@@ -1052,5 +1052,37 @@ async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.environ.get("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    import logging
+    
+    # Setup logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    # Get port from environment with validation
+    try:
+        port = int(os.environ.get("PORT", 10000))
+        if port <= 0 or port > 65535:
+            logger.warning(f"Invalid port {port}, using default 10000")
+            port = 10000
+    except (ValueError, TypeError) as e:
+        logger.error(f"Error parsing PORT environment variable: {e}, using default 10000")
+        port = 10000
+    
+    host = "0.0.0.0"
+    
+    logger.info(f"🚀 Starting AI Fashion Backend (production) on {host}:{port}")
+    logger.info(f"Environment: {os.environ.get('ENVIRONMENT', 'production')}")
+    
+    try:
+        uvicorn.run(
+            app, 
+            host=host, 
+            port=port,
+            log_level="info",
+            access_log=True,
+            reload=False,  # Disable reload in production
+            workers=1  # Single worker for free tier
+        )
+    except Exception as e:
+        logger.error(f"Failed to start server: {e}")
+        raise
