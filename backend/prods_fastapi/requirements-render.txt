@@ -30,7 +30,7 @@ aiofiles==23.2.1
 
 # --- Caching / Queue ---
 redis==5.0.1
-# slowapi==0.1.9   # ❌ remove (breaks with your FastAPI/Starlette)
+slowapi==0.1.9   # ❌ remove (breaks with your FastAPI/Starlette)
 fastapi-limiter==0.1.6
 
 # --- Error tracking ---
