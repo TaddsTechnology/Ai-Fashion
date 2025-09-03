@@ -1,54 +1,51 @@
-# Core FastAPI dependencies
+# --- Core FastAPI ---
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 python-multipart==0.0.6
 
-# Database
+# --- DB ---
 psycopg2-binary==2.9.9
 sqlalchemy==2.0.23
 alembic==1.13.1
 
-# Data processing (Python 3.11 compatible)
+# --- Data / ML (Py 3.11.9) ---
+numpy==1.26.4
+scipy==1.15.1
+scikit-learn==1.7.1
 pandas==2.1.4
-numpy==1.26.2
 
-# Image processing (optimized for Render)
+# --- Vision / Imaging ---
 pillow==10.1.0
 opencv-python-headless==4.8.1.78
-
-# MediaPipe for skin tone analysis
 mediapipe==0.10.9
 
-# Color processing
+# --- Color ---
 webcolors==1.13
 colormath==3.0.0
 
-# HTTP and utilities
+# --- HTTP / IO ---
 httpx==0.25.2
 requests==2.31.0
 aiofiles==23.2.1
 
-# Rate limiting and monitoring
-slowapi==0.1.9
+# --- Caching / Queue ---
 redis==5.0.1
+# slowapi==0.1.9   # ❌ remove (breaks with your FastAPI/Starlette)
+fastapi-limiter==0.1.6
 
-# Error tracking
+# --- Error tracking ---
 sentry-sdk[fastapi]==1.40.0
 
-# Cloud storage
+# --- Cloud storage ---
 cloudinary==1.37.0
 
-# Environment and configuration
+# --- Config ---
 python-dotenv==1.0.0
 pydantic==2.5.2
 pydantic-settings==2.1.0
 
-# Performance and caching
+# --- Perf / Utils ---
 ujson==5.9.0
-
-# Logging and debugging
 loguru==0.7.2
-
-# Additional utilities
 python-dateutil==2.8.2
 pytz==2023.3
