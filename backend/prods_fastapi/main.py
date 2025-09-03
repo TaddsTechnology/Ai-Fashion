@@ -217,7 +217,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:5173", 
         "https://app.taddstechnology.com",
-        "https://ai-fashion-backend-d9nj.onrender.com",
+        "https://devfashion.onrender.com",
         "https://devfrontend-pmjx.onrender.com",  # Add the actual frontend URL
         "https://devfashion.onrender.com",  # Add the backend URL as well
         "http://localhost:8000",  # For local development
@@ -451,6 +451,42 @@ def calculate_confidence_score(image_array: np.ndarray, final_color: np.ndarray,
         logger.warning(f"Confidence calculation failed: {e}")
         return 0.5
 
+
+# Placeholder function for Gradio ML model integration
+async def call_gradio_skin_tone_model(image_data: bytes, filename: str = None) -> Dict:
+    """Call external Gradio ML model for skin tone analysis (placeholder).
+    
+    Args:
+        image_data: Raw image bytes
+        filename: Original filename for reference
+    
+    Returns:
+        Dict with skin tone analysis results or None if unavailable
+    """
+    try:
+        logger.info(f"🤖 Placeholder call to Gradio ML model for {filename}")
+        
+        # TODO: Replace this with actual Gradio client integration
+        # Example integration would look like:
+        # from gradio_client import Client
+        # client = Client("your-gradio-app-url")
+        # result = await client.predict(image_data, api_name="/predict")
+        # return result
+        
+        logger.warning("⚠️ Gradio ML model not yet integrated - this is a placeholder")
+        return {
+            "success": False,
+            "error": "Gradio ML model integration not implemented yet",
+            "placeholder": True
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Gradio ML model call failed: {e}")
+        return {
+            "success": False,
+            "error": f"Gradio ML model error: {str(e)}",
+            "placeholder": True
+        }
 
 def find_closest_monk_tone_enhanced(rgb_color: np.ndarray) -> tuple:
     """Enhanced Monk tone matching with better light skin detection."""
