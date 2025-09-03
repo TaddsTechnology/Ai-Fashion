@@ -21,6 +21,16 @@ import time
 # Using MediaPipe and OpenCV for face detection instead
 from enhanced_skin_tone_analyzer import EnhancedSkinToneAnalyzer
 
+# Configure logging FIRST before any other imports
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+    ]
+)
+logger = logging.getLogger(__name__)
+
 # Try to import the improved analyzer
 try:
     from improved_skin_tone_analyzer import ImprovedSkinToneAnalyzer
@@ -34,16 +44,6 @@ except ImportError as e:
 from services.cloudinary_service import cloudinary_service
 from services.sentry_service import EnhancedSentryService
 from config import settings
-
-# Configure logging FIRST before any other imports
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-    ]
-)
-logger = logging.getLogger(__name__)
 
 # Enable debug logging in development
 import os
