@@ -66,12 +66,18 @@ const [skinAnalysisResult, setSkinAnalysisResult] = useState<SkinAnalysisResult 
       console.log('Response text length:', responseText.length);
       
       if (!responseText || responseText.trim() === '') {
-        throw new Error('Empty response from server');
+        console.error('❌ Empty response received from server');
+        throw new Error('Empty response from server - please try again');
       }
       
       let result;
       try {
         result = JSON.parse(responseText);
+        
+        // Validate that we got a proper response structure
+        if (!result || typeof result !== 'object') {
+          throw new Error('Invalid response structure');
+        }
         
         // Enhanced logging for complete visibility
         console.log('🎯 === SKIN ANALYSIS COMPLETE === 🎯');
