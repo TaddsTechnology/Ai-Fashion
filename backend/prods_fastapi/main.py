@@ -1121,23 +1121,27 @@ def analyze_skin_tone_info():
 @limiter.limit("10/minute")
 async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
     """Analyze skin tone from uploaded image with optimization."""
-    # Always ensure we return JSON, even on errors
+    # CRITICAL: Always ensure we return JSON, even on errors
+    default_response = {
+        'monk_skin_tone': 'Monk04',
+        'monk_tone_display': 'Monk 4',
+        'monk_hex': '#eadaba',
+        'derived_hex_code': '#eadaba',
+        'dominant_rgb': [234, 218, 186],
+        'confidence': 0.5,
+        'success': False,
+        'error': 'Processing failed'
+    }
+    
     try:
-        logger.info(f"🔍 Starting skin tone analysis for file: {file.filename}")
+        logger.info(f"🔍 Starting skin tone analysis for file: {file.filename if file else 'unknown'}")
         
         # Validate file
         if not file:
             logger.error("No file provided")
-            return {
-                'monk_skin_tone': 'Monk04',
-                'monk_tone_display': 'Monk 4',
-                'monk_hex': '#eadaba',
-                'derived_hex_code': '#eadaba',
-                'dominant_rgb': [234, 218, 186],
-                'confidence': 0.5,
-                'success': False,
-                'error': 'No file provided'
-            }
+            response = default_response.copy()
+            response['error'] = 'No file provided'
+            return response
             
         if not file.content_type or not file.content_type.startswith("image/"):
             logger.error(f"Invalid file type: {file.content_type}")
