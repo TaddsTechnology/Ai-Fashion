@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: ai-fashion-backend
+    env: python
+    buildCommand: |
+      cd backend/prods_fastapi &&
+      pip install --upgrade pip &&
+      pip install -r requirements.txt
+    startCommand: cd backend/prods_fastapi && python main.py
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - key: PYTHON_VERSION
+        value: 3.9.16
+    autoDeploy: true
+    branch: main
+    repo: https://github.com/TaddsTechnology/Ai-Fashion.git

@@ -1,0 +1,55 @@
+# Core FastAPI dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Database
+psycopg2-binary==2.9.7
+sqlalchemy==2.0.23
+alembic==1.12.1
+
+# Image processing (optimized for Render)
+pillow==10.1.0
+opencv-python-headless==4.8.1.78
+numpy==1.24.3
+
+# MediaPipe for skin tone analysis
+mediapipe==0.10.7
+
+# Color processing
+webcolors==1.13
+colormath==3.0.0
+
+# HTTP and utilities
+httpx==0.25.0
+requests==2.31.0
+aiofiles==23.2.1
+
+# Rate limiting and monitoring
+slowapi==0.1.9
+redis==5.0.1
+
+# Error tracking
+sentry-sdk[fastapi]==1.38.0
+
+# Cloud storage
+cloudinary==1.36.0
+
+# Environment and configuration
+python-dotenv==1.0.0
+pydantic==2.5.0
+pydantic-settings==2.0.3
+
+# Performance and caching
+asyncio==3.4.3
+ujson==5.8.0
+
+# Logging and debugging
+loguru==0.7.2
+
+# CORS and security
+python-cors==1.0.0
+
+# Additional utilities
+python-dateutil==2.8.2
+pytz==2023.3
