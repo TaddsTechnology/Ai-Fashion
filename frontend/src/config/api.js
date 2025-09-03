@@ -58,4 +58,7 @@ export const getFileUploadHeaders = () => ({
   'Accept': 'application/json',
 });
 
+// Named export for endpoints (for backward compatibility)
+export const API_ENDPOINTS = API_CONFIG.ENDPOINTS;
+
 export default API_CONFIG;
