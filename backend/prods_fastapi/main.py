@@ -80,6 +80,7 @@ except Exception as e:
 
 # Import color router
 from color_routes import color_router, palette_router
+from enhanced_color_routes import enhanced_router
 
 # Initialize rate limiter
 limiter = Limiter(key_func=get_remote_address)
@@ -159,6 +160,7 @@ async def handle_options(path: str):
 # Include the color routers
 app.include_router(color_router)
 app.include_router(palette_router)
+app.include_router(enhanced_router)
 
 # Monk skin tone scale - now loaded from database
 def get_monk_skin_tones():
