@@ -1,0 +1,82 @@
+[
+  {
+    "color_suggestions": [
+      {
+        "skin_tone": "Spring",
+        "suitable_colors": "coral, peach, light gold, warm turquoise, soft greens"
+      },
+      {
+        "skin_tone": "Summer",
+        "suitable_colors": "lavender, soft pinks, powder blue, dusty rose"
+      },
+      {
+        "skin_tone": "Autumn",
+        "suitable_colors": "mustard, rust, olive, burnt orange"
+      },
+      {
+        "skin_tone": "Winter",
+        "suitable_colors": "black, navy, true white, emerald, royal blue"
+      },
+      {
+        "skin_tone": "Light Spring",
+        "suitable_colors": "peach, mint, coral"
+      },
+      {
+        "skin_tone": "Warm Spring",
+        "suitable_colors": "warm beige, golden yellow, apricot"
+      },
+      {
+        "skin_tone": "Clear Spring",
+        "suitable_colors": "turquoise, clear yellow, bright coral"
+      },
+      {
+        "skin_tone": "Light Summer",
+        "suitable_colors": "lavender, powder blue, dusty rose"
+      },
+      {
+        "skin_tone": "Soft Summer",
+        "suitable_colors": "slate blue, soft plum, moss green"
+      },
+      {
+        "skin_tone": "Cool Summer",
+        "suitable_colors": "clear blues, soft fuchsias, cool pinks"
+      },
+      {
+        "skin_tone": "Soft Autumn",
+        "suitable_colors": "taupe, sage, terracotta"
+      },
+      {
+        "skin_tone": "Warm Autumn",
+        "suitable_colors": "mustard, rust, olive"
+      },
+      {
+        "skin_tone": "Deep Autumn",
+        "suitable_colors": "burgundy, chocolate, deep teal"
+      },
+      {
+        "skin_tone": "Cool Winter",
+        "suitable_colors": "navy, cool red, black"
+      },
+      {
+        "skin_tone": "Clear Winter",
+        "suitable_colors": "emerald, fuchsia, royal blue"
+      },
+      {
+        "skin_tone": "Deep Winter",
+        "suitable_colors": "deep purples, rich blues, crisp whites"
+      },
+      {
+        "skin_tone": "Cool Winter",
+        "suitable_colors": "Emerald, cobalt blue, cherry, sapphire, bright navy, amethyst, bottle-green, fuchsia, cool ruby"
+      },
+      {
+        "skin_tone": "Clear Winter",
+        "suitable_colors": "Hot pink, cobalt blue, true red, violet, sapphire, azure, ice pink, acid yellow, emerald, light grey marle"
+      },
+      {
+        "skin_tone": "Deep Winter",
+        "suitable_colors": "Deep claret, forest green, oakmoss, true red, garnet, navy, turquoise, cool ruby, chestnut red, sapphire, amethyst, white"
+      }
+    ]
+  }
+]

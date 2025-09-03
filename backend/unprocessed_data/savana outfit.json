@@ -1,0 +1,292 @@
+[
+  {
+    "products": [
+      {
+        "brand": "Savana",
+        "price": 17250,
+        "gender": "Female",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/123f2f28bf5f437b98f3e0fee1624c81UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Light Blue",
+        "product_name": "Zippered Criss Cross Back Sports Bra",
+        "product_type": "Sports Bra",
+        "sub_category": "Underwear",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 49000,
+        "gender": "Female",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/452b71267d764628b9999ed73277780cUR_w540_h720_q85_watermark.webp",
+        "base_colour": "Light Blue",
+        "product_name": "Pocket High Waist Straight Leg Jeans",
+        "product_type": "Jeans",
+        "sub_category": "Pants",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 16000,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/26f08c68653e4cc4bc1e71eb1b85dd26_w540_h720_q85_watermark.webp",
+        "base_colour": "Multicolor",
+        "product_name": "Drawstring Straight Leg Pants",
+        "product_type": "Pants",
+        "sub_category": "Pants",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 34000,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/9716d1121a88439cb8253a17e0683eb4UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Blue",
+        "product_name": "Ripped High Waist Straight Leg Jeans",
+        "product_type": "Jeans",
+        "sub_category": "Pants",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 10000,
+        "gender": "Unisex",
+        "image_url": "https://static.mfrcdn.com/images/v/501de09300b0d0cc7cb34e1e1dd75b18.png",
+        "base_colour": "Black",
+        "product_name": "Colour Block Pullover T-Shirt",
+        "product_type": "T-Shirt",
+        "sub_category": "Tops",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 10000,
+        "gender": "Female",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/94d0c3292ae94b0989e3c13d63736252_w540_h720_q85_watermark.webp",
+        "base_colour": "White",
+        "product_name": "Embroidered Bra & Panty Set",
+        "product_type": "Bra & Panty Set",
+        "sub_category": "Sets",
+        "master_category": "Lingerie"
+      },
+      {
+        "brand": "Savana",
+        "price": 18500,
+        "gender": "Female",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/05a06ce910714fe78ab6dd62473c9bc1UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Red",
+        "product_name": "Plus Size Cut Out Detail Dress",
+        "product_type": "Dress",
+        "sub_category": "Dresses",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 32500,
+        "gender": "Female",
+        "image_url": "https://static.mfrcdn.com/images/v/a333425443ed23433ee61e2228058353.png",
+        "base_colour": "Multicolor",
+        "product_name": "Plus Size Printed A-Line Dress",
+        "product_type": "Dress",
+        "sub_category": "Dresses",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 15500,
+        "gender": "Women",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/7214a22c09674539b7f5dabf1294e7c8UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Black",
+        "product_name": "Contrast Stitch Bodycon Dress",
+        "product_type": "Dress",
+        "sub_category": "Dresses",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 31000,
+        "gender": "female",
+        "image_url": "https://static.mfrcdn.com/images/v/501de09300b0d0cc7cb34e1e1dd75b18.png",
+        "base_colour": "Pink",
+        "product_name": "High Waist Straight Leg Jeans",
+        "product_type": "jeans",
+        "sub_category": "jeans",
+        "master_category": "clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 13250,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/680cd6ca942c46dc8d73db85669bc783UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Light Blue",
+        "product_name": "High Waist Straight Leg Jeans",
+        "product_type": "Jeans",
+        "sub_category": "Pants",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 45000,
+        "gender": "Women",
+        "image_url": "https://static.mfrcdn.com/images/v/501de09300b0d0cc7cb34e1e1dd75b18.png",
+        "base_colour": "Black",
+        "product_name": "Maxi Darted Wide Leg Trousers",
+        "product_type": "Trousers",
+        "sub_category": "Trousers",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 39000,
+        "gender": "Women",
+        "image_url": "https://static.mfrcdn.com/images/v/501de09300b0d0cc7cb34e1e1dd75b18.png",
+        "base_colour": "White",
+        "product_name": "100% Cotton Contrast Stitch Straight Leg Jeans",
+        "product_type": "Jeans",
+        "sub_category": "Pants",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 25500,
+        "gender": "Female",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/3eaa932506954a948d64c8f74fdc7241UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Blue",
+        "product_name": "Plus Size Ring Shorts Co-ords",
+        "product_type": "Shorts Co-ords",
+        "sub_category": "Shorts",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 26500,
+        "gender": "Women",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/ce019db4cf2a486a9011819128de0ac8UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Sage Green",
+        "product_name": "100% Cotton Co-ord Set",
+        "product_type": "Co-ord Set",
+        "sub_category": "Sets",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 30500,
+        "gender": "Female",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/95516bb03c1f465cbe116485dc3d1832UR_w540_h720_q85_watermark.webp",
+        "base_colour": "Green",
+        "product_name": "Plus Size Printed Bikini Sets",
+        "product_type": "Bikini Set",
+        "sub_category": "Swimwear",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 61500,
+        "gender": "Female",
+        "image_url": "https://static.mfrcdn.com/images/v/a333425443ed23433ee61e2228058353.png",
+        "base_colour": "Pink",
+        "product_name": "Plus Size Ruffle A-Line Dress",
+        "product_type": "Dress",
+        "sub_category": "Dresses",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 46000,
+        "gender": "Female",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/6ca23cde9e5b4a9bbdf21714a768a58fUR_w540_h720_q85_watermark.webp",
+        "base_colour": "Pink-Black",
+        "product_name": "Plus Size Belted A-Line Dress",
+        "product_type": "Dress",
+        "sub_category": "Dresses",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 32500,
+        "gender": "women",
+        "image_url": "https://static.mfrcdn.com/images/v/501de09300b0d0cc7cb34e1e1dd75b18.png",
+        "base_colour": "Vintage Light Wash",
+        "product_name": "High Waist Straight Leg Jeans",
+        "product_type": "jeans",
+        "sub_category": "jeans",
+        "master_category": "clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 20500,
+        "gender": "Female",
+        "image_url": "https://static.mfrcdn.com/images/v/501de09300b0d0cc7cb34e1e1dd75b18.png",
+        "base_colour": "Multicolor",
+        "product_name": "Plus Size Contrast Slip Dress",
+        "product_type": "Dress",
+        "sub_category": "Dresses",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 10000,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/d3931e6946194fe6b738a0ff4d60c7ab_w540_h720_q85_watermark.webp",
+        "base_colour": "Multicolor",
+        "product_name": "Colour Block Pullover T-Shirt",
+        "product_type": "T-Shirt",
+        "sub_category": "Tops",
+        "master_category": "Apparel"
+      },
+      {
+        "brand": "Savana",
+        "price": 10000,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/5c4a25d5228c4cb79a10476243e53f83_w540_h720_q85_watermark.webp",
+        "base_colour": "Brown",
+        "product_name": "Colour Block Pullover T-Shirt",
+        "product_type": "T-Shirt",
+        "sub_category": "Tops",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 9000,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/e12196415c8f47eeae71a5ce0dd4e0b8_w540_h720_q85_watermark.webp",
+        "base_colour": "Purple-Yellow",
+        "product_name": "Colour Block Pullover T-Shirt",
+        "product_type": "T-Shirt",
+        "sub_category": "Tops",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 12500,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/e7a569bd7400463a82191701fa179695_w540_h720_q85_watermark.webp",
+        "base_colour": "Grey",
+        "product_name": "Colour Block Pullover T-Shirt",
+        "product_type": "T-Shirt",
+        "sub_category": "Tops",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 10500,
+        "gender": "Women",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/4c49f5ea2b7746ce83b7e89963fbae6b_w540_h720_q85_watermark.webp",
+        "base_colour": "Grey",
+        "product_name": "Colour Block Pullover T-Shirt",
+        "product_type": "T-Shirt",
+        "sub_category": "Tops",
+        "master_category": "Clothing"
+      },
+      {
+        "brand": "Savana",
+        "price": 13500,
+        "gender": "Unisex",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/319474f8250b4a09899df95d2abc28bb_w540_h720_q85_watermark.webp",
+        "base_colour": "Pink-Black",
+        "product_name": "Colour Block Pullover T-Shirt",
+        "product_type": "T-Shirt",
+        "sub_category": "T-Shirts",
+        "master_category": "Clothing"
+      }
+    ]
+  }
+]

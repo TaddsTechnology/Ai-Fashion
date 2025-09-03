@@ -1,0 +1,129 @@
+services:
+  # Database service
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-fashion-postgres
+    environment:
+      - POSTGRES_DB=ai_fashion
+      - POSTGRES_USER=ai_fashion_user
+      - POSTGRES_PASSWORD=Q4uF4B1PcjLL6mha1SNjdaQXDARzfT7T
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_fashion_user -d ai_fashion"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Redis cache service
+  redis:
+    image: redis:7-alpine
+    container_name: ai-fashion-redis
+    command: redis-server --appendonly yes --requirepass R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Backend API service
+  backend:
+    build:
+      context: ./backend/prods_fastapi
+      dockerfile: Dockerfile
+    container_name: ai-fashion-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploaded_images:/app/uploaded_images
+      - ./backend/prods_fastapi/main.py:/app/prods_fastapi/main.py
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      # Database settings
+      - DATABASE_URL=postgresql+asyncpg://ai_fashion_user:Q4uF4B1PcjLL6mha1SNjdaQXDARzfT7T@postgres:5432/ai_fashion
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ai_fashion
+      - DATABASE_USER=ai_fashion_user
+      - DATABASE_PASSWORD=Q4uF4B1PcjLL6mha1SNjdaQXDARzfT7T
+      # Redis settings
+      - REDIS_URL=redis://:R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU@redis:6379/0
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU
+      - REDIS_DB=0
+      # Background tasks
+      - DRAMATIQ_BROKER_URL=redis://:R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU@redis:6379/1
+      # Environment
+      - ENVIRONMENT=production
+      - DEBUG=false
+      # Security
+      - SECRET_KEY=lwFDMqzpQdUNx79KsqFMFZqCpMY!0NiUfZ&OTeQpliXwnRYbhfO6CIBs7A3CbFtU
+      # Features
+      - ENABLE_CACHING=true
+      - ENABLE_MONITORING=true
+      - ENABLE_BACKGROUND_TASKS=true
+      # Cloudinary settings
+      - CLOUDINARY_CLOUD_NAME=dbfperlhc
+      - CLOUDINARY_API_KEY=686121626416134
+      - CLOUDINARY_API_SECRET=sKzyutyRbpeB5v4RiUHboj7gbGY
+      - CLOUDINARY_URL=cloudinary://686121626416134:sKzyutyRbpeB5v4RiUHboj7gbGY@dbfperlhc
+      # Sentry settings
+      - SENTRY_DSN=https://3e332a3455981e58101a093989e6b605@o4509774929461248.ingest.us.sentry.io/4509789483827200
+      - SENTRY_ENVIRONMENT=production
+      - SENTRY_TRACES_SAMPLE_RATE=1.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  frontend:
+    image: docker.io/newbie028/ai-fashion-frontend:latest
+    container_name: ai-fashion-frontend
+    ports:
+      - "3000:3000"
+    # Removed volumes for production mode - changes will be in the built image
+    environment:
+      - VITE_API_URL=https://ai-fashion-backend-d9nj.onrender.com
+      - NODE_ENV=production
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+networks:
+  ai-fashion-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  uploaded_images:
+    driver: local

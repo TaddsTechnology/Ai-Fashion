@@ -1,0 +1,544 @@
+hex_code,color_name,suitable_skin_tone,seasonal_palette,category
+#FFF9D7,Light Yellow,,Light Spring,recommended
+#F1EB9C,Pale Yellow,,Light Spring,recommended
+#F5E1A4,Cream Yellow,,Light Spring,recommended
+#F8CFA9,Peach,,Light Spring,recommended
+#000000,Black,,Light Spring,avoid
+#5C068C,Deep Purple,,Light Spring,avoid
+#FCE300,Bright Yellow,,Warm Spring,recommended
+#FDD26E,Golden Yellow,,Warm Spring,recommended
+#FFCD00,Sunflower Yellow,,Warm Spring,recommended
+#FFB81C,Amber,,Warm Spring,recommended
+#000000,Black,,Warm Spring,avoid
+#003DA5,Navy Blue,,Warm Spring,avoid
+#FFF9D7,Light Yellow,,Clear Spring,recommended
+#FCE300,Bright Yellow,,Clear Spring,recommended
+#FDD26E,Golden Yellow,,Clear Spring,recommended
+#FFCD00,Sunflower Yellow,,Clear Spring,recommended
+#000000,Black,,Clear Spring,avoid
+#5C462B,Dark Brown,,Clear Spring,avoid
+#C6DAE7,Powder Blue,,Light Summer,recommended
+#99D6EA,Light Blue,,Light Summer,recommended
+#9BCBEB,Sky Blue,,Light Summer,recommended
+#B8C9E1,Periwinkle,,Light Summer,recommended
+#000000,Black,,Light Summer,avoid
+#5C068C,Deep Purple,,Light Summer,avoid
+#F395C7,Pink,,Cool Summer,recommended
+#F57EB6,Rose,,Cool Summer,recommended
+#E277CD,Orchid,,Cool Summer,recommended
+#C964CF,Lilac,,Cool Summer,recommended
+#000000,Black,,Cool Summer,avoid
+#FF8200,Orange,,Cool Summer,avoid
+#F1BDC8,Soft Pink,,Soft Summer,recommended
+#FFA3B5,Coral Pink,,Soft Summer,recommended
+#9BCBEB,Soft Blue,,Soft Summer,recommended
+#6DCDB8,Seafoam Green,,Soft Summer,recommended
+#000000,Black,,Soft Summer,avoid
+#FF8200,Orange,,Soft Summer,avoid
+#F5E1A4,Soft Yellow,,Soft Autumn,recommended
+#FCD299,Peach,,Soft Autumn,recommended
+#DFD1A7,Beige,,Soft Autumn,recommended
+#BBC592,Sage,,Soft Autumn,recommended
+#000000,Black,,Soft Autumn,avoid
+#FF1493,Hot Pink,,Soft Autumn,avoid
+#FFCD00,Golden Yellow,,Warm Autumn,recommended
+#B4A91F,Mustard,,Warm Autumn,recommended
+#A09958,Olive,,Warm Autumn,recommended
+#A6631B,Rust,,Warm Autumn,recommended
+#000000,Black,,Warm Autumn,avoid
+#FF1493,Hot Pink,,Warm Autumn,avoid
+#A6631B,Rust,,Deep Autumn,recommended
+#946037,Copper,,Deep Autumn,recommended
+#7C4D3A,Brown,,Deep Autumn,recommended
+#9A3324,Brick Red,,Deep Autumn,recommended
+#F395C7,Pastel Pink,,Deep Autumn,avoid
+#99D6EA,Light Blue,,Deep Autumn,avoid
+#FEFEFE,Pure White,,Clear Winter,recommended
+#00A3E1,Bright Blue,,Clear Winter,recommended
+#0077C8,Cobalt Blue,,Clear Winter,recommended
+#E40046,True Red,,Clear Winter,recommended
+#F5E1A4,Cream Yellow,,Clear Winter,avoid
+#A09958,Moss Green,,Clear Winter,avoid
+#FEFEFE,Pure White,,Cool Winter,recommended
+#0057B8,Royal Blue,,Cool Winter,recommended
+#004B87,Navy Blue,,Cool Winter,recommended
+#84329B,Purple,,Cool Winter,recommended
+#F5E1A4,Cream Yellow,,Cool Winter,avoid
+#A09958,Moss Green,,Cool Winter,avoid
+#FEFEFE,Pure White,,Deep Winter,recommended
+#0057B8,Royal Blue,,Deep Winter,recommended
+#004B87,Navy Blue,,Deep Winter,recommended
+#002D72,Deep Blue,,Deep Winter,recommended
+#F5E1A4,Cream Yellow,,Deep Winter,avoid
+#FCC89B,Light Peach,,Deep Winter,avoid
+#FEFEFE,,Clear Winter,,recommended
+#C8D8EB,,Clear Winter,,recommended
+#F395C7,,Clear Winter,,recommended
+#00A3E1,,Clear Winter,,recommended
+#0096CA,,Clear Winter,,recommended
+#0087AE,,Clear Winter,,recommended
+#0086D6,,Clear Winter,,recommended
+#0077C8,,Clear Winter,,recommended
+#0057B8,,Clear Winter,,recommended
+#004B87,,Clear Winter,,recommended
+#003DA5,,Clear Winter,,recommended
+#2D389B,,Clear Winter,,recommended
+#87189D,,Clear Winter,,recommended
+#A51890,,Clear Winter,,recommended
+#AA0061,,Clear Winter,,recommended
+#C6007E,,Clear Winter,,recommended
+#E00885,,Clear Winter,,recommended
+#E3006D,,Clear Winter,,recommended
+#E40046,,Clear Winter,,recommended
+#CE0037,,Clear Winter,,recommended
+#C724B1,,Clear Winter,,recommended
+#963CBD,,Clear Winter,,recommended
+#009775,,Clear Winter,,recommended
+#00594C,,Clear Winter,,recommended
+#131413,,Clear Winter,,recommended
+#FEFEFE,,Cool Winter,,recommended
+#99D6EA,,Cool Winter,,recommended
+#F8E59A,,Cool Winter,,recommended
+#F395C7,,Cool Winter,,recommended
+#59CBE8,,Cool Winter,,recommended
+#9BB8D3,,Cool Winter,,recommended
+#00A3E1,,Cool Winter,,recommended
+#808286,,Cool Winter,,recommended
+#009775,,Cool Winter,,recommended
+#00B0B9,,Cool Winter,,recommended
+#0082BA,,Cool Winter,,recommended
+#0086D6,,Cool Winter,,recommended
+#0072CE,,Cool Winter,,recommended
+#0057B8,,Cool Winter,,recommended
+#004B87,,Cool Winter,,recommended
+#484A51,,Cool Winter,,recommended
+#84329B,,Cool Winter,,recommended
+#963CBD,,Cool Winter,,recommended
+#C724B1,,Cool Winter,,recommended
+#DA1884,,Cool Winter,,recommended
+#E3006D,,Cool Winter,,recommended
+#CE0037,,Cool Winter,,recommended
+#AA0061,,Cool Winter,,recommended
+#890C58,,Cool Winter,,recommended
+#131413,,Cool Winter,,recommended
+#FEFEFE,,Deep Winter,,recommended
+#B8C9E1,,Deep Winter,,recommended
+#0096CA,,Deep Winter,,recommended
+#0086D6,,Deep Winter,,recommended
+#007FA3,,Deep Winter,,recommended
+#617F00,,Deep Winter,,recommended
+#0057B8,,Deep Winter,,recommended
+#004B87,,Deep Winter,,recommended
+#84329B,,Deep Winter,,recommended
+#963CBD,,Deep Winter,,recommended
+#C724B1,,Deep Winter,,recommended
+#DA1884,,Deep Winter,,recommended
+#E3006D,,Deep Winter,,recommended
+#CE0037,,Deep Winter,,recommended
+#AA0061,,Deep Winter,,recommended
+#991E68,,Deep Winter,,recommended
+#890C58,,Deep Winter,,recommended
+#5C068C,,Deep Winter,,recommended
+#009775,,Deep Winter,,recommended
+#009F4D,,Deep Winter,,recommended
+#00594C,,Deep Winter,,recommended
+#002D72,,Deep Winter,,recommended
+#001E62,,Deep Winter,,recommended
+#131413,,Deep Winter,,recommended
+#341902,,Deep Winter,,recommended
+#F1BDC8,,Soft Summer,,recommended
+#FFA3B5,,Soft Summer,,recommended
+#9BCBEB,,Soft Summer,,recommended
+#6DCDB8,,Soft Summer,,recommended
+#9CAF88,,Soft Summer,,recommended
+#A39382,,Soft Summer,,recommended
+#C4A4A7,,Soft Summer,,recommended
+#D592AA,,Soft Summer,,recommended
+#F65275,,Soft Summer,,recommended
+#808286,,Soft Summer,,recommended
+#A277A6,,Soft Summer,,recommended
+#A05EB5,,Soft Summer,,recommended
+#A15A95,,Soft Summer,,recommended
+#86647A,,Soft Summer,,recommended
+#7C6992,,Soft Summer,,recommended
+#57728B,,Soft Summer,,recommended
+#5C82A5,,Soft Summer,,recommended
+#779FB5,,Soft Summer,,recommended
+#9BB8D3,,Soft Summer,,recommended
+#71C5E8,,Soft Summer,,recommended
+#A7A2C3,,Soft Summer,,recommended
+#9595D2,,Soft Summer,,recommended
+#009CA6,,Soft Summer,,recommended
+#484A51,,Soft Summer,,recommended
+#1A83D7,,Soft Summer,,recommended
+#F395C7,,Cool Summer,,recommended
+#BCBDBE,,Cool Summer,,recommended
+#C4A4A7,,Cool Summer,,recommended
+#F57EB6,,Cool Summer,,recommended
+#E277CD,,Cool Summer,,recommended
+#C964CF,,Cool Summer,,recommended
+#A277A6,,Cool Summer,,recommended
+#808286,,Cool Summer,,recommended
+#00A376,,Cool Summer,,recommended
+#00B0B9,,Cool Summer,,recommended
+#00A9E0,,Cool Summer,,recommended
+#71C5E8,,Cool Summer,,recommended
+#57728B,,Cool Summer,,recommended
+#0077C8,,Cool Summer,,recommended
+#7965B2,,Cool Summer,,recommended
+#963CBD,,Cool Summer,,recommended
+#93328E,,Cool Summer,,recommended
+#AC145A,,Cool Summer,,recommended
+#BF0D3E,,Cool Summer,,recommended
+#E31C79,,Cool Summer,,recommended
+#EF60A3,,Cool Summer,,recommended
+#007681,,Cool Summer,,recommended
+#006F62,,Cool Summer,,recommended
+#484A51,,Cool Summer,,recommended
+#003057,,Cool Summer,,recommended
+#C6DAE7,,Light Summer,,recommended
+#99D6EA,,Light Summer,,recommended
+#9BCBEB,,Light Summer,,recommended
+#B8C9E1,,Light Summer,,recommended
+#ECB3CB,,Light Summer,,recommended
+#DD9CDF,,Light Summer,,recommended
+#C4BFB6,,Light Summer,,recommended
+#CDB5A7,,Light Summer,,recommended
+#A39382,,Light Summer,,recommended
+#F67599,,Light Summer,,recommended
+#F57EB6,,Light Summer,,recommended
+#CF92B7,,Light Summer,,recommended
+#AD96DC,,Light Summer,,recommended
+#9595D2,,Light Summer,,recommended
+#6787B7,,Light Summer,,recommended
+#808286,,Light Summer,,recommended
+#C964CF,,Light Summer,,recommended
+#A05EB5,,Light Summer,,recommended
+#57728B,,Light Summer,,recommended
+#3E6991,,Light Summer,,recommended
+#9BB8D3,,Light Summer,,recommended
+#71C5E8,,Light Summer,,recommended
+#5BC2E7,,Light Summer,,recommended
+#6DCDB8,,Light Summer,,recommended
+#26D07C,,Light Summer,,recommended
+#FFF9D7,,Clear Spring,,recommended
+#FCE300,,Clear Spring,,recommended
+#FDD26E,,Clear Spring,,recommended
+#FFCD00,,Clear Spring,,recommended
+#FFB81C,,Clear Spring,,recommended
+#FDAA63,,Clear Spring,,recommended
+#FF8200,,Clear Spring,,recommended
+#FF8D6D,,Clear Spring,,recommended
+#DA291C,,Clear Spring,,recommended
+#E40046,,Clear Spring,,recommended
+#D539B5,,Clear Spring,,recommended
+#A77BCA,,Clear Spring,,recommended
+#963CBD,,Clear Spring,,recommended
+#84329B,,Clear Spring,,recommended
+#00558C,,Clear Spring,,recommended
+#007FA3,,Clear Spring,,recommended
+#0087AE,,Clear Spring,,recommended
+#008EAA,,Clear Spring,,recommended
+#00A499,,Clear Spring,,recommended
+#77C5D5,,Clear Spring,,recommended
+#D0DF00,,Clear Spring,,recommended
+#A6631B,,Clear Spring,,recommended
+#BE5400,,Clear Spring,,recommended
+#5C462B,,Clear Spring,,recommended
+#453536,,Clear Spring,,recommended
+#FCE300,,Warm Spring,,recommended
+#FDD26E,,Warm Spring,,recommended
+#FFCD00,,Warm Spring,,recommended
+#FFB81C,,Warm Spring,,recommended
+#F0B323,,Warm Spring,,recommended
+#D4C304,,Warm Spring,,recommended
+#C4D600,,Warm Spring,,recommended
+#A9C23F,,Warm Spring,,recommended
+#A8AD00,,Warm Spring,,recommended
+#74AA50,,Warm Spring,,recommended
+#6CC24A,,Warm Spring,,recommended
+#009F4D,,Warm Spring,,recommended
+#00A499,,Warm Spring,,recommended
+#2DCCD3,,Warm Spring,,recommended
+#6DCDB8,,Warm Spring,,recommended
+#9595D2,,Warm Spring,,recommended
+#963CBD,,Warm Spring,,recommended
+#DA291C,,Warm Spring,,recommended
+#B46A55,,Warm Spring,,recommended
+#EC5037,,Warm Spring,,recommended
+#A6631B,,Warm Spring,,recommended
+#FF8200,,Warm Spring,,recommended
+#FF8F1C,,Warm Spring,,recommended
+#FDAA63,,Warm Spring,,recommended
+#FFA38B,,Warm Spring,,recommended
+#FFF9D7,,Light Spring,,recommended
+#F1EB9C,,Light Spring,,recommended
+#F5E1A4,,Light Spring,,recommended
+#F8CFA9,,Light Spring,,recommended
+#FCC89B,,Light Spring,,recommended
+#D9EA9A,,Light Spring,,recommended
+#D0DEBB,,Light Spring,,recommended
+#A5DFD3,,Light Spring,,recommended
+#A4DBE8,,Light Spring,,recommended
+#9BCBE8,,Light Spring,,recommended
+#C5B4E3,,Light Spring,,recommended
+#D7A9E3,,Light Spring,,recommended
+#FBDB65,,Light Spring,,recommended
+#CAC7A7,,Light Spring,,recommended
+#D3BC8D,,Light Spring,,recommended
+#D9B48F,,Light Spring,,recommended
+#FDAA63,,Light Spring,,recommended
+#CDA077,,Light Spring,,recommended
+#C0A392,,Light Spring,,recommended
+#FF8D6D,,Light Spring,,recommended
+#FAAA8D,,Light Spring,,recommended
+#9595D2,,Light Spring,,recommended
+#2DCCD3,,Light Spring,,recommended
+#6DCDB8,,Light Spring,,recommended
+#6CC24A,,Light Spring,,recommended
+#F5E1A4,,Soft Autumn,,recommended
+#FCD299,,Soft Autumn,,recommended
+#DFD1A7,,Soft Autumn,,recommended
+#BBC592,,Soft Autumn,,recommended
+#A3AA83,,Soft Autumn,,recommended
+#A09958,,Soft Autumn,,recommended
+#899064,,Soft Autumn,,recommended
+#94795D,,Soft Autumn,,recommended
+#B58150,,Soft Autumn,,recommended
+#DB864E,,Soft Autumn,,recommended
+#AE8A79,,Soft Autumn,,recommended
+#C26E60,,Soft Autumn,,recommended
+#956C58,,Soft Autumn,,recommended
+#946037,,Soft Autumn,,recommended
+#C05131,,Soft Autumn,,recommended
+#7C4D3A,,Soft Autumn,,recommended
+#524D3A,,Soft Autumn,,recommended
+#24563F,,Soft Autumn,,recommended
+#487A7B,,Soft Autumn,,recommended
+#507F70,,Soft Autumn,,recommended
+#009F4D,,Soft Autumn,,recommended
+#6BCABA,,Soft Autumn,,recommended
+#CDA788,,Soft Autumn,,recommended
+#D9B48F,,Soft Autumn,,recommended
+#FDAA63,,Soft Autumn,,recommended
+#FFCD00,,Warm Autumn,,recommended
+#B4A91F,,Warm Autumn,,recommended
+#B89D18,,Warm Autumn,,recommended
+#A09958,,Warm Autumn,,recommended
+#8F993E,,Warm Autumn,,recommended
+#5E7E29,,Warm Autumn,,recommended
+#7A7256,,Warm Autumn,,recommended
+#A07400,,Warm Autumn,,recommended
+#A6631B,,Warm Autumn,,recommended
+#946037,,Warm Autumn,,recommended
+#9D4815,,Warm Autumn,,recommended
+#7C4D3A,,Warm Autumn,,recommended
+#9A3324,,Warm Autumn,,recommended
+#5C462B,,Warm Autumn,,recommended
+#C4622D,,Warm Autumn,,recommended
+#EC5037,,Warm Autumn,,recommended
+#EF7200,,Warm Autumn,,recommended
+#F68D2E,,Warm Autumn,,recommended
+#D69A2D,,Warm Autumn,,recommended
+#6BCABA,,Warm Autumn,,recommended
+#00BFB3,,Warm Autumn,,recommended
+#009F4D,,Warm Autumn,,recommended
+#00778B,,Warm Autumn,,recommended
+#046A38,,Warm Autumn,,recommended
+#205C40,,Warm Autumn,,recommended
+#0F52BA,Sapphire Blue,Fair_Cool,,recommended
+#009775,Emerald Green,Fair_Cool,,recommended
+#9966CC,Amethyst Purple,Fair_Cool,,recommended
+#D2042D,Cherry Red,Fair_Cool,,recommended
+#E30B5C,Raspberry,Fair_Cool,,recommended
+#FF69B4,Cool Pink,Fair_Cool,,recommended
+#000080,Navy,Fair_Cool,,recommended
+#4169E1,Royal Blue,Fair_Cool,,recommended
+#B0E0E6,Powder Blue,Fair_Cool,,recommended
+#CCCCFF,Periwinkle,Fair_Cool,,recommended
+#E6E6FA,Lavender,Fair_Cool,,recommended
+#8F00FF,Violet,Fair_Cool,,recommended
+#8E4585,Plum,Fair_Cool,,recommended
+#FFFFFF,Pure White,Fair_Cool,,recommended
+#808080,Cool Gray,Fair_Cool,,recommended
+#000000,Black,Fair_Cool,,recommended
+#C0C0C0,Silver,Fair_Cool,,recommended
+#F4C2C2,Baby Pink,Fair_Cool,,recommended
+#98FB98,Mint Green,Fair_Cool,,recommended
+#D8BFD8,Soft Lavender,Fair_Cool,,recommended
+#C19A6B,Camel,Fair_Warm,,recommended
+#8B4513,Warm Brown,Fair_Warm,,recommended
+#B7410E,Rust,Fair_Warm,,recommended
+#FF7F50,Coral,Fair_Warm,,recommended
+#FFCBA4,Peach,Fair_Warm,,recommended
+#FBCEB1,Apricot,Fair_Warm,,recommended
+#E6C200,Honey,Fair_Warm,,recommended
+#FFBF00,Amber,Fair_Warm,,recommended
+#FFDF00,Warm Yellow,Fair_Warm,,recommended
+#FF6347,Tomato Red,Fair_Warm,,recommended
+#FF91A4,Warm Pink,Fair_Warm,,recommended
+#F5F5DC,Cream,Fair_Warm,,recommended
+#FFFFF0,Ivory,Fair_Warm,,recommended
+#F5E1A4,Warm Beige,Fair_Warm,,recommended
+#FFDAB9,Light Peach,Fair_Warm,,recommended
+#FFB6C1,Warm Pastel Pink,Fair_Warm,,recommended
+#FFFF8D,Butter Yellow,Fair_Warm,,recommended
+#000080,Navy,Fair_Neutral,,recommended
+#800020,Burgundy,Fair_Neutral,,recommended
+#228B22,Forest Green,Fair_Neutral,,recommended
+#301934,Deep Purple,Fair_Neutral,,recommended
+#F5F5F5,Soft White,Fair_Neutral,,recommended
+#D3D3D3,Light Gray,Fair_Neutral,,recommended
+#483C32,Taupe,Fair_Neutral,,recommended
+#008080,Teal,Fair_Neutral,,recommended
+#DCAE96,Dusty Rose,Fair_Neutral,,recommended
+#9CAF88,Sage Green,Fair_Neutral,,recommended
+#0F52BA,Sapphire,Medium_Cool,,recommended
+#009775,Emerald,Medium_Cool,,recommended
+#9B111E,Ruby Red,Medium_Cool,,recommended
+#0073E6,True Blue,Medium_Cool,,recommended
+#00A86B,Cool Green,Medium_Cool,,recommended
+#FF00FF,Magenta,Medium_Cool,,recommended
+#000080,Navy,Medium_Cool,,recommended
+#800020,Burgundy,Medium_Cool,,recommended
+#301934,Deep Purple,Medium_Cool,,recommended
+#FFFFFF,Pure White,Medium_Cool,,recommended
+#808080,Cool Gray,Medium_Cool,,recommended
+#FF69B4,Hot Pink,Medium_Cool,,recommended
+#0000FF,Electric Blue,Medium_Cool,,recommended
+#32CD32,Lime Green,Medium_Cool,,recommended
+#FFC87C,Topaz,Medium_Warm,,recommended
+#50C878,Warm Emerald,Medium_Warm,,recommended
+#733635,Garnet,Medium_Warm,,recommended
+#B7410E,Rust,Medium_Warm,,recommended
+#CC5500,Burnt Orange,Medium_Warm,,recommended
+#8B4513,Warm Brown,Medium_Warm,,recommended
+#FFDB58,Mustard,Medium_Warm,,recommended
+#FFBF00,Amber,Medium_Warm,,recommended
+#FFDF00,Warm Yellow,Medium_Warm,,recommended
+#CB4154,Brick Red,Medium_Warm,,recommended
+#E2725B,Terracotta,Medium_Warm,,recommended
+#F5F5DC,Cream,Medium_Warm,,recommended
+#C19A6B,Camel,Medium_Warm,,recommended
+#8B8680,Warm Gray,Medium_Warm,,recommended
+#E1AD01,Turmeric,Medium_Warm,,recommended
+#CC6600,Paprika,Medium_Warm,,recommended
+#D2691E,Cinnamon,Medium_Warm,,recommended
+#000080,Navy,Medium_Neutral,,recommended
+#800020,Burgundy,Medium_Neutral,,recommended
+#228B22,Forest Green,Medium_Neutral,,recommended
+#7B3F00,Chocolate Brown,Medium_Neutral,,recommended
+#F8F8FF,Off-white,Medium_Neutral,,recommended
+#C0C0C0,Soft Gray,Medium_Neutral,,recommended
+#483C32,Taupe,Medium_Neutral,,recommended
+#008080,Teal,Medium_Neutral,,recommended
+#6699CC,Dusty Blue,Medium_Neutral,,recommended
+#E0B0FF,Mauve,Medium_Neutral,,recommended
+#009775,Emerald,Olive_Cool,,recommended
+#0F52BA,Sapphire,Olive_Cool,,recommended
+#301934,Deep Purple,Olive_Cool,,recommended
+#800020,Burgundy,Olive_Cool,,recommended
+#004D40,Deep Teal,Olive_Cool,,recommended
+#228B22,Forest Green,Olive_Cool,,recommended
+#000000,Black,Olive_Cool,,recommended
+#36454F,Charcoal,Olive_Cool,,recommended
+#808080,Cool Gray,Olive_Cool,,recommended
+#FF00FF,Fuchsia,Olive_Cool,,recommended
+#0000FF,Electric Blue,Olive_Cool,,recommended
+#32CD32,Lime Green,Olive_Cool,,recommended
+#808000,Olive Green,Olive_Warm,,recommended
+#8B4513,Warm Brown,Olive_Warm,,recommended
+#B7410E,Rust,Olive_Warm,,recommended
+#FFDB58,Mustard,Olive_Warm,,recommended
+#FFBF00,Amber,Olive_Warm,,recommended
+#CD7F32,Bronze,Olive_Warm,,recommended
+#50C878,Warm Emerald,Olive_Warm,,recommended
+#FFC87C,Topaz,Olive_Warm,,recommended
+#FF8C00,Deep Orange,Olive_Warm,,recommended
+#9932CC,Warm Purple,Olive_Warm,,recommended
+#F5F5DC,Cream,Olive_Warm,,recommended
+#F5E1A4,Warm Beige,Olive_Warm,,recommended
+#FFD700,Gold,Olive_Warm,,recommended
+#000080,Navy,Olive_Neutral,,recommended
+#800020,Burgundy,Olive_Neutral,,recommended
+#228B22,Forest Green,Olive_Neutral,,recommended
+#301934,Deep Purple,Olive_Neutral,,recommended
+#F5F5F5,Soft White,Olive_Neutral,,recommended
+#D3D3D3,Light Gray,Olive_Neutral,,recommended
+#483C32,Taupe,Olive_Neutral,,recommended
+#008080,Teal,Olive_Neutral,,recommended
+#DCAE96,Dusty Rose,Olive_Neutral,,recommended
+#9CAF88,Sage Green,Olive_Neutral,,recommended
+#4169E1,Royal Blue,Dark_Cool,,recommended
+#009775,Emerald,Dark_Cool,,recommended
+#0F52BA,Sapphire,Dark_Cool,,recommended
+#FF00FF,Fuchsia,Dark_Cool,,recommended
+#0000FF,Electric Blue,Dark_Cool,,recommended
+#32CD32,Lime Green,Dark_Cool,,recommended
+#FF0000,Bright Red,Dark_Cool,,recommended
+#FF69B4,Hot Pink,Dark_Cool,,recommended
+#FF00FF,Magenta,Dark_Cool,,recommended
+#FFFFFF,Pure White,Dark_Cool,,recommended
+#000000,Black,Dark_Cool,,recommended
+#C0C0C0,Silver,Dark_Cool,,recommended
+#FF1493,Bright Pink,Dark_Cool,,recommended
+#0047AB,Cobalt Blue,Dark_Cool,,recommended
+#B7410E,Rust,Dark_Warm,,recommended
+#CC5500,Burnt Orange,Dark_Warm,,recommended
+#FFD700,Golden Yellow,Dark_Warm,,recommended
+#50C878,Warm Emerald,Dark_Warm,,recommended
+#FFC87C,Topaz,Dark_Warm,,recommended
+#8B4513,Warm Brown,Dark_Warm,,recommended
+#CC6600,Paprika,Dark_Warm,,recommended
+#D2691E,Cinnamon,Dark_Warm,,recommended
+#B87333,Copper,Dark_Warm,,recommended
+#FFBF00,Amber,Dark_Warm,,recommended
+#CD7F32,Bronze,Dark_Warm,,recommended
+#CB4154,Brick Red,Dark_Warm,,recommended
+#E2725B,Terracotta,Dark_Warm,,recommended
+#F4C430,Saffron,Dark_Warm,,recommended
+#000080,Navy,Dark_Neutral,,recommended
+#800020,Burgundy,Dark_Neutral,,recommended
+#228B22,Forest Green,Dark_Neutral,,recommended
+#301934,Deep Purple,Dark_Neutral,,recommended
+#F5F5F5,Soft White,Dark_Neutral,,recommended
+#D3D3D3,Light Gray,Dark_Neutral,,recommended
+#483C32,Taupe,Dark_Neutral,,recommended
+#008080,Teal,Dark_Neutral,,recommended
+#DCAE96,Dusty Rose,Dark_Neutral,,recommended
+#9CAF88,Sage Green,Dark_Neutral,,recommended
+#0000FF,Electric Blue,Deep_Cool,,recommended
+#FF69B4,Hot Pink,Deep_Cool,,recommended
+#32CD32,Lime Green,Deep_Cool,,recommended
+#FF0000,True Red,Deep_Cool,,recommended
+#663399,Royal Purple,Deep_Cool,,recommended
+#009775,Emerald,Deep_Cool,,recommended
+#9966CC,Amethyst,Deep_Cool,,recommended
+#000000,Black,Deep_Cool,,recommended
+#FFFFFF,Pure White,Deep_Cool,,recommended
+#FF00FF,Fuchsia,Deep_Cool,,recommended
+#40E0D0,Turquoise,Deep_Cool,,recommended
+#8F00FF,Violet,Deep_Cool,,recommended
+#FFD700,Golden Yellow,Deep_Warm,,recommended
+#CC5500,Burnt Orange,Deep_Warm,,recommended
+#B7410E,Rust,Deep_Warm,,recommended
+#E0115F,Warm Ruby,Deep_Warm,,recommended
+#FFC87C,Topaz,Deep_Warm,,recommended
+#50C878,Warm Emerald,Deep_Warm,,recommended
+#B87333,Copper,Deep_Warm,,recommended
+#FF91A4,Warm Pink,Deep_Warm,,recommended
+#FF7F50,Coral,Deep_Warm,,recommended
+#CD7F32,Bronze,Deep_Warm,,recommended
+#CC6600,Paprika,Deep_Warm,,recommended
+#E1AD01,Turmeric,Deep_Warm,,recommended
+#F4C430,Saffron,Deep_Warm,,recommended
+#000080,Navy,Deep_Neutral,,recommended
+#800020,Burgundy,Deep_Neutral,,recommended
+#228B22,Forest Green,Deep_Neutral,,recommended
+#301934,Deep Purple,Deep_Neutral,,recommended
+#F5F5F5,Soft White,Deep_Neutral,,recommended
+#D3D3D3,Light Gray,Deep_Neutral,,recommended
+#483C32,Taupe,Deep_Neutral,,recommended
+#008080,Teal,Deep_Neutral,,recommended
+#DCAE96,Dusty Rose,Deep_Neutral,,recommended
+#9CAF88,Sage Green,Deep_Neutral,,recommended

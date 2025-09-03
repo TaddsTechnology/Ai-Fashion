@@ -1,0 +1,53 @@
+# Optimized Dockerfile for Render deployment
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    wget \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements-minimal.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --timeout=1000 --retries=5 -r requirements-minimal.txt
+
+# Copy the entire backend directory
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p processed_data prods_fastapi/data
+
+# Set environment variables
+ENV PYTHONPATH=/app:/app/prods_fastapi
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || curl -f http://localhost:8000/ || exit 1
+
+# Make startup script executable
+RUN chmod +x /app/start_app.py
+
+# Create a simple entrypoint script as fallback
+RUN echo '#!/bin/bash\nexec python /app/start_app.py' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+# Command to run the application using startup script with fallback
+CMD ["python", "/app/start_app.py"]
