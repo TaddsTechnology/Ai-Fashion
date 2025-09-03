@@ -571,10 +571,26 @@ def get_api_color_recommendations(
     request: Request,
     skin_tone: str = Query(None),
     hex_color: str = Query(None),
-    limit: int = Query(50, ge=10, le=100, description="Maximum number of colors to return")
+    limit: int = Query(50, ge=10, le=100, description="Maximum number of colors to return"),
+    occasion: str = Query("casual", description="Occasion type: work, casual, party, formal"),
+    use_mst: bool = Query(True, description="Use MST master palette data if available")
 ):
-    """Enhanced color recommendations combining multiple database tables - based on main_simple.py."""
-    logger.info(f"Color recommendations request: skin_tone={skin_tone}, hex_color={hex_color}")
+    """Enhanced color recommendations with MST master palette integration."""
+    logger.info(f"Color recommendations request: skin_tone={skin_tone}, hex_color={hex_color}, occasion={occasion}, use_mst={use_mst}")
+    
+    # Try MST database first if requested and skin_tone is provided
+    if use_mst and skin_tone:
+        try:
+            from mst_database_service import get_mst_color_recommendations
+            mst_result = get_mst_color_recommendations(skin_tone, occasion, limit)
+            
+            if "error" not in mst_result:
+                logger.info(f"Returning MST-based recommendations for {skin_tone}")
+                return mst_result
+            else:
+                logger.info(f"MST lookup failed for {skin_tone}, falling back to standard method")
+        except Exception as e:
+            logger.warning(f"MST database lookup failed: {e}, falling back to standard method")
     
     try:
         # Database connection - use environment variable or fallback to known URL

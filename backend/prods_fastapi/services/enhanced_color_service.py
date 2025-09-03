@@ -8,6 +8,8 @@ import os
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 import logging
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 logger = logging.getLogger(__name__)
 
@@ -15,42 +17,118 @@ logger = logging.getLogger(__name__)
 class EnhancedColorRecommendationService:
     def __init__(self):
         self.mst_palette_data: Dict[int, Dict] = {}
+        self.database_url = os.getenv(
+            "DATABASE_URL", 
+            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
+        )
         self.load_mst_master_palette()
     
     def load_mst_master_palette(self) -> None:
-        """Load the MST master palette data from JSON file"""
+        """Load the MST master palette data from PostgreSQL database"""
         try:
-            # Try multiple possible paths for the JSON file
-            possible_paths = [
-                "backend/datasets/mst_master_palette_all.json",
-                "../datasets/mst_master_palette_all.json",
-                "datasets/mst_master_palette_all.json",
-                os.path.join(os.path.dirname(__file__), "../../../datasets/mst_master_palette_all.json")
-            ]
-            
-            json_path = None
-            for path in possible_paths:
-                if os.path.exists(path):
-                    json_path = path
-                    break
-            
-            if not json_path:
-                logger.warning("MST master palette JSON file not found, using fallback data")
-                self._load_fallback_data()
+            # Try to load from database first
+            self._load_from_database()
+            if self.mst_palette_data:
+                logger.info(f"Loaded MST master palette data from database for {len(self.mst_palette_data)} skin tones")
                 return
-            
-            with open(json_path, 'r', encoding='utf-8') as file:
-                palette_list = json.load(file)
+        except Exception as e:
+            logger.warning(f"Failed to load from database: {e}")
+        
+        # Fallback to JSON file if database fails
+        try:
+            self._load_from_json_file()
+            if self.mst_palette_data:
+                logger.info(f"Loaded MST master palette data from JSON file for {len(self.mst_palette_data)} skin tones")
+                return
+        except Exception as e:
+            logger.warning(f"Failed to load from JSON file: {e}")
+        
+        # Ultimate fallback to hardcoded data
+        logger.warning("Using fallback data")
+        self._load_fallback_data()
+    
+    def _load_from_database(self) -> None:
+        """Load MST data from PostgreSQL database"""
+        try:
+            conn = psycopg2.connect(self.database_url)
+            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                cursor.execute("""
+                    SELECT 
+                        mst_id,
+                        seasonal_type,
+                        common_undertones,
+                        base_palette,
+                        accent_palette,
+                        avoid_palette,
+                        neutrals_light,
+                        neutrals_dark,
+                        metals,
+                        denim_wash,
+                        prints_patterns,
+                        contrast_rules,
+                        pairing_rules,
+                        occasion_palettes,
+                        examples,
+                        notes
+                    FROM mst_master_palette 
+                    ORDER BY mst_id
+                """)
                 
-            # Convert list to dictionary keyed by mst_id for faster lookup
-            for palette in palette_list:
-                self.mst_palette_data[palette['mst_id']] = palette
+                records = cursor.fetchall()
                 
-            logger.info(f"Loaded MST master palette data for {len(self.mst_palette_data)} skin tones")
+                for record in records:
+                    mst_id = record['mst_id']
+                    # Convert the database record to our expected format
+                    # JSONB columns are already parsed, no need for json.loads()
+                    self.mst_palette_data[mst_id] = {
+                        'mst_id': mst_id,
+                        'seasonal_type': record['seasonal_type'] if record['seasonal_type'] else [],
+                        'common_undertones': record['common_undertones'] if record['common_undertones'] else [],
+                        'base_palette': record['base_palette'] if record['base_palette'] else [],
+                        'accent_palette': record['accent_palette'] if record['accent_palette'] else [],
+                        'avoid_palette': record['avoid_palette'] if record['avoid_palette'] else [],
+                        'neutrals_light': record['neutrals_light'] if record['neutrals_light'] else [],
+                        'neutrals_dark': record['neutrals_dark'] if record['neutrals_dark'] else [],
+                        'metals': record['metals'] if record['metals'] else [],
+                        'denim_wash': record['denim_wash'] if record['denim_wash'] else [],
+                        'prints_patterns': record['prints_patterns'] or '',
+                        'contrast_rules': record['contrast_rules'] or '',
+                        'pairing_rules': record['pairing_rules'] or '',
+                        'occasion_palettes': record['occasion_palettes'] if record['occasion_palettes'] else {},
+                        'examples': record['examples'] if record['examples'] else [],
+                        'notes': record['notes'] or ''
+                    }
+                
+            conn.close()
             
         except Exception as e:
-            logger.error(f"Failed to load MST master palette: {e}")
-            self._load_fallback_data()
+            logger.error(f"Failed to load MST data from database: {e}")
+            raise
+    
+    def _load_from_json_file(self) -> None:
+        """Load MST data from JSON file as fallback"""
+        possible_paths = [
+            "backend/datasets/mst_master_palette_all.json",
+            "../datasets/mst_master_palette_all.json",
+            "datasets/mst_master_palette_all.json",
+            os.path.join(os.path.dirname(__file__), "../../../datasets/mst_master_palette_all.json")
+        ]
+        
+        json_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                json_path = path
+                break
+        
+        if not json_path:
+            raise FileNotFoundError("MST master palette JSON file not found")
+        
+        with open(json_path, 'r', encoding='utf-8') as file:
+            palette_list = json.load(file)
+            
+        # Convert list to dictionary keyed by mst_id for faster lookup
+        for palette in palette_list:
+            self.mst_palette_data[palette['mst_id']] = palette
     
     def _load_fallback_data(self) -> None:
         """Load basic fallback data if main file is not available"""

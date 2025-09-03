@@ -24,12 +24,14 @@ async def get_enhanced_color_recommendations(
     request: Request,
     monk_tone: str = Query(..., description="Monk skin tone (e.g., 'Monk03', 'Monk 5', '3')"),
     occasion: str = Query("casual", description="Occasion type: work, casual, party, formal"),
-    limit: int = Query(20, ge=5, le=50, description="Maximum number of colors to return")
+    limit: int = Query(20, ge=5, le=50, description="Maximum number of colors to return"),
+    use_database: bool = Query(True, description="Use MST database service for real-time data")
 ) -> Dict[str, Any]:
     """
-    Get enhanced color recommendations using MST master palette data.
+    Get enhanced color recommendations using MST master palette data from database.
     
     **New Features:**
+    - Real-time data from PostgreSQL database
     - Occasion-specific color palettes (work, casual, party, formal)
     - Detailed styling advice (metals, denim, patterns)
     - Colors to avoid
@@ -37,8 +39,26 @@ async def get_enhanced_color_recommendations(
     - Seasonal type analysis
     """
     try:
-        logger.info(f"Enhanced color recommendation request: {monk_tone}, occasion: {occasion}")
+        logger.info(f"Enhanced color recommendation request: {monk_tone}, occasion: {occasion}, use_database: {use_database}")
         
+        # Try MST database service first
+        if use_database:
+            try:
+                from mst_database_service import get_comprehensive_recommendations
+                recommendations = get_comprehensive_recommendations(monk_tone, occasion, limit)
+                
+                if "error" not in recommendations:
+                    return {
+                        "success": True,
+                        "data": recommendations,
+                        "message": f"Enhanced color recommendations for {monk_tone} ({occasion} occasion) from database"
+                    }
+                else:
+                    logger.warning(f"Database service failed: {recommendations['error']}, falling back to file service")
+            except Exception as db_e:
+                logger.warning(f"MST database service failed: {db_e}, falling back to file service")
+        
+        # Fallback to file-based service
         recommendations = enhanced_color_service.get_comprehensive_recommendations(
             monk_tone=monk_tone,
             occasion=occasion,
@@ -48,7 +68,7 @@ async def get_enhanced_color_recommendations(
         return {
             "success": True,
             "data": recommendations,
-            "message": f"Enhanced color recommendations for {monk_tone} ({occasion} occasion)"
+            "message": f"Enhanced color recommendations for {monk_tone} ({occasion} occasion) from file fallback"
         }
         
     except Exception as e:
@@ -274,16 +294,59 @@ async def get_quick_color_palette(
 @enhanced_router.get("/mst-info")
 async def get_mst_information() -> Dict[str, Any]:
     """
-    Get information about available MST (Monk Skin Tone) data and capabilities.
+    Get information about available MST (Monk Skin Tone) data and capabilities from database.
     """
     try:
-        available_tones = list(enhanced_color_service.mst_palette_data.keys())
+        # Try to get information from database first
+        database_info = {}
+        file_info = {}
+        
+        # Database information
+        try:
+            from mst_database_service import get_all_mst_ids
+            available_db_tones = get_all_mst_ids()
+            database_info = {
+                "available_mst_ids": sorted(available_db_tones),
+                "total_tones": len(available_db_tones),
+                "source": "PostgreSQL database",
+                "status": "active"
+            }
+            logger.info(f"Found {len(available_db_tones)} MST tones in database")
+        except Exception as db_e:
+            logger.warning(f"Could not load database MST info: {db_e}")
+            database_info = {
+                "status": "unavailable",
+                "error": str(db_e)
+            }
+        
+        # File information (fallback)
+        try:
+            available_file_tones = list(enhanced_color_service.mst_palette_data.keys())
+            file_info = {
+                "available_mst_ids": sorted(available_file_tones),
+                "total_tones": len(available_file_tones),
+                "source": "JSON file",
+                "status": "fallback"
+            }
+        except Exception as file_e:
+            logger.warning(f"Could not load file MST info: {file_e}")
+            file_info = {
+                "status": "unavailable",
+                "error": str(file_e)
+            }
+        
+        # Use database info if available, otherwise file info
+        primary_source = database_info if database_info.get("status") == "active" else file_info
         
         info = {
-            "available_mst_ids": sorted(available_tones),
-            "total_tones": len(available_tones),
+            "database_source": database_info,
+            "file_source": file_info,
+            "primary_data_source": primary_source.get("source", "unknown"),
+            "available_mst_ids": primary_source.get("available_mst_ids", []),
+            "total_tones": primary_source.get("total_tones", 0),
             "supported_occasions": ["work", "casual", "party", "formal", "business", "wedding", "evening"],
             "features": [
+                "Real-time database integration",
                 "Seasonal color analysis",
                 "Occasion-specific palettes", 
                 "Styling advice (metals, denim, patterns)",
@@ -305,7 +368,7 @@ async def get_mst_information() -> Dict[str, Any]:
         return {
             "success": True,
             "data": info,
-            "message": "MST master palette system information"
+            "message": "MST master palette system information with database integration"
         }
         
     except Exception as e:
