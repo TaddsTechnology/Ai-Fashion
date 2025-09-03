@@ -1033,11 +1033,39 @@ def analyze_skin_tone_info():
 @limiter.limit("10/minute")
 async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
     """Analyze skin tone from uploaded image with optimization."""
+    # Always ensure we return JSON, even on errors
     try:
-        if not file.content_type.startswith("image/"):
-            raise HTTPException(status_code=400, detail="File must be an image")
+        logger.info(f"🔍 Starting skin tone analysis for file: {file.filename}")
+        
+        # Validate file
+        if not file:
+            logger.error("No file provided")
+            return {
+                'monk_skin_tone': 'Monk04',
+                'monk_tone_display': 'Monk 4',
+                'monk_hex': '#eadaba',
+                'derived_hex_code': '#eadaba',
+                'dominant_rgb': [234, 218, 186],
+                'confidence': 0.5,
+                'success': False,
+                'error': 'No file provided'
+            }
+            
+        if not file.content_type or not file.content_type.startswith("image/"):
+            logger.error(f"Invalid file type: {file.content_type}")
+            return {
+                'monk_skin_tone': 'Monk04',
+                'monk_tone_display': 'Monk 4',
+                'monk_hex': '#eadaba',
+                'derived_hex_code': '#eadaba',
+                'dominant_rgb': [234, 218, 186],
+                'confidence': 0.5,
+                'success': False,
+                'error': f'Invalid file type: {file.content_type}. Must be an image.'
+            }
 
         image_data = await file.read()
+        logger.info(f"📁 File read successfully, size: {len(image_data)} bytes")
         
         # Optimize image for faster processing
         try:
