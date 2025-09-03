@@ -21,6 +21,15 @@ import time
 # Using MediaPipe and OpenCV for face detection instead
 from enhanced_skin_tone_analyzer import EnhancedSkinToneAnalyzer
 
+# Try to import the improved analyzer
+try:
+    from improved_skin_tone_analyzer import ImprovedSkinToneAnalyzer
+    IMPROVED_ANALYZER_AVAILABLE = True
+    logger.info("✅ Improved skin tone analyzer imported")
+except ImportError as e:
+    logger.warning(f"⚠️ Improved skin tone analyzer not available: {e}")
+    IMPROVED_ANALYZER_AVAILABLE = False
+
 # Import services
 from services.cloudinary_service import cloudinary_service
 from services.sentry_service import EnhancedSentryService
@@ -124,6 +133,17 @@ from datetime import datetime
 
 # Initialize enhanced skin tone analyzer
 enhanced_analyzer = EnhancedSkinToneAnalyzer()
+
+# Initialize improved skin tone analyzer if available
+if IMPROVED_ANALYZER_AVAILABLE:
+    try:
+        improved_analyzer = ImprovedSkinToneAnalyzer()
+        logger.info("✅ Improved skin tone analyzer initialized successfully")
+    except Exception as e:
+        logger.warning(f"⚠️ Failed to initialize improved skin tone analyzer: {e}")
+        improved_analyzer = None
+else:
+    improved_analyzer = None
 
 # Initialize database on startup
 try:
@@ -457,6 +477,38 @@ def find_closest_monk_tone_enhanced(rgb_color: np.ndarray) -> tuple:
 
     return closest_monk, min_distance
 
+
+# Improved skin tone analysis function
+def analyze_skin_tone_with_improved_analyzer(image_array: np.ndarray) -> Dict:
+    """Analyze skin tone using the improved analyzer with enhanced algorithms."""
+    if improved_analyzer is None:
+        logger.warning("Improved analyzer not available, using enhanced analyzer")
+        return enhanced_analyzer.analyze_skin_tone(image_array, MONK_SKIN_TONES)
+    
+    try:
+        logger.info("Using improved skin tone analyzer with landmark detection")
+        result = improved_analyzer.analyze_skin_tone_enhanced(image_array, MONK_SKIN_TONES)
+        
+        # Log improvement metrics
+        if result.get('success'):
+            confidence = result.get('confidence', 0)
+            landmarks_detected = result.get('landmarks_detected', False)
+            clustering_confidence = result.get('clustering_confidence', 0)
+            regions_analyzed = result.get('regions_analyzed', 0)
+            
+            logger.info(
+                f"Improved analysis complete: "
+                f"confidence={confidence:.2f}, "
+                f"landmarks={landmarks_detected}, "
+                f"clustering_conf={clustering_confidence:.2f}, "
+                f"regions={regions_analyzed}"
+            )
+        
+        return result
+        
+    except Exception as e:
+        logger.warning(f"Improved analyzer failed: {e}, falling back to enhanced analyzer")
+        return enhanced_analyzer.analyze_skin_tone(image_array, MONK_SKIN_TONES)
 
 # Old dlib-based function removed - now using enhanced_analyzer
 
@@ -1104,17 +1156,56 @@ async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
         except Exception as e:
             logger.warning(f"Failed to store image in Cloudinary: {e}")
 
+        # Call Gradio ML model for skin tone analysis
         try:
-            result = enhanced_analyzer.analyze_skin_tone(image_array, MONK_SKIN_TONES)
-            if result['success']:
+            logger.info("🤖 Calling Gradio ML model for skin tone analysis...")
+            
+            # Convert numpy array back to PIL Image for sending to Gradio
+            pil_image = Image.fromarray(image_array)
+            
+            # Save image to bytes for sending to Gradio
+            img_byte_arr = io.BytesIO()
+            pil_image.save(img_byte_arr, format='JPEG', quality=95)
+            img_byte_arr = img_byte_arr.getvalue()
+            
+            # Call your Gradio ML model
+            gradio_result = await call_gradio_skin_tone_model(img_byte_arr, file.filename)
+            
+            if gradio_result and gradio_result.get('success'):
+                logger.info(f"✅ Gradio model returned: {gradio_result.get('monk_skin_tone')}")
+                
                 # Add Cloudinary URL to response if upload was successful
                 if upload_result and upload_result.get('success'):
-                    result['cloudinary_url'] = upload_result.get('url')
-                    result['image_public_id'] = upload_result.get('public_id')
-                return result
+                    gradio_result['cloudinary_url'] = upload_result.get('url')
+                    gradio_result['image_public_id'] = upload_result.get('public_id')
+                    
+                return gradio_result
+            else:
+                logger.warning(f"Gradio model failed or returned invalid result: {gradio_result}")
+                
         except Exception as e:
-            logger.warning(f"Enhanced analysis failed: {e}, falling back to simple analysis")
+            logger.warning(f"Gradio ML model failed: {e}, trying improved analyzer")
             
+        # Try improved analyzer as fallback
+        try:
+            logger.info("📊 Trying improved skin tone analyzer...")
+            analyzer_result = analyze_skin_tone_with_improved_analyzer(image_array)
+            
+            if analyzer_result and analyzer_result.get('success'):
+                logger.info(f"✅ Improved analyzer returned: {analyzer_result.get('monk_skin_tone')}")
+                
+                # Add Cloudinary URL to response if upload was successful
+                if upload_result and upload_result.get('success'):
+                    analyzer_result['cloudinary_url'] = upload_result.get('url')
+                    analyzer_result['image_public_id'] = upload_result.get('public_id')
+                    
+                return analyzer_result
+            else:
+                logger.warning(f"Improved analyzer failed or returned invalid result: {analyzer_result}")
+                
+        except Exception as e:
+            logger.warning(f"Improved analyzer failed: {e}, falling back to database default")
+        
         # Fallback - get a random monk tone from database
         try:
             from database import SessionLocal, SkinToneMapping
