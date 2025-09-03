@@ -25,6 +25,10 @@ from services.cloudinary_service import cloudinary_service
 from services.sentry_service import EnhancedSentryService
 from config import settings
 
+# Configure logging FIRST before any other imports
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # Import performance optimizations - CONDITIONALLY
 try:
     from performance import (
@@ -102,9 +106,7 @@ except ImportError as e:
     def get_system_stats(): return {"error": "Monitoring not available"}
     async def get_health_status(): return {"status": "unknown", "error": "Monitoring not available"}
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Import datetime
 from datetime import datetime
 
 # Initialize enhanced skin tone analyzer
