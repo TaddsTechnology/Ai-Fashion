@@ -15,6 +15,7 @@ from webcolors import hex_to_rgb, rgb_to_hex
 import logging
 import mediapipe as mp
 import asyncio
+import time
 # import dlib  # Removed to avoid compilation issues
 # face_recognition also removed to avoid dlib compilation issues
 # Using MediaPipe and OpenCV for face detection instead
@@ -26,8 +27,20 @@ from services.sentry_service import EnhancedSentryService
 from config import settings
 
 # Configure logging FIRST before any other imports
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+    ]
+)
 logger = logging.getLogger(__name__)
+
+# Enable debug logging in development
+import os
+if os.getenv('ENVIRONMENT', '').lower() in ['development', 'dev']:
+    logging.getLogger().setLevel(logging.DEBUG)
+    logger.info('🔧 DEBUG logging enabled for development')
 
 # Import performance optimizations - CONDITIONALLY
 try:
@@ -185,6 +198,8 @@ app.add_middleware(
         "http://localhost:5173", 
         "https://app.taddstechnology.com",
         "https://ai-fashion-backend-d9nj.onrender.com",
+        "https://devfrontend-pmjx.onrender.com",  # Add the actual frontend URL
+        "https://devfashion.onrender.com",  # Add the backend URL as well
         "http://localhost:8000",  # For local development
         "https://localhost:8000",  # For HTTPS local development
     ],
@@ -209,10 +224,37 @@ app.add_middleware(
     max_age=3600  # Cache preflight for 1 hour
 )
 
+# Add request logging middleware for debugging
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    
+    # Log incoming request details
+    logger.info(f"📥 {request.method} {request.url} from {request.client.host if request.client else 'unknown'}")
+    logger.info(f"Headers: {dict(request.headers)}")
+    
+    # Log query parameters if any
+    if request.query_params:
+        logger.info(f"Query params: {dict(request.query_params)}")
+    
+    try:
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        
+        # Log response details
+        logger.info(f"📤 Response: {response.status_code} in {process_time:.4f}s")
+        
+        return response
+    except Exception as e:
+        process_time = time.time() - start_time
+        logger.error(f"❌ Request failed: {e} in {process_time:.4f}s")
+        raise
+
 # Add explicit OPTIONS handler for CORS preflight requests
 @app.options("/{path:path}")
 async def handle_options(path: str):
     """Handle CORS preflight requests for all paths"""
+    logger.info(f"🔧 CORS preflight request for path: {path}")
     return {"message": "OK"}
 
 # Include the color routers
