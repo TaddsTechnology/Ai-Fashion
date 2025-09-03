@@ -719,7 +719,7 @@ def get_api_color_recommendations(
         
         DATABASE_URL = os.getenv(
             "DATABASE_URL", 
-            "postgresql://localhost:5432/ai_fashion_dev"
+            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
         )
         
         # Force synchronous driver
