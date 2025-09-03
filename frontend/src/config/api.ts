@@ -1,5 +1,5 @@
 // API Configuration - Updated for production
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-fashion-backend-d9nj.onrender.com';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://devfashion.onrender.com';
 
 // PostgreSQL Database Configuration - This should be handled by backend only
 // export const DATABASE_URL = 'moved to backend environment variables';
