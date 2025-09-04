@@ -32,11 +32,15 @@ export default defineConfig({
     watch: {
       usePolling: true,
       interval: 100
-    }
+    },
+    // Fix for client-side routing - serve index.html for all routes
+    historyApiFallback: true
   },
   preview: {
     host: 'localhost',
     port: 3001,
+    // Fix for client-side routing in preview mode
+    historyApiFallback: true
   },
   define: {
     global: 'globalThis',
