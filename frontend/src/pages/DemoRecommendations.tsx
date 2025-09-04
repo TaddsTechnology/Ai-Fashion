@@ -82,9 +82,30 @@ interface DatabaseColor {
 }
 
 const DemoRecommendations = () => {
+  // Initialize all state variables first
+  const navigate = useNavigate();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [skinAnalysis, setSkinAnalysis] = useState<SkinAnalysisResult | null>(null);
+  const [skinHex, setSkinHex] = useState<string>('#d7bd96'); // Default skin hex
+  const [monkSkinTone, setMonkSkinTone] = useState<string>('Monk05'); // Default Monk skin tone
+  const [activeTab, setActiveTab] = useState<'makeup' | 'outfit' | 'colors'>('makeup');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [availableFilters, setAvailableFilters] = useState<{[key: string]: string[]}>({});
+  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
+  const [colorRecommendations, setColorRecommendations] = useState<ColorRecommendations | null>(null);
   const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
   const [feedbackShown, setFeedbackShown] = useState(false);
   const [lastPhotoTimestamp, setLastPhotoTimestamp] = useState<string | null>(null);
+  const itemsPerPage = 24;
+
+  // Handler functions
+  const handleFeedbackClose = () => {
+    setShowFeedbackPopup(false);
+  };
 
   // Show feedback popup after analysis is complete and products are loaded
   useEffect(() => {
@@ -109,25 +130,6 @@ const DemoRecommendations = () => {
       setShowFeedbackPopup(false); // Hide any currently shown popup
     }
   }, [skinAnalysis, skinHex, monkSkinTone]);
-
-  const handleFeedbackClose = () => {
-    setShowFeedbackPopup(false);
-  };
-  const navigate = useNavigate();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [skinAnalysis, setSkinAnalysis] = useState<SkinAnalysisResult | null>(null);
-  const [skinHex, setSkinHex] = useState<string>('#d7bd96'); // Default skin hex
-  const [monkSkinTone, setMonkSkinTone] = useState<string>('Monk05'); // Default Monk skin tone
-  const [activeTab, setActiveTab] = useState<'makeup' | 'outfit' | 'colors'>('makeup');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [availableFilters, setAvailableFilters] = useState<{[key: string]: string[]}>({});
-  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string}>({});
-  const [colorRecommendations, setColorRecommendations] = useState<ColorRecommendations | null>(null);
-  const itemsPerPage = 24;
 
   // Handle page changes
   const handlePageChange = (page: number) => {
