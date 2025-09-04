@@ -1,14 +1,14 @@
 ---
-title: Ai Fashion
-emoji: 👁
+title: AI Fashion Backend API
+emoji: 🎨
 colorFrom: blue
-colorTo: blue
-sdk: gradio
-sdk_version: 5.44.1
+colorTo: purple
+sdk: docker
 app_file: app.py
+app_port: 7860
 pinned: false
 license: mit
-short_description: AI Fashion Solutions - Revolutionizing Beauty & Style
+short_description: AI Fashion Backend - FastAPI for beauty recommendations
 ---
 
 # HueMatch: Personalized Color Recommendations

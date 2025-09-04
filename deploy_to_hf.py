@@ -46,12 +46,18 @@ def main():
         files_to_upload = [
             "app.py",
             "requirements.txt", 
-            "README.md"
+            "README.md",
+            "Dockerfile"
+        ]
+        
+        # Folders to upload
+        folders_to_upload = [
+            "backend"
         ]
         
         print("📤 Uploading files to Hugging Face Space...")
         
-        # Upload each file
+        # Upload individual files
         for file_name in files_to_upload:
             file_path = current_dir / file_name
             if file_path.exists():
@@ -67,6 +73,24 @@ def main():
                 print(f"   ✅ {file_name} uploaded")
             else:
                 print(f"   ⚠️  {file_name} not found, skipping")
+        
+        # Upload backend folder
+        print("📁 Uploading backend folder...")
+        for folder_name in folders_to_upload:
+            folder_path = current_dir / folder_name
+            if folder_path.exists():
+                print(f"   Uploading {folder_name}/ directory...")
+                api.upload_folder(
+                    folder_path=str(folder_path),
+                    path_in_repo=folder_name,
+                    repo_id=repo_id,
+                    repo_type=repo_type,
+                    token=token,
+                    commit_message=f"Update {folder_name} directory"
+                )
+                print(f"   ✅ {folder_name}/ uploaded")
+            else:
+                print(f"   ⚠️  {folder_name}/ not found, skipping")
         
         print(f"""
 🎉 Deployment Complete!
