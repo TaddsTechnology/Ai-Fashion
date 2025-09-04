@@ -107,9 +107,9 @@ const DemoRecommendations = () => {
     setShowFeedbackPopup(false);
   };
 
-  // Show feedback popup after analysis is complete and products are loaded
+  // Show feedback popup after analysis is complete
   useEffect(() => {
-    if (!loading && !error && products.length > 0 && !feedbackShown) {
+    if (!loading && !error && !feedbackShown) {
       const timer = setTimeout(() => {
         setShowFeedbackPopup(true);
         setFeedbackShown(true);
@@ -117,7 +117,7 @@ const DemoRecommendations = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [loading, error, products.length, feedbackShown]);
+  }, [loading, error, feedbackShown]);
 
   // Reset feedback state when skin analysis changes (new photo uploaded)
   useEffect(() => {

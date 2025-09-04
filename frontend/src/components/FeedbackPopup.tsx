@@ -166,9 +166,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          data: feedbackData
-        }),
+        body: JSON.stringify(feedbackData),
       });
 
       if (response.ok) {
