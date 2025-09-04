@@ -738,99 +738,236 @@ async def _get_fallback_color_recommendations(skin_tone: str, limit: int) -> Dic
 
 @app.get("/api/color-palettes-db")
 def get_color_palettes_db(
-    hex_color: str = Query(None),
-    skin_tone: str = Query(None)
+    skin_tone: Optional[str] = Query(None, description="Monk skin tone (e.g., Monk05) or seasonal type"),
+    limit: int = Query(500, ge=10, le=1000, description="Number of colors to return")
 ):
-    """Get color palettes from database for specific skin tone - with fallback."""
-    logger.info(f"Color palette request: skin_tone={skin_tone}, hex_color={hex_color}")
+    """Get color palettes from database based on skin tone mapping."""
+    logger.info(f"Color palette request: skin_tone={skin_tone}, limit={limit}")
     
     if not skin_tone:
         raise HTTPException(status_code=400, detail="skin_tone parameter is required")
     
     try:
-        # Try database approach first
+        # Database connection
         from database import SessionLocal, SkinToneMapping, ColorPalette
+        from sqlalchemy import create_engine, text
+        import json
         
+        # Get database URL from environment or use default
+        DATABASE_URL = os.getenv(
+            "DATABASE_URL", 
+            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
+        )
+        
+        engine = create_engine(DATABASE_URL)
         db = SessionLocal()
+        
         try:
-            seasonal_type = None
+            cursor = db.connection().connection.cursor()
             
-            if "monk" in skin_tone.lower():
-                monk_number = ''.join(filter(str.isdigit, skin_tone))
-                if monk_number:
-                    monk_tone_formatted = f"Monk{monk_number.zfill(2)}"
-                    
-                    mapping = db.query(SkinToneMapping).filter(
-                        SkinToneMapping.monk_tone == monk_tone_formatted
-                    ).first()
-                    
-                    if mapping:
-                        seasonal_type = mapping.seasonal_type
-            else:
-                seasonal_type = skin_tone
+            # Step 1: Determine seasonal type from Monk tone
+            seasonal_type = skin_tone
+            seasonal_type_map = {
+                'Monk01': 'Light Spring',
+                'Monk02': 'Light Spring', 
+                'Monk03': 'Clear Spring',
+                'Monk04': 'Warm Spring',
+                'Monk05': 'Soft Autumn',
+                'Monk06': 'Warm Autumn',
+                'Monk07': 'Deep Autumn',
+                'Monk08': 'Deep Winter',
+                'Monk09': 'Cool Winter',
+                'Monk10': 'Clear Winter'
+            }
             
-            if seasonal_type:
-                palette = db.query(ColorPalette).filter(
-                    ColorPalette.skin_tone == seasonal_type
-                ).first()
+            # Check if it's a Monk tone and map it to seasonal type
+            if skin_tone in seasonal_type_map:
+                seasonal_type = seasonal_type_map[skin_tone]
+            
+            # Try to get from skin_tone_mappings table first
+            if "Monk" in skin_tone:
+                cursor.execute("""
+                    SELECT seasonal_type 
+                    FROM skin_tone_mappings 
+                    WHERE monk_tone = %s
+                """, [skin_tone])
                 
-                if palette and palette.flattering_colors:
-                    return {
-                        "colors": palette.flattering_colors,
-                        "colors_to_avoid": palette.colors_to_avoid or [],
-                        "seasonal_type": seasonal_type,
-                        "description": palette.description or f"Colors for {seasonal_type}"
-                    }
+                mapping_result = cursor.fetchone()
+                if mapping_result:
+                    seasonal_type = mapping_result[0]
+                    logger.info(f"Found seasonal type from mapping: {seasonal_type} for {skin_tone}")
+            
+            # Step 2: Get colors from comprehensive_colors table (Monk tone specific)
+            all_colors = []
+            if "Monk" in skin_tone:
+                cursor.execute("""
+                    SELECT DISTINCT hex_code, color_name, color_family, brightness_level
+                    FROM comprehensive_colors 
+                    WHERE monk_tones::text LIKE %s
+                    AND hex_code IS NOT NULL
+                    AND color_name IS NOT NULL
+                    ORDER BY color_name
+                    LIMIT %s
+                """, [f'%{skin_tone}%', limit])
+                
+                monk_results = cursor.fetchall()
+                for row in monk_results:
+                    all_colors.append({
+                        "name": row[1],
+                        "hex": row[0],
+                        "color_family": row[2] or "unknown",
+                        "brightness_level": row[3] or "medium",
+                        "source": "comprehensive_colors"
+                    })
+                
+                logger.info(f"Added {len(monk_results)} colors from comprehensive_colors for {skin_tone}")
+            
+            # Step 3: Get colors from color_palettes table (seasonal type specific)
+            if seasonal_type != skin_tone and seasonal_type != "Universal":
+                try:
+                    cursor.execute("""
+                        SELECT flattering_colors, colors_to_avoid
+                        FROM color_palettes 
+                        WHERE skin_tone = %s
+                    """, [seasonal_type])
+                    
+                    palette_result = cursor.fetchone()
+                    if palette_result and palette_result[0]:
+                        flattering_colors = palette_result[0] if isinstance(palette_result[0], list) else json.loads(palette_result[0])
+                        for color in flattering_colors:
+                            # Avoid duplicates
+                            if not any(existing["hex"].lower() == color.get("hex", "").lower() for existing in all_colors):
+                                all_colors.append({
+                                    "name": color.get("name", "Unknown Color"),
+                                    "hex": color.get("hex", "#000000"),
+                                    "source": "seasonal_palette",
+                                    "seasonal_type": seasonal_type
+                                })
+                        
+                        logger.info(f"Added {len(flattering_colors)} colors from color_palettes for {seasonal_type}")
+                except Exception as e:
+                    logger.info(f"Could not fetch from color_palettes table: {e}")
+            
+            # Step 4: Get additional colors from main colors table
+            try:
+                cursor.execute("""
+                    SELECT DISTINCT hex_code, color_name, seasonal_palette, category
+                    FROM colors 
+                    WHERE (seasonal_palette = %s OR suitable_skin_tone LIKE %s)
+                    AND category = 'recommended'
+                    AND hex_code IS NOT NULL
+                    AND color_name IS NOT NULL
+                    ORDER BY color_name
+                    LIMIT 50
+                """, [seasonal_type, f'%{skin_tone}%'])
+                
+                colors_results = cursor.fetchall()
+                for row in colors_results:
+                    # Avoid duplicates
+                    if not any(existing["hex"].lower() == row[0].lower() for existing in all_colors):
+                        all_colors.append({
+                            "name": row[1],
+                            "hex": row[0],
+                            "source": "colors_table",
+                            "seasonal_palette": row[2] or seasonal_type,
+                            "category": row[3]
+                        })
+                
+                if colors_results:
+                    logger.info(f"Added {len(colors_results)} colors from colors table")
+            except Exception as e:
+                logger.info(f"Could not fetch from colors table: {e}")
+            
+            # Always add seasonal type specific colors as they are most relevant
+            seasonal_colors = get_seasonal_type_colors(seasonal_type)
+            for color in seasonal_colors:
+                # Avoid duplicates
+                if not any(existing["hex"].lower() == color["hex"].lower() for existing in all_colors):
+                    all_colors.append(color)
+            
+            if seasonal_colors:
+                logger.info(f"Added {len(seasonal_colors)} seasonal type specific colors for {seasonal_type}")
+            
+            # If we still don't have enough colors, get some universal ones from database
+            if len(all_colors) < 10:
+                try:
+                    cursor.execute("""
+                        SELECT DISTINCT hex_code, color_name, color_family, brightness_level
+                        FROM comprehensive_colors 
+                        WHERE color_family IN ('blue', 'green', 'red', 'purple', 'neutral', 'brown', 'pink')
+                        AND hex_code IS NOT NULL
+                        AND color_name IS NOT NULL
+                        ORDER BY color_name
+                        LIMIT 20
+                    """)
+                    
+                    universal_results = cursor.fetchall()
+                    for row in universal_results:
+                        # Avoid duplicates
+                        if not any(existing["hex"].lower() == row[0].lower() for existing in all_colors):
+                            all_colors.append({
+                                "name": row[1],
+                                "hex": row[0],
+                                "source": "universal_colors",
+                                "color_family": row[2] or "unknown",
+                                "brightness_level": row[3] or "medium"
+                            })
+                    
+                    if universal_results:
+                        logger.info(f"Added {len(universal_results)} universal colors")
+                except Exception as db_error:
+                    logger.warning(f"Database query failed: {db_error}")
+            
+            # Format response to match frontend expectations
+            final_colors = all_colors[:limit] if len(all_colors) > limit else all_colors
+            
+            response = {
+                "colors_that_suit": [{"name": color["name"], "hex": color["hex"]} for color in final_colors],
+                "colors": final_colors,  # Full color objects with metadata
+                "colors_to_avoid": [],  # We can enhance this later
+                "seasonal_type": seasonal_type,
+                "monk_skin_tone": skin_tone,
+                "total_colors": len(final_colors),
+                "description": f"Based on your {seasonal_type} seasonal type and {skin_tone} skin tone, here are colors from our database that complement your complexion.",
+                "message": f"Showing {len(final_colors)} recommended colors from multiple database sources.",
+                "database_source": True,
+                "sources_used": list(set([color.get("source", "unknown") for color in final_colors]))
+            }
+            
+            logger.info(f"Returning {len(final_colors)} colors for {skin_tone} (seasonal: {seasonal_type})")
+            return response
+            
         finally:
             db.close()
-            
+    
     except Exception as e:
-        logger.warning(f"Database lookup failed: {e}")
-    
-    # Fallback response - get basic colors from database if possible
-    try:
-        from database import SessionLocal
-        from sqlalchemy import text
-        db = SessionLocal()
-        try:
-            fallback_query = text("""
-                SELECT DISTINCT hex_code, color_name 
-                FROM comprehensive_colors 
-                WHERE color_family IN ('blue', 'green', 'red', 'neutral', 'brown')
-                AND hex_code IS NOT NULL AND color_name IS NOT NULL
-                LIMIT 10
-            """)
-            result = db.execute(fallback_query)
-            fallback_colors = result.fetchall()
-            
-            if fallback_colors:
-                colors_list = [{"name": row[1], "hex": row[0]} for row in fallback_colors]
-            else:
-                # Ultimate fallback - basic colors
-                colors_list = [
-                    {"name": "Navy Blue", "hex": "#002D72"},
-                    {"name": "Forest Green", "hex": "#205C40"},
-                    {"name": "Burgundy", "hex": "#890C58"},
-                    {"name": "Charcoal", "hex": "#36454F"}
-                ]
-        finally:
-            db.close()
-    except Exception as fallback_e:
-        logger.warning(f"Fallback query failed: {fallback_e}")
-        # Ultimate fallback - basic colors
-        colors_list = [
-            {"name": "Navy Blue", "hex": "#002D72"},
-            {"name": "Forest Green", "hex": "205C40"},
-            {"name": "Burgundy", "hex": "#890C58"},
-            {"name": "Charcoal", "hex": "#36454F"}
+        logger.error(f"Error in get_color_palettes_db: {e}")
+        # Fallback response
+        fallback_colors = [
+            {"name": "Navy Blue", "hex": "#000080"},
+            {"name": "Forest Green", "hex": "#228B22"},
+            {"name": "Burgundy", "hex": "#800020"},
+            {"name": "Charcoal Gray", "hex": "#36454F"},
+            {"name": "Cream White", "hex": "#F5F5DC"},
+            {"name": "Soft Pink", "hex": "#FFB6C1"},
+            {"name": "Royal Purple", "hex": "#663399"},
+            {"name": "Emerald Green", "hex": "#50C878"},
+            {"name": "Deep Orange", "hex": "#FF6600"},
+            {"name": "Chocolate Brown", "hex": "#8B4513"}
         ]
-    
-    return {
-        "colors": colors_list,
-        "colors_to_avoid": [],
-        "seasonal_type": skin_tone or "Unknown",
-        "description": f"Fallback color palette for {skin_tone or 'unknown skin tone'} - database not available"
-    }
+        
+        return {
+            "colors_that_suit": fallback_colors,
+            "colors": [{"name": c["name"], "hex": c["hex"], "source": "fallback"} for c in fallback_colors],
+            "colors_to_avoid": [],
+            "seasonal_type": skin_tone or "Unknown",
+            "monk_skin_tone": skin_tone,
+            "total_colors": len(fallback_colors),
+            "description": f"Fallback color palette for {skin_tone or 'unknown skin tone'} - database error occurred",
+            "message": f"Showing {len(fallback_colors)} fallback colors due to database error.",
+            "database_source": False,
+            "error": str(e)
+        }
 
 
 @app.get("/analyze-skin-tone")
@@ -980,6 +1117,142 @@ async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
             'success': False,
             'error': f"Ultimate error fallback: {str(e)}"
         }
+
+
+def get_seasonal_type_colors(seasonal_type: str) -> List[Dict]:
+    """Get colors specifically tailored to each seasonal type."""
+    seasonal_palettes = {
+        "Warm Autumn": [
+            {"name": "Rust", "hex": "#B7410E", "source": "seasonal_warm_autumn"},
+            {"name": "Burnt Orange", "hex": "#CC5500", "source": "seasonal_warm_autumn"},
+            {"name": "Golden Yellow", "hex": "#FFD700", "source": "seasonal_warm_autumn"},
+            {"name": "Olive Green", "hex": "#808000", "source": "seasonal_warm_autumn"},
+            {"name": "Deep Terracotta", "hex": "#E2725B", "source": "seasonal_warm_autumn"},
+            {"name": "Warm Brown", "hex": "#8B4513", "source": "seasonal_warm_autumn"},
+            {"name": "Mustard Yellow", "hex": "#FFDB58", "source": "seasonal_warm_autumn"},
+            {"name": "Pumpkin Orange", "hex": "#FF7518", "source": "seasonal_warm_autumn"},
+            {"name": "Camel Brown", "hex": "#C19A6B", "source": "seasonal_warm_autumn"},
+            {"name": "Deep Gold", "hex": "#B8860B", "source": "seasonal_warm_autumn"},
+            {"name": "Brick Red", "hex": "#CB4154", "source": "seasonal_warm_autumn"},
+            {"name": "Forest Green", "hex": "#228B22", "source": "seasonal_warm_autumn"}
+        ],
+        "Soft Autumn": [
+            {"name": "Muted Coral", "hex": "#F88379", "source": "seasonal_soft_autumn"},
+            {"name": "Sage Green", "hex": "#9CAF88", "source": "seasonal_soft_autumn"},
+            {"name": "Dusty Rose", "hex": "#DCAE96", "source": "seasonal_soft_autumn"},
+            {"name": "Taupe", "hex": "#483C32", "source": "seasonal_soft_autumn"},
+            {"name": "Soft Teal", "hex": "#5F8A8B", "source": "seasonal_soft_autumn"},
+            {"name": "Muted Gold", "hex": "#D4AF37", "source": "seasonal_soft_autumn"},
+            {"name": "Pewter Gray", "hex": "#899499", "source": "seasonal_soft_autumn"},
+            {"name": "Soft Burgundy", "hex": "#800020", "source": "seasonal_soft_autumn"},
+            {"name": "Mushroom Beige", "hex": "#C7B299", "source": "seasonal_soft_autumn"},
+            {"name": "Muted Olive", "hex": "#6B8E23", "source": "seasonal_soft_autumn"}
+        ],
+        "Deep Autumn": [
+            {"name": "Deep Burgundy", "hex": "#722F37", "source": "seasonal_deep_autumn"},
+            {"name": "Rich Chocolate", "hex": "#7B3F00", "source": "seasonal_deep_autumn"},
+            {"name": "Hunter Green", "hex": "#355E3B", "source": "seasonal_deep_autumn"},
+            {"name": "Burnt Sienna", "hex": "#E97451", "source": "seasonal_deep_autumn"},
+            {"name": "Deep Rust", "hex": "#B7410E", "source": "seasonal_deep_autumn"},
+            {"name": "Rich Gold", "hex": "#B8860B", "source": "seasonal_deep_autumn"},
+            {"name": "Deep Forest", "hex": "#013220", "source": "seasonal_deep_autumn"},
+            {"name": "Mahogany", "hex": "#C04000", "source": "seasonal_deep_autumn"},
+            {"name": "Dark Olive", "hex": "#556B2F", "source": "seasonal_deep_autumn"},
+            {"name": "Espresso Brown", "hex": "#362D1C", "source": "seasonal_deep_autumn"}
+        ],
+        "Clear Spring": [
+            {"name": "Bright Coral", "hex": "#FF7F50", "source": "seasonal_clear_spring"},
+            {"name": "Turquoise", "hex": "#40E0D0", "source": "seasonal_clear_spring"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_clear_spring"},
+            {"name": "Bright Yellow", "hex": "#FFFF00", "source": "seasonal_clear_spring"},
+            {"name": "Hot Pink", "hex": "#FF69B4", "source": "seasonal_clear_spring"},
+            {"name": "Royal Blue", "hex": "#4169E1", "source": "seasonal_clear_spring"},
+            {"name": "Lime Green", "hex": "#32CD32", "source": "seasonal_clear_spring"},
+            {"name": "Bright Orange", "hex": "#FF8C00", "source": "seasonal_clear_spring"},
+            {"name": "Magenta", "hex": "#FF00FF", "source": "seasonal_clear_spring"},
+            {"name": "Electric Blue", "hex": "#00BFFF", "source": "seasonal_clear_spring"}
+        ],
+        "Warm Spring": [
+            {"name": "Peach", "hex": "#FFCBA4", "source": "seasonal_warm_spring"},
+            {"name": "Golden Green", "hex": "#B8C25D", "source": "seasonal_warm_spring"},
+            {"name": "Warm Coral", "hex": "#FF6B6B", "source": "seasonal_warm_spring"},
+            {"name": "Butter Yellow", "hex": "#FFFD74", "source": "seasonal_warm_spring"},
+            {"name": "Light Orange", "hex": "#FFB347", "source": "seasonal_warm_spring"},
+            {"name": "Aqua", "hex": "#00FFFF", "source": "seasonal_warm_spring"},
+            {"name": "Warm Pink", "hex": "#FF91A4", "source": "seasonal_warm_spring"},
+            {"name": "Caramel", "hex": "#C68E17", "source": "seasonal_warm_spring"},
+            {"name": "Ivory", "hex": "#FFFFF0", "source": "seasonal_warm_spring"},
+            {"name": "Light Teal", "hex": "#77DD77", "source": "seasonal_warm_spring"}
+        ],
+        "Light Spring": [
+            {"name": "Soft Pink", "hex": "#FFB6C1", "source": "seasonal_light_spring"},
+            {"name": "Light Yellow", "hex": "#FFFFE0", "source": "seasonal_light_spring"},
+            {"name": "Mint Green", "hex": "#98FF98", "source": "seasonal_light_spring"},
+            {"name": "Baby Blue", "hex": "#89CFF0", "source": "seasonal_light_spring"},
+            {"name": "Lavender", "hex": "#E6E6FA", "source": "seasonal_light_spring"},
+            {"name": "Light Peach", "hex": "#FFCBA4", "source": "seasonal_light_spring"},
+            {"name": "Soft Coral", "hex": "#F08080", "source": "seasonal_light_spring"},
+            {"name": "Cream", "hex": "#FFFDD0", "source": "seasonal_light_spring"},
+            {"name": "Light Aqua", "hex": "#7FFFD4", "source": "seasonal_light_spring"},
+            {"name": "Soft Green", "hex": "#90EE90", "source": "seasonal_light_spring"}
+        ],
+        "Cool Winter": [
+            {"name": "Icy Blue", "hex": "#B0E0E6", "source": "seasonal_cool_winter"},
+            {"name": "Deep Navy", "hex": "#000080", "source": "seasonal_cool_winter"},
+            {"name": "Pure White", "hex": "#FFFFFF", "source": "seasonal_cool_winter"},
+            {"name": "Charcoal Gray", "hex": "#36454F", "source": "seasonal_cool_winter"},
+            {"name": "Burgundy Wine", "hex": "#722F37", "source": "seasonal_cool_winter"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_cool_winter"},
+            {"name": "Royal Purple", "hex": "#663399", "source": "seasonal_cool_winter"},
+            {"name": "Cool Pink", "hex": "#FF1493", "source": "seasonal_cool_winter"},
+            {"name": "Silver Gray", "hex": "#C0C0C0", "source": "seasonal_cool_winter"},
+            {"name": "True Red", "hex": "#FF0000", "source": "seasonal_cool_winter"}
+        ],
+        "Deep Winter": [
+            {"name": "True Black", "hex": "#000000", "source": "seasonal_deep_winter"},
+            {"name": "Pure White", "hex": "#FFFFFF", "source": "seasonal_deep_winter"},
+            {"name": "Deep Red", "hex": "#8B0000", "source": "seasonal_deep_winter"},
+            {"name": "Royal Blue", "hex": "#4169E1", "source": "seasonal_deep_winter"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_deep_winter"},
+            {"name": "Deep Purple", "hex": "#663399", "source": "seasonal_deep_winter"},
+            {"name": "Hot Pink", "hex": "#FF69B4", "source": "seasonal_deep_winter"},
+            {"name": "Bright Yellow", "hex": "#FFFF00", "source": "seasonal_deep_winter"},
+            {"name": "True Navy", "hex": "#000080", "source": "seasonal_deep_winter"},
+            {"name": "Magenta", "hex": "#FF00FF", "source": "seasonal_deep_winter"}
+        ],
+        "Clear Winter": [
+            {"name": "Bright White", "hex": "#FFFFFF", "source": "seasonal_clear_winter"},
+            {"name": "True Black", "hex": "#000000", "source": "seasonal_clear_winter"},
+            {"name": "Electric Blue", "hex": "#00BFFF", "source": "seasonal_clear_winter"},
+            {"name": "Bright Red", "hex": "#FF0000", "source": "seasonal_clear_winter"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_clear_winter"},
+            {"name": "Fuchsia", "hex": "#FF00FF", "source": "seasonal_clear_winter"},
+            {"name": "Lemon Yellow", "hex": "#FFFF00", "source": "seasonal_clear_winter"},
+            {"name": "Royal Purple", "hex": "#7851A9", "source": "seasonal_clear_winter"},
+            {"name": "Turquoise", "hex": "#40E0D0", "source": "seasonal_clear_winter"},
+            {"name": "Hot Pink", "hex": "#FF69B4", "source": "seasonal_clear_winter"}
+        ]
+    }
+    
+    # Return colors for the specific seasonal type, or default colors if not found
+    colors = seasonal_palettes.get(seasonal_type, [])
+    
+    if not colors:
+        # Universal fallback colors for any seasonal type
+        colors = [
+            {"name": "Navy Blue", "hex": "#000080", "source": "universal_fallback"},
+            {"name": "Forest Green", "hex": "#228B22", "source": "universal_fallback"},
+            {"name": "Burgundy", "hex": "#800020", "source": "universal_fallback"},
+            {"name": "Charcoal Gray", "hex": "#36454F", "source": "universal_fallback"},
+            {"name": "Cream White", "hex": "#F5F5DC", "source": "universal_fallback"},
+            {"name": "Soft Pink", "hex": "#FFB6C1", "source": "universal_fallback"},
+            {"name": "Royal Purple", "hex": "#663399", "source": "universal_fallback"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "universal_fallback"},
+            {"name": "Deep Orange", "hex": "#FF6600", "source": "universal_fallback"},
+            {"name": "Chocolate Brown", "hex": "#8B4513", "source": "universal_fallback"}
+        ]
+    
+    return colors
 
 
 if __name__ == "__main__":

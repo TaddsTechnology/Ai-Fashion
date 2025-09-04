@@ -14,17 +14,17 @@ sys.path.insert(0, str(prods_fastapi_dir))
 os.environ.setdefault("ENV", "production")
 os.environ.setdefault("DATABASE_URL", "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require")
 
-# Import the working FastAPI app with analyze-skin-tone endpoint
+# Import the comprehensive FastAPI app with full functionality
 try:
-    from main_simple import app
-    print("✅ Successfully imported FastAPI backend with analyze-skin-tone endpoint")
+    from prods_fastapi.main import app
+    print("✅ Successfully imported comprehensive FastAPI backend from prods_fastapi.main")
 except ImportError as e:
-    print(f"⚠️ Direct import failed: {e}, trying prods_fastapi.main_simple")
+    print(f"⚠️ Main import failed: {e}, trying fallback to main_simple")
     try:
         from prods_fastapi.main_simple import app
-        print("✅ Successfully imported FastAPI backend from prods_fastapi")
+        print("✅ Successfully imported fallback FastAPI backend from prods_fastapi.main_simple")
     except ImportError as e2:
-        print(f"⚠️ Prods_fastapi import failed: {e2}, creating minimal backup")
+        print(f"⚠️ All imports failed: {e2}, creating minimal backup")
         # Create working backup FastAPI app with analyze-skin-tone
         from fastapi import FastAPI, File, UploadFile, HTTPException
         from fastapi.middleware.cors import CORSMiddleware
