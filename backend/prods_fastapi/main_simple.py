@@ -221,10 +221,10 @@ def get_apparel(
 
 # New endpoint: analyze skin tone from uploaded image to match frontend expectation
 @app.post("/analyze-skin-tone")
-async def analyze_skin_tone_endpoint(image: UploadFile = File(...)):
+async def analyze_skin_tone_endpoint(file: UploadFile = File(...)):
     try:
         # Read and process image
-        img = Image.open(image.file).convert("RGB")
+        img = Image.open(file.file).convert("RGB")
         arr = np.array(img)
         h, w = arr.shape[:2]
         center = arr[h//4:3*h//4, w//4:3*w//4]
