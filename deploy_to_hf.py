@@ -9,12 +9,16 @@ from pathlib import Path
 
 def main():
     # Set up HF token
-    token = "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"
-    api = HfApi(token=token)
+    hf_token = "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"
+    github_token = "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"
+    
+    api = HfApi(token=hf_token)
     
     # Repository details
     repo_id = "TaddsTeam/Ai-Fashion"  # Correct space name
     repo_type = "space"
+    
+    print(f"🚀 Deploying AI Fashion app to Hugging Face Space: {repo_id}")
     
     try:
         # Check if the space already exists
@@ -29,7 +33,7 @@ def main():
                     repo_id=repo_id,
                     repo_type=repo_type,
                     space_sdk="gradio",
-                    token=token,
+                    token=hf_token,
                     private=False  # Make it public
                 )
                 print(f"✅ Created space: {repo_id}")
@@ -66,7 +70,7 @@ def main():
                     path_in_repo=file_name,
                     repo_id=repo_id,
                     repo_type=repo_type,
-                    token=token,
+                    token=hf_token,
                     commit_message=f"Update {file_name}"
                 )
                 print(f"   ✅ {file_name} uploaded")
@@ -84,7 +88,7 @@ def main():
                     path_in_repo=folder_name,
                     repo_id=repo_id,
                     repo_type=repo_type,
-                    token=token,
+                    token=hf_token,
                     commit_message=f"Update {folder_name} directory"
                 )
                 print(f"   ✅ {folder_name}/ uploaded")
