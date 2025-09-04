@@ -147,17 +147,18 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
       
       // Prepare feedback data for SheetDB (flatten the structure)
       const feedbackData = {
+        timestamp: new Date().toISOString(),
+        session_id: userContext?.sessionId || `session_${Date.now()}`,
         monk_skin_tone: userContext?.monkSkinTone || 'Unknown',
         active_tab: userContext?.activeTab || 'color-analysis',
-        session_id: userContext?.sessionId || `session_${Date.now()}`,
+        rating: rating || null,
+        written_feedback: writtenFeedback.trim() || '',
         first_impression: answers[0] || '',
         confidence_boost: answers[1] || '',
         social_impact: answers[2] || '',
         purchase_intent: answers[3] || '',
-        written_feedback: writtenFeedback.trim() || '',
-        rating: rating || null,
-        user_agent: navigator.userAgent,
-        timestamp: new Date().toISOString()
+        client_ip: 'N/A', // Client IP not available in browser context
+        user_agent: navigator.userAgent
       };
 
       const response = await fetch(sheetDbUrl, {
@@ -490,9 +491,39 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
                   }`}
                 ></div>
               ))}
+              {/* Add dot for written feedback slide */}
+              <div 
+                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${
+                  currentSlide === slides.length
+                    ? 'bg-purple-500 w-4 sm:w-6' 
+                    : currentSlide > slides.length 
+                      ? 'bg-purple-300' 
+                      : 'bg-gray-200'
+                }`}
+              ></div>
             </div>
             
-            <div className="w-8 sm:w-16"></div> {/* Spacer for alignment */}
+            {/* Next button for quiz slides */}
+            {!isWrittenFeedbackSlide && answers[currentSlide] ? (
+              <button 
+                onClick={() => {
+                  if (currentSlide === slides.length - 1) {
+                    // Last quiz slide - move to written feedback slide
+                    setCurrentSlide(slides.length);
+                  } else {
+                    // Move to next quiz slide
+                    setCurrentSlide(prev => prev + 1);
+                  }
+                }}
+                disabled={isAnimating}
+                className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all bg-purple-600 text-white hover:bg-purple-700 transform hover:scale-105"
+              >
+                <span className="text-xs sm:text-sm font-medium">Next</span>
+                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+            ) : (
+              <div className="w-8 sm:w-16"></div> {/* Spacer for alignment */}
+            )}
           </div>
         </div>
       </div>
