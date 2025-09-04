@@ -1128,17 +1128,17 @@ def get_color_palettes_db(
             except Exception as e:
                 logger.info(f"Could not fetch from colors table: {e}")
             
-            # If we don't have enough colors, add seasonal type specific colors
-            if len(all_colors) < 10:
-                seasonal_colors = get_seasonal_type_colors(seasonal_type)
-                for color in seasonal_colors:
-                    # Avoid duplicates
-                    if not any(existing["hex"].lower() == color["hex"].lower() for existing in all_colors):
-                        all_colors.append(color)
-                
-                logger.info(f"Added {len(seasonal_colors)} seasonal type specific colors")
+            # Always add seasonal type specific colors as they are most relevant
+            seasonal_colors = get_seasonal_type_colors(seasonal_type)
+            for color in seasonal_colors:
+                # Avoid duplicates
+                if not any(existing["hex"].lower() == color["hex"].lower() for existing in all_colors):
+                    all_colors.append(color)
             
-            # If still not enough, get some universal ones from database
+            if seasonal_colors:
+                logger.info(f"Added {len(seasonal_colors)} seasonal type specific colors for {seasonal_type}")
+            
+            # If we still don't have enough colors, get some universal ones from database
             if len(all_colors) < 10:
                 try:
                     cursor.execute("""
