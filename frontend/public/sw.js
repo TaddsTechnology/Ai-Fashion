@@ -1,6 +1,6 @@
-const CACHE_NAME = 'huematch-v1';
-const STATIC_CACHE_NAME = 'huematch-static-v1';
-const DYNAMIC_CACHE_NAME = 'huematch-dynamic-v1';
+const CACHE_NAME = 'huematch-v2';
+const STATIC_CACHE_NAME = 'huematch-static-v2';
+const DYNAMIC_CACHE_NAME = 'huematch-dynamic-v2';
 
 // Assets to cache immediately
 const STATIC_ASSETS = [
@@ -68,7 +68,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Handle API requests with network-first strategy
-  if (url.pathname.startsWith('/api/') || url.hostname.includes('ai-fashion-backend') || url.hostname.includes('onrender.com')) {
+  if (url.pathname.startsWith('/api/') || url.hostname.includes('ai-fashion-backend') || (url.hostname.includes('onrender.com') && url.pathname.startsWith('/api/'))) {
     event.respondWith(networkFirst(request));
     return;
   }
