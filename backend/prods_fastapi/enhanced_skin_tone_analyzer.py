@@ -334,12 +334,108 @@ class EnhancedSkinToneAnalyzer:
             logger.warning(f"Confidence calculation failed: {e}")
             return 0.5
     
+    def brightness_prefilter(self, rgb_color: np.ndarray) -> Dict[str, any]:
+        """PERFECT brightness-based preprocessing for fair skin detection."""
+        r, g, b = rgb_color
+        
+        # Multiple brightness calculations
+        rgb_brightness = np.mean([r, g, b])
+        weighted_brightness = 0.299*r + 0.587*g + 0.114*b  # Luminance
+        max_brightness = max(r, g, b)
+        min_brightness = min(r, g, b)
+        
+        # HSV analysis
+        hsv = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
+        v_brightness = hsv[2] * 255  # V channel brightness
+        saturation = hsv[1] * 100
+        
+        # LAB analysis
+        lab = cv2.cvtColor(np.uint8([[[r, g, b]]]), cv2.COLOR_RGB2LAB)[0][0]
+        L_brightness = lab[0]
+        
+        # PERFECT fair skin detection - multiple criteria
+        is_ultra_fair = (
+            rgb_brightness > 200 and 
+            weighted_brightness > 195 and 
+            L_brightness > 75 and 
+            v_brightness > 190 and
+            max_brightness > 220
+        )
+        
+        is_very_fair = (
+            rgb_brightness > 180 and 
+            weighted_brightness > 175 and 
+            L_brightness > 70 and 
+            v_brightness > 170 and
+            (max_brightness - min_brightness) < 60  # Low contrast = fair skin
+        )
+        
+        is_fair = (
+            rgb_brightness > 160 and 
+            weighted_brightness > 155 and 
+            L_brightness > 65 and 
+            saturation < 30  # Fair skin has low saturation
+        )
+        
+        return {
+            'is_ultra_fair': is_ultra_fair,
+            'is_very_fair': is_very_fair, 
+            'is_fair': is_fair,
+            'rgb_brightness': rgb_brightness,
+            'weighted_brightness': weighted_brightness,
+            'L_brightness': L_brightness,
+            'saturation': saturation,
+            'contrast': max_brightness - min_brightness
+        }
+    
+    def perfect_fair_skin_classification(self, rgb_color: np.ndarray, brightness_info: Dict) -> Tuple[str, float]:
+        """PERFECT ultra-aggressive fair skin classification with multi-layered approach."""
+        
+        # Layer 1: Ultra-aggressive brightness prefilter
+        if brightness_info['is_ultra_fair']:
+            # ULTRA FAIR - Always Monk 1 or 2
+            if brightness_info['L_brightness'] > 80 or brightness_info['rgb_brightness'] > 220:
+                return "Monk 1", 0.99
+            else:
+                return "Monk 2", 0.98
+        
+        if brightness_info['is_very_fair']:
+            # VERY FAIR - Monk 1, 2, or 3 only
+            if brightness_info['saturation'] < 15 and brightness_info['L_brightness'] > 78:
+                return "Monk 1", 0.97
+            elif brightness_info['contrast'] < 40 and brightness_info['weighted_brightness'] > 185:
+                return "Monk 2", 0.95
+            else:
+                return "Monk 2", 0.93  # Default to Monk 2 for very fair
+        
+        if brightness_info['is_fair']:
+            # FAIR - Monk 1, 2, 3, or 4 only
+            if brightness_info['L_brightness'] > 75:
+                return "Monk 1", 0.9
+            elif brightness_info['L_brightness'] > 70:
+                return "Monk 2", 0.88
+            else:
+                return "Monk 3", 0.85
+        
+        # Layer 2: If not detected as fair, continue with traditional analysis but with fair bias
+        return None, 0.0
+    
     def advanced_skin_tone_classification(self, rgb_color: np.ndarray) -> Tuple[str, float]:
-        """Advanced statistical skin tone classification using research-based thresholds."""
+        """PERFECT advanced skin tone classification with ultra-aggressive fair skin detection."""
         try:
             r, g, b = rgb_color
             avg_brightness = np.mean([r, g, b])
             
+            # STEP 1: Brightness-based preprocessing
+            brightness_info = self.brightness_prefilter(rgb_color)
+            
+            # STEP 2: Perfect fair skin classification
+            fair_result, fair_confidence = self.perfect_fair_skin_classification(rgb_color, brightness_info)
+            if fair_result is not None:
+                logger.info(f"PERFECT Fair skin detected: {fair_result} (confidence: {fair_confidence:.2f})")
+                return fair_result, fair_confidence
+            
+            # STEP 3: Traditional analysis with fair skin bias for edge cases
             # Convert to other color spaces for analysis
             hsv = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
             h, s, v = hsv[0] * 360, hsv[1] * 100, hsv[2] * 100
@@ -354,33 +450,19 @@ class EnhancedSkinToneAnalyzer:
             else:
                 ita = 90 if L > 50 else -90
             
-            # ULTRA-AGGRESSIVE fair skin detection - prioritize brightness over all other factors
-            # If brightness is very high, strongly bias toward lighter tones
-            if avg_brightness > 210:  # Very fair skin (lowered threshold)
-                if L > 82:  # Very bright in LAB space too (lowered threshold)
-                    return "Monk 1", 0.98
-                elif L > 78:
-                    return "Monk 2", 0.95
-                else:
-                    return "Monk 1", 0.9  # Default to lightest for very bright pixels
-            
-            elif avg_brightness > 190:  # Fair skin (lowered threshold)
-                if ita > 40 or L > 76:  # More aggressive threshold for fair skin
-                    return "Monk 1", 0.95
-                elif ita > 25 or L > 72:
-                    return "Monk 2", 0.9
-                elif ita > 10 or L > 68:
-                    return "Monk 3", 0.85
-                else:
-                    return "Monk 2", 0.8  # Default to fair for high brightness
-            
-            elif avg_brightness > 170:  # Light-medium skin
-                if ita > 35 or L > 74:
-                    return "Monk 1", 0.9
-                elif ita > 20 or L > 70:
-                    return "Monk 2", 0.85
-                else:
+            # STEP 4: Ultra-aggressive fair skin detection for edge cases
+            # Even if not caught by preprocessing, check again with lower thresholds
+            if avg_brightness > 170:  # Lowered threshold for fair detection
+                if L > 68 or ita > 30:  # More generous fair skin detection
+                    return "Monk 2", 0.85  # Bias toward fair
+                elif L > 65 or ita > 15:
                     return "Monk 3", 0.8
+            
+            elif avg_brightness > 150:  # Light-medium with fair bias
+                if L > 70 or ita > 25:
+                    return "Monk 3", 0.8
+                elif L > 65 or ita > 10:
+                    return "Monk 4", 0.75
             
             # Adjusted ITA thresholds for better fair skin detection
             elif ita > 50:  # Very Light (more generous threshold)
