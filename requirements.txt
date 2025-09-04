@@ -12,3 +12,4 @@ sqlalchemy[asyncio]==2.0.23
 opencv-python-headless==4.8.1.78
 Pillow==10.0.1
 webcolors==1.13
+gradio
