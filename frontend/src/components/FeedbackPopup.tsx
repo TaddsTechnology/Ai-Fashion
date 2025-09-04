@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronRight, ChevronLeft, Sparkles, Heart, Star, Zap } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Sparkles, Heart, Star, Zap, MessageSquare, Send } from 'lucide-react';
 
 interface FeedbackPopupProps {
   isVisible: boolean;
@@ -31,6 +31,9 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [isAnimating, setIsAnimating] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [writtenFeedback, setWrittenFeedback] = useState('');
+  const [rating, setRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Reset state when modal opens
   useEffect(() => {
@@ -38,6 +41,9 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
       setCurrentSlide(0);
       setAnswers({});
       setShowThankYou(false);
+      setWrittenFeedback('');
+      setRating(0);
+      setIsSubmitting(false);
     }
   }, [isVisible]);
 
@@ -102,6 +108,81 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
     }
   ];
 
+  // Add written feedback slide data
+  const writtenFeedbackSlide = {
+    id: slides.length,
+    title: "Your Thoughts",
+    subtitle: "Tell us more (optional)",
+    question: "Any additional thoughts about these color recommendations?",
+    icon: <MessageSquare className="w-6 h-6" />,
+    gradient: "from-purple-500 via-indigo-500 to-blue-500",
+    options: []
+  };
+
+  const totalSlides = slides.length + 1; // Include written feedback slide
+
+  // Function to submit feedback to SheetDB
+  const submitFeedback = async () => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      const sheetDbUrl = 'https://sheetdb.io/api/v1/atpn8mhf808aa';
+      
+      // Prepare feedback data for SheetDB (flatten the structure)
+      const feedbackData = {
+        monk_skin_tone: userContext?.monkSkinTone || 'Unknown',
+        active_tab: userContext?.activeTab || 'color-analysis',
+        session_id: userContext?.sessionId || `session_${Date.now()}`,
+        first_impression: answers[0] || '',
+        confidence_boost: answers[1] || '',
+        social_impact: answers[2] || '',
+        purchase_intent: answers[3] || '',
+        written_feedback: writtenFeedback.trim() || '',
+        rating: rating || null,
+        user_agent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      };
+
+      const response = await fetch(sheetDbUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: feedbackData
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Feedback submitted successfully to SheetDB:', result);
+        
+        // Show thank you message
+        setShowThankYou(true);
+        setTimeout(() => {
+          onClose();
+        }, 2500);
+      } else {
+        console.error('Failed to submit feedback to SheetDB:', response.statusText);
+        // Still show thank you to avoid confusing the user
+        setShowThankYou(true);
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error submitting feedback to SheetDB:', error);
+      // Still show thank you to avoid confusing the user
+      setShowThankYou(true);
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleAnswerSelect = (slideId: number, answer: string) => {
     setAnswers(prev => ({ ...prev, [slideId]: answer }));
     
@@ -109,11 +190,8 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
     setIsAnimating(true);
     setTimeout(() => {
       if (slideId === slides.length - 1) {
-        // Last slide - show thank you
-        setShowThankYou(true);
-        setTimeout(() => {
-          onClose();
-        }, 2000);
+        // Last quiz slide - move to written feedback slide
+        setCurrentSlide(slides.length); // Go to written feedback slide
       } else {
         // Move to next slide
         setCurrentSlide(prev => prev + 1);
@@ -128,8 +206,9 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
     }
   };
 
-  const currentSlideData = slides[currentSlide];
-  const progress = ((currentSlide + 1) / slides.length) * 100;
+  const currentSlideData = currentSlide < slides.length ? slides[currentSlide] : writtenFeedbackSlide;
+  const progress = ((currentSlide + 1) / totalSlides) * 100;
+  const isWrittenFeedbackSlide = currentSlide === slides.length;
 
   if (showThankYou) {
     return (
@@ -192,7 +271,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-xs sm:text-sm opacity-75">{currentSlide + 1} of {slides.length}</p>
+            <p className="text-xs sm:text-sm opacity-75">{currentSlide + 1} of {totalSlides}</p>
           </div>
         </div>
 
@@ -202,50 +281,123 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
             {currentSlideData.question}
           </h4>
           
-          <div className="space-y-2 sm:space-y-3">
-            {currentSlideData.options.map((option, index) => {
-              const isSelected = answers[currentSlide] === option.value;
-              return (
-                <button 
-                  key={option.value} 
-                  onClick={() => handleAnswerSelect(currentSlide, option.value)}
-                  disabled={isAnimating}
-                  className={`w-full text-left p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.01] sm:hover:scale-[1.02] border-2 group ${
-                    isSelected 
-                      ? `bg-gradient-to-r ${currentSlideData.gradient} text-white border-transparent shadow-lg scale-[1.01] sm:scale-[1.02]` 
-                      : 'bg-gray-50 hover:bg-gray-100 border-gray-200 hover:border-gray-300'
-                  } ${isAnimating ? 'pointer-events-none' : ''}`}
-                  style={{ 
-                    animationDelay: `${index * 0.1}s`,
-                    animation: isVisible ? 'slideInUp 0.6s ease-out' : 'none'
-                  }}
-                >
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <span className="text-2xl sm:text-3xl flex-shrink-0 transform transition-transform group-hover:scale-110">
-                      {option.emoji}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <span className={`font-semibold text-base sm:text-lg block mb-1 leading-tight ${
-                        isSelected ? 'text-white' : 'text-gray-800'
-                      }`}>
-                        {option.text}
+          {isWrittenFeedbackSlide ? (
+            // Written feedback slide content
+            <div className="space-y-4">
+              {/* Quick rating */}
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-3">How would you rate these recommendations overall?</p>
+                <div className="flex justify-center space-x-2 mb-6">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setRating(star)}
+                      className={`p-1 transition-colors hover:scale-110 transform duration-200 ${
+                        star <= rating ? 'text-yellow-500' : 'text-gray-300 hover:text-yellow-400'
+                      }`}
+                    >
+                      <Star className="w-8 h-8 fill-current" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Text area */}
+              <div>
+                <textarea
+                  value={writtenFeedback}
+                  onChange={(e) => setWrittenFeedback(e.target.value)}
+                  placeholder="Share your thoughts... What did you love? What could be better? Any specific colors you'd want to see? (Optional)"
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-purple-400 focus:ring-2 focus:ring-purple-200 transition-colors resize-none h-32 text-gray-700 placeholder-gray-400"
+                  maxLength={500}
+                />
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-xs text-gray-500">
+                    {writtenFeedback.length}/500 characters
+                  </span>
+                  <span className="text-xs text-gray-500">Optional</span>
+                </div>
+              </div>
+
+              {/* Submit button */}
+              <button
+                onClick={submitFeedback}
+                disabled={isSubmitting}
+                className={`w-full mt-6 p-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] ${
+                  isSubmitting
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 shadow-lg hover:shadow-xl'
+                }`}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Sending feedback...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    <Send className="w-5 h-5" />
+                    <span>Submit Feedback</span>
+                  </div>
+                )}
+              </button>
+
+              {/* Skip option */}
+              <button
+                onClick={() => submitFeedback()}
+                disabled={isSubmitting}
+                className="w-full mt-2 p-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                Skip and finish
+              </button>
+            </div>
+          ) : (
+            // Regular quiz slide content
+            <div className="space-y-2 sm:space-y-3">
+              {currentSlideData.options.map((option, index) => {
+                const isSelected = answers[currentSlide] === option.value;
+                return (
+                  <button 
+                    key={option.value} 
+                    onClick={() => handleAnswerSelect(currentSlide, option.value)}
+                    disabled={isAnimating}
+                    className={`w-full text-left p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 transform hover:scale-[1.01] sm:hover:scale-[1.02] border-2 group ${
+                      isSelected 
+                        ? `bg-gradient-to-r ${currentSlideData.gradient} text-white border-transparent shadow-lg scale-[1.01] sm:scale-[1.02]` 
+                        : 'bg-gray-50 hover:bg-gray-100 border-gray-200 hover:border-gray-300'
+                    } ${isAnimating ? 'pointer-events-none' : ''}`}
+                    style={{ 
+                      animationDelay: `${index * 0.1}s`,
+                      animation: isVisible ? 'slideInUp 0.6s ease-out' : 'none'
+                    }}
+                  >
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <span className="text-2xl sm:text-3xl flex-shrink-0 transform transition-transform group-hover:scale-110">
+                        {option.emoji}
                       </span>
-                      {option.description && (
-                        <span className={`text-xs sm:text-sm leading-tight ${
-                          isSelected ? 'text-white/90' : 'text-gray-500'
+                      <div className="flex-1 min-w-0">
+                        <span className={`font-semibold text-base sm:text-lg block mb-1 leading-tight ${
+                          isSelected ? 'text-white' : 'text-gray-800'
                         }`}>
-                          {option.description}
+                          {option.text}
                         </span>
+                        {option.description && (
+                          <span className={`text-xs sm:text-sm leading-tight ${
+                            isSelected ? 'text-white/90' : 'text-gray-500'
+                          }`}>
+                            {option.description}
+                          </span>
+                        )}
+                      </div>
+                      {isSelected && (
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-pulse flex-shrink-0" />
                       )}
                     </div>
-                    {isSelected && (
-                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-pulse flex-shrink-0" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="flex justify-between items-center mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-100">
