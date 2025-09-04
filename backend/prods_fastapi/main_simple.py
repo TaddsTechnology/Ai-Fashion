@@ -51,13 +51,17 @@ app.add_middleware(
 def get_monk_skin_tones():
     """Get Monk skin tones from database."""
     try:
-        # Database connection 
+        # Database connection with SSL
         DATABASE_URL = os.getenv(
             "DATABASE_URL", 
             "postgresql://fashion_jvy9_user:0d2Nn5mvyw6KMBDT21l9olpHaxrTPEzh@dpg-d1vhvpbuibrs739dkn3g-a.oregon-postgres.render.com/fashion_jvy9"
         )
         
-        engine = create_engine(DATABASE_URL)
+        # Handle SSL connection for external PostgreSQL
+        if "render.com" in DATABASE_URL:
+            engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
+        else:
+            engine = create_engine(DATABASE_URL)
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
         db = SessionLocal()
         
