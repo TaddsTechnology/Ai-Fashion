@@ -1,0 +1,1201 @@
+{
+  "mst_master_palette": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('mst_master_palette_id_seq'::regclass)"
+      },
+      {
+        "name": "mst_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "seasonal_type",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "common_undertones",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "base_palette",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "accent_palette",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "avoid_palette",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "neutrals_light",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "neutrals_dark",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "metals",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "denim_wash",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "prints_patterns",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "contrast_rules",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "pairing_rules",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "occasion_palettes",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "examples",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "notes",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "sample_data": [
+      {
+        "id": 1,
+        "mst_id": 1,
+        "seasonal_type": [
+          "Light Summer",
+          "Light Spring"
+        ],
+        "common_undertones": [
+          "cool",
+          "light",
+          "neutral"
+        ],
+        "base_palette": [
+          "#F67599",
+          "#C964CF",
+          "#71C5E8",
+          "#F57EB6",
+          "#A05EB5",
+          "#6DCDB8",
+          "#6787B7",
+          "#FAAA8D",
+          "#CDA077",
+          "#FCC89B",
+          "#57728B",
+          "#F1EB9C",
+          "#99D6EA",
+          "#D9EA9A",
+          "#D9B48F",
+          "#9BCBEB",
+          "#9BCBE8",
+          "#D3BC8D",
+          "#F5E1A4",
+          "#F8CFA9",
+          "#AD96DC",
+          "#DD9CDF",
+          "#CF92B7",
+          "#A4DBE8"
+        ],
+        "accent_palette": [
+          "#26D07C",
+          "#2DCCD3",
+          "#6CC24A",
+          "#FDAA63",
+          "#5BC2E7",
+          "#FBDB65",
+          "#FF8D6D",
+          "#3E6991"
+        ],
+        "avoid_palette": [
+          "#000000",
+          "#5C068C"
+        ],
+        "neutrals_light": [
+          "#E6E6E6",
+          "#D9D9D9",
+          "#B8C9E1"
+        ],
+        "neutrals_dark": [
+          "#484A51",
+          "#3B3B3B",
+          "#003057"
+        ],
+        "metals": [
+          "silver",
+          "white gold",
+          "platinum",
+          "rose gold"
+        ],
+        "denim_wash": [
+          "light",
+          "mid",
+          "soft indigo"
+        ],
+        "prints_patterns": "Soft, airy prints; watercolor stripes/plaids.",
+        "contrast_rules": "Low-to-medium contrast; favor cool, misty combos.",
+        "pairing_rules": "Mix cool greys with dusty roses and powder blues; avoid harsh neons.",
+        "occasion_palettes": {
+          "work": [
+            "#F67599",
+            "#C964CF",
+            "#71C5E8",
+            "#F57EB6",
+            "#A05EB5",
+            "#6DCDB8"
+          ],
+          "casual": [
+            "#26D07C",
+            "#2DCCD3",
+            "#6CC24A",
+            "#FDAA63",
+            "#5BC2E7",
+            "#FBDB65",
+            "#FF8D6D",
+            "#3E6991"
+          ],
+          "festive_wedding": [
+            "#26D07C",
+            "#2DCCD3",
+            "#6CC24A",
+            "#FDAA63",
+            "#F67599",
+            "#C964CF",
+            "#71C5E8",
+            "#F57EB6"
+          ],
+          "formal_black_tie": [
+            "#F67599",
+            "#C964CF",
+            "#71C5E8"
+          ]
+        },
+        "examples": [
+          "lavender",
+          "powder blue",
+          "dusty rose",
+          "peach",
+          "mint",
+          "coral"
+        ],
+        "notes": "Auto-merged from your seasonal files for MST-1. Adjust season mapping if desired.",
+        "created_at": "2025-09-03 08:53:46.875641",
+        "updated_at": "2025-09-03 08:53:46.875641"
+      },
+      {
+        "id": 2,
+        "mst_id": 2,
+        "seasonal_type": [
+          "Light Spring",
+          "Light Summer"
+        ],
+        "common_undertones": [
+          "warm",
+          "light",
+          "neutral"
+        ],
+        "base_palette": [
+          "#F67599",
+          "#C964CF",
+          "#71C5E8",
+          "#F57EB6",
+          "#A05EB5",
+          "#6DCDB8",
+          "#6787B7",
+          "#FAAA8D",
+          "#CDA077",
+          "#FCC89B",
+          "#57728B",
+          "#F1EB9C",
+          "#99D6EA",
+          "#D9EA9A",
+          "#D9B48F",
+          "#9BCBEB",
+          "#9BCBE8",
+          "#D3BC8D",
+          "#F5E1A4",
+          "#F8CFA9",
+          "#AD96DC",
+          "#DD9CDF",
+          "#CF92B7",
+          "#A4DBE8"
+        ],
+        "accent_palette": [
+          "#26D07C",
+          "#2DCCD3",
+          "#6CC24A",
+          "#FDAA63",
+          "#5BC2E7",
+          "#FBDB65",
+          "#FF8D6D",
+          "#3E6991"
+        ],
+        "avoid_palette": [
+          "#000000",
+          "#5C068C"
+        ],
+        "neutrals_light": [
+          "#FFF9D7",
+          "#F5E1A4",
+          "#F8CFA9",
+          "#FEFEFE"
+        ],
+        "neutrals_dark": [
+          "#5C462B",
+          "#453536",
+          "#7C4D3A"
+        ],
+        "metals": [
+          "gold",
+          "rose gold",
+          "light bronze",
+          "white gold"
+        ],
+        "denim_wash": [
+          "light",
+          "mid"
+        ],
+        "prints_patterns": "Crisp small-to-medium prints; bright, high-clarity motifs.",
+        "contrast_rules": "Medium contrast; avoid stark black near face.",
+        "pairing_rules": "Pair warm ivories/peaches with bright yellows/corals; anchor with tan/camel.",
+        "occasion_palettes": {
+          "work": [
+            "#F67599",
+            "#C964CF",
+            "#71C5E8",
+            "#F57EB6",
+            "#A05EB5",
+            "#6DCDB8"
+          ],
+          "casual": [
+            "#26D07C",
+            "#2DCCD3",
+            "#6CC24A",
+            "#FDAA63",
+            "#5BC2E7",
+            "#FBDB65",
+            "#FF8D6D",
+            "#3E6991"
+          ],
+          "festive_wedding": [
+            "#26D07C",
+            "#2DCCD3",
+            "#6CC24A",
+            "#FDAA63",
+            "#F67599",
+            "#C964CF",
+            "#71C5E8",
+            "#F57EB6"
+          ],
+          "formal_black_tie": [
+            "#F67599",
+            "#C964CF",
+            "#71C5E8"
+          ]
+        },
+        "examples": [
+          "peach",
+          "mint",
+          "coral",
+          "lavender",
+          "powder blue",
+          "dusty rose"
+        ],
+        "notes": "Auto-merged from your seasonal files for MST-2. Adjust season mapping if desired.",
+        "created_at": "2025-09-03 08:53:46.875641",
+        "updated_at": "2025-09-03 08:53:46.875641"
+      },
+      {
+        "id": 3,
+        "mst_id": 3,
+        "seasonal_type": [
+          "Clear Spring",
+          "Light Spring"
+        ],
+        "common_undertones": [
+          "warm",
+          "clear",
+          "light"
+        ],
+        "base_palette": [
+          "#00A499",
+          "#007FA3",
+          "#00558C",
+          "#FFB81C",
+          "#DA291C",
+          "#A6631B",
+          "#2DCCD3",
+          "#D539B5",
+          "#963CBD",
+          "#84329B",
+          "#6CC24A",
+          "#FDAA63",
+          "#FBDB65",
+          "#FF8D6D",
+          "#FDD26E",
+          "#5C462B",
+          "#6DCDB8",
+          "#77C5D5",
+          "#FAAA8D",
+          "#CDA077",
+          "#A77BCA",
+          "#FCC89B",
+          "#F1EB9C",
+          "#D9EA9A"
+        ],
+        "accent_palette": [
+          "#FFCD00",
+          "#FF8200",
+          "#FCE300",
+          "#E40046",
+          "#D0DF00",
+          "#BE5400",
+          "#0087AE",
+          "#008EAA"
+        ],
+        "avoid_palette": [
+          "#000000",
+          "#5C462B",
+          "#5C068C"
+        ],
+        "neutrals_light": [
+          "#FFF9D7",
+          "#F5E1A4",
+          "#F8CFA9",
+          "#FEFEFE"
+        ],
+        "neutrals_dark": [
+          "#453536",
+          "#7C4D3A"
+        ],
+        "metals": [
+          "gold",
+          "rose gold",
+          "light bronze",
+          "white gold"
+        ],
+        "denim_wash": [
+          "light",
+          "mid"
+        ],
+        "prints_patterns": "Crisp small-to-medium prints; bright, high-clarity motifs.",
+        "contrast_rules": "Medium contrast; avoid stark black near face.",
+        "pairing_rules": "Pair warm ivories/peaches with bright yellows/corals; anchor with tan/camel.",
+        "occasion_palettes": {
+          "work": [
+            "#00A499",
+            "#007FA3",
+            "#00558C",
+            "#FFB81C",
+            "#DA291C",
+            "#A6631B"
+          ],
+          "casual": [
+            "#FFCD00",
+            "#FF8200",
+            "#FCE300",
+            "#E40046",
+            "#D0DF00",
+            "#BE5400",
+            "#0087AE",
+            "#008EAA"
+          ],
+          "festive_wedding": [
+            "#FFCD00",
+            "#FF8200",
+            "#FCE300",
+            "#E40046",
+            "#00A499",
+            "#007FA3",
+            "#00558C",
+            "#FFB81C"
+          ],
+          "formal_black_tie": [
+            "#00A499",
+            "#007FA3",
+            "#00558C"
+          ]
+        },
+        "examples": [
+          "turquoise",
+          "clear yellow",
+          "bright coral",
+          "peach",
+          "mint",
+          "coral"
+        ],
+        "notes": "Auto-merged from your seasonal files for MST-3. Adjust season mapping if desired.",
+        "created_at": "2025-09-03 08:53:46.875641",
+        "updated_at": "2025-09-03 08:53:46.875641"
+      },
+      {
+        "id": 4,
+        "mst_id": 4,
+        "seasonal_type": [
+          "Warm Spring",
+          "Cool Summer"
+        ],
+        "common_undertones": [
+          "warm",
+          "neutral"
+        ],
+        "base_palette": [
+          "#00A499",
+          "#00A376",
+          "#009F4D",
+          "#007681",
+          "#006F62",
+          "#003057",
+          "#D4C304",
+          "#BF0D3E",
+          "#FFB81C",
+          "#FF8F1C",
+          "#AC145A",
+          "#E31C79",
+          "#DA291C",
+          "#F0B323",
+          "#A6631B",
+          "#2DCCD3",
+          "#EC5037",
+          "#963CBD",
+          "#A9C23F",
+          "#93328E",
+          "#6CC24A",
+          "#FDAA63",
+          "#EF60A3",
+          "#FDD26E"
+        ],
+        "accent_palette": [
+          "#FFCD00",
+          "#FF8200",
+          "#FCE300",
+          "#00A9E0",
+          "#C4D600",
+          "#0077C8",
+          "#00B0B9",
+          "#A8AD00"
+        ],
+        "avoid_palette": [
+          "#000000",
+          "#003DA5",
+          "#FF8200"
+        ],
+        "neutrals_light": [
+          "#FFF9D7",
+          "#F5E1A4",
+          "#F8CFA9",
+          "#FEFEFE"
+        ],
+        "neutrals_dark": [
+          "#5C462B",
+          "#453536",
+          "#7C4D3A"
+        ],
+        "metals": [
+          "gold",
+          "rose gold",
+          "light bronze",
+          "white gold"
+        ],
+        "denim_wash": [
+          "light",
+          "mid"
+        ],
+        "prints_patterns": "Crisp small-to-medium prints; bright, high-clarity motifs.",
+        "contrast_rules": "Medium contrast; avoid stark black near face.",
+        "pairing_rules": "Pair warm ivories/peaches with bright yellows/corals; anchor with tan/camel.",
+        "occasion_palettes": {
+          "work": [
+            "#00A499",
+            "#00A376",
+            "#009F4D",
+            "#007681",
+            "#006F62",
+            "#003057"
+          ],
+          "casual": [
+            "#FFCD00",
+            "#FF8200",
+            "#FCE300",
+            "#00A9E0",
+            "#C4D600",
+            "#0077C8",
+            "#00B0B9",
+            "#A8AD00"
+          ],
+          "festive_wedding": [
+            "#FFCD00",
+            "#FF8200",
+            "#FCE300",
+            "#00A9E0",
+            "#00A499",
+            "#00A376",
+            "#009F4D",
+            "#007681"
+          ],
+          "formal_black_tie": [
+            "#00A499",
+            "#00A376",
+            "#009F4D"
+          ]
+        },
+        "examples": [
+          "warm beige",
+          "golden yellow",
+          "apricot",
+          "clear blues",
+          "soft fuchsias",
+          "cool pinks"
+        ],
+        "notes": "Auto-merged from your seasonal files for MST-4. Adjust season mapping if desired.",
+        "created_at": "2025-09-03 08:53:46.875641",
+        "updated_at": "2025-09-03 08:53:46.875641"
+      },
+      {
+        "id": 5,
+        "mst_id": 5,
+        "seasonal_type": [
+          "Soft Summer",
+          "Soft Autumn"
+        ],
+        "common_undertones": [
+          "neutral",
+          "soft"
+        ],
+        "base_palette": [
+          "#24563F",
+          "#B58150",
+          "#7C4D3A",
+          "#71C5E8",
+          "#C26E60",
+          "#A05EB5",
+          "#6BCABA",
+          "#6DCDB8",
+          "#A09958",
+          "#5C82A5",
+          "#A15A95",
+          "#487A7B",
+          "#956C58",
+          "#FCD299",
+          "#57728B",
+          "#94795D",
+          "#507F70",
+          "#FFA3B5",
+          "#779FB5",
+          "#D9B48F",
+          "#9BCBEB",
+          "#CDA788",
+          "#F5E1A4",
+          "#D592AA"
+        ],
+        "accent_palette": [
+          "#009CA6",
+          "#009F4D",
+          "#1A83D7",
+          "#C05131",
+          "#F65275",
+          "#DB864E",
+          "#946037",
+          "#FDAA63"
+        ],
+        "avoid_palette": [
+          "#000000",
+          "#FF8200",
+          "#FF1493"
+        ],
+        "neutrals_light": [
+          "#E6E6E6",
+          "#D9D9D9",
+          "#B8C9E1"
+        ],
+        "neutrals_dark": [
+          "#484A51",
+          "#3B3B3B",
+          "#003057"
+        ],
+        "metals": [
+          "silver",
+          "white gold",
+          "platinum",
+          "rose gold"
+        ],
+        "denim_wash": [
+          "light",
+          "mid",
+          "soft indigo"
+        ],
+        "prints_patterns": "Soft, airy prints; watercolor stripes/plaids.",
+        "contrast_rules": "Low-to-medium contrast; favor cool, misty combos.",
+        "pairing_rules": "Mix cool greys with dusty roses and powder blues; avoid harsh neons.",
+        "occasion_palettes": {
+          "work": [
+            "#24563F",
+            "#B58150",
+            "#7C4D3A",
+            "#71C5E8",
+            "#C26E60",
+            "#A05EB5"
+          ],
+          "casual": [
+            "#009CA6",
+            "#009F4D",
+            "#1A83D7",
+            "#C05131",
+            "#F65275",
+            "#DB864E",
+            "#946037",
+            "#FDAA63"
+          ],
+          "festive_wedding": [
+            "#009CA6",
+            "#009F4D",
+            "#1A83D7",
+            "#C05131",
+            "#24563F",
+            "#B58150",
+            "#7C4D3A",
+            "#71C5E8"
+          ],
+          "formal_black_tie": [
+            "#24563F",
+            "#B58150",
+            "#7C4D3A"
+          ]
+        },
+        "examples": [
+          "slate blue",
+          "soft plum",
+          "moss green",
+          "taupe",
+          "sage",
+          "terracotta"
+        ],
+        "notes": "Auto-merged from your seasonal files for MST-5. Adjust season mapping if desired.",
+        "created_at": "2025-09-03 08:53:46.875641",
+        "updated_at": "2025-09-03 08:53:46.875641"
+      }
+    ],
+    "row_count": 10
+  },
+  "color_palettes": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('color_palettes_id_seq'::regclass)"
+      },
+      {
+        "name": "skin_tone",
+        "type": "VARCHAR",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "flattering_colors",
+        "type": "JSON",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "colors_to_avoid",
+        "type": "JSON",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "sample_data": [
+      {
+        "id": 1,
+        "skin_tone": "Clear Winter",
+        "flattering_colors": [
+          {
+            "name": "Hot Pink",
+            "hex": "#E3006D"
+          },
+          {
+            "name": "Cobalt Blue",
+            "hex": "#0057B8"
+          },
+          {
+            "name": "True Red",
+            "hex": "#CE0037"
+          },
+          {
+            "name": "Violet",
+            "hex": "#963CBD"
+          },
+          {
+            "name": "Emerald",
+            "hex": "#009775"
+          },
+          {
+            "name": "Ice Pink",
+            "hex": "#F395C7"
+          }
+        ],
+        "colors_to_avoid": [
+          {
+            "name": "Muted Olive",
+            "hex": "#A3AA83"
+          },
+          {
+            "name": "Dusty Rose",
+            "hex": "#C4A4A7"
+          },
+          {
+            "name": "Terracotta",
+            "hex": "#A6631B"
+          },
+          {
+            "name": "Mustard",
+            "hex": "#B89D18"
+          }
+        ],
+        "description": "Clear Winter complexions look best in pure, vivid colors with blue undertones. Avoid muted, earthy tones that can make your complexion appear dull."
+      },
+      {
+        "id": 2,
+        "skin_tone": "Cool Winter",
+        "flattering_colors": [
+          {
+            "name": "Emerald",
+            "hex": "#009775"
+          },
+          {
+            "name": "Cobalt Blue",
+            "hex": "#0082BA"
+          },
+          {
+            "name": "Cherry",
+            "hex": "#CE0037"
+          },
+          {
+            "name": "Sapphire",
+            "hex": "#0057B8"
+          },
+          {
+            "name": "Fuchsia",
+            "hex": "#C724B1"
+          },
+          {
+            "name": "Cool Ruby",
+            "hex": "#AA0061"
+          }
+        ],
+        "colors_to_avoid": [
+          {
+            "name": "Orange",
+            "hex": "#FF8200"
+          },
+          {
+            "name": "Warm Gold",
+            "hex": "#F0B323"
+          },
+          {
+            "name": "Peach",
+            "hex": "#FDAA63"
+          },
+          {
+            "name": "Olive",
+            "hex": "#A09958"
+          }
+        ],
+        "description": "Cool Winter types look best in cool, clear colors with blue undertones. Avoid warm, earthy tones that clash with your cool complexion."
+      },
+      {
+        "id": 3,
+        "skin_tone": "Deep Winter",
+        "flattering_colors": [
+          {
+            "name": "Deep Claret",
+            "hex": "#890C58"
+          },
+          {
+            "name": "Forest Green",
+            "hex": "#00594C"
+          },
+          {
+            "name": "True Red",
+            "hex": "#CE0037"
+          },
+          {
+            "name": "Navy",
+            "hex": "#002D72"
+          },
+          {
+            "name": "Amethyst",
+            "hex": "#84329B"
+          },
+          {
+            "name": "White",
+            "hex": "#FEFEFE"
+          }
+        ],
+        "colors_to_avoid": [
+          {
+            "name": "Light Pastels",
+            "hex": "#F1EB9C"
+          },
+          {
+            "name": "Peach",
+            "hex": "#FCC89B"
+          },
+          {
+            "name": "Beige",
+            "hex": "#D3BC8D"
+          },
+          {
+            "name": "Camel",
+            "hex": "#CDA077"
+          }
+        ],
+        "description": "Deep Winter complexions look best in deep, rich colors with cool undertones. Avoid light pastels and warm earth tones that can wash you out."
+      },
+      {
+        "id": 4,
+        "skin_tone": "Clear Spring",
+        "flattering_colors": [
+          {
+            "name": "Turquoise",
+            "hex": "#008EAA"
+          },
+          {
+            "name": "Clear Yellow",
+            "hex": "#FFCD00"
+          },
+          {
+            "name": "Bright Coral",
+            "hex": "#FF8D6D"
+          },
+          {
+            "name": "Violet",
+            "hex": "#963CBD"
+          },
+          {
+            "name": "Bright Green",
+            "hex": "#00A499"
+          },
+          {
+            "name": "Watermelon",
+            "hex": "#E40046"
+          }
+        ],
+        "colors_to_avoid": [
+          {
+            "name": "Dusty Rose",
+            "hex": "#C4A4A7"
+          },
+          {
+            "name": "Mauve",
+            "hex": "#86647A"
+          },
+          {
+            "name": "Taupe",
+            "hex": "#A39382"
+          },
+          {
+            "name": "Muted Teal",
+            "hex": "#507F70"
+          }
+        ],
+        "description": "Clear Spring complexions look best in clear, bright colors with warm undertones. Avoid muted, dusty colors that can make your complexion appear dull."
+      },
+      {
+        "id": 5,
+        "skin_tone": "Warm Spring",
+        "flattering_colors": [
+          {
+            "name": "Warm Beige",
+            "hex": "#FDAA63"
+          },
+          {
+            "name": "Golden Yellow",
+            "hex": "#FFB81C"
+          },
+          {
+            "name": "Apricot",
+            "hex": "#FF8F1C"
+          },
+          {
+            "name": "Coral",
+            "hex": "#FFA38B"
+          },
+          {
+            "name": "Warm Green",
+            "hex": "#74AA50"
+          },
+          {
+            "name": "Turquoise",
+            "hex": "#2DCCD3"
+          }
+        ],
+        "colors_to_avoid": [
+          {
+            "name": "Black",
+            "hex": "#131413"
+          },
+          {
+            "name": "Navy",
+            "hex": "#003057"
+          },
+          {
+            "name": "Cool Pink",
+            "hex": "#F395C7"
+          },
+          {
+            "name": "Burgundy",
+            "hex": "#890C58"
+          }
+        ],
+        "description": "Warm Spring types look best in warm, clear colors with golden undertones. Avoid cool, dark colors that can clash with your warm coloring."
+      }
+    ],
+    "row_count": 12
+  },
+  "skin_tone_mappings": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('skin_tone_mappings_id_seq'::regclass)"
+      },
+      {
+        "name": "monk_tone",
+        "type": "VARCHAR",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "seasonal_type",
+        "type": "VARCHAR",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "hex_code",
+        "type": "VARCHAR",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "sample_data": [
+      {
+        "id": 1,
+        "monk_tone": "Monk01",
+        "seasonal_type": "Light Spring",
+        "hex_code": "#f6ede4"
+      },
+      {
+        "id": 2,
+        "monk_tone": "Monk02",
+        "seasonal_type": "Light Spring",
+        "hex_code": "#f3e7db"
+      },
+      {
+        "id": 3,
+        "monk_tone": "Monk03",
+        "seasonal_type": "Clear Spring",
+        "hex_code": "#f7ead0"
+      },
+      {
+        "id": 4,
+        "monk_tone": "Monk04",
+        "seasonal_type": "Warm Spring",
+        "hex_code": "#eadaba"
+      },
+      {
+        "id": 5,
+        "monk_tone": "Monk05",
+        "seasonal_type": "Soft Autumn",
+        "hex_code": "#d7bd96"
+      }
+    ],
+    "row_count": 10
+  },
+  "color_hex_data": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('color_hex_data_id_seq'::regclass)"
+      },
+      {
+        "name": "seasonal_type",
+        "type": "VARCHAR",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "hex_codes",
+        "type": "JSON",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "data_source",
+        "type": "VARCHAR",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "sample_data": null,
+    "row_count": 0
+  },
+  "color_suggestions": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('color_suggestions_id_seq'::regclass)"
+      },
+      {
+        "name": "skin_tone",
+        "type": "VARCHAR",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "suitable_colors_text",
+        "type": "TEXT",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "data_source",
+        "type": "VARCHAR",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "sample_data": null,
+    "row_count": 0
+  },
+  "comprehensive_colors": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('comprehensive_colors_id_seq'::regclass)"
+      },
+      {
+        "name": "hex_code",
+        "type": "VARCHAR",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "color_name",
+        "type": "VARCHAR",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "monk_tones",
+        "type": "JSON",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "seasonal_types",
+        "type": "JSON",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "color_family",
+        "type": "VARCHAR",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "brightness_level",
+        "type": "VARCHAR",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "undertone",
+        "type": "VARCHAR",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_source",
+        "type": "VARCHAR",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "sample_data": null,
+    "row_count": 0
+  }
+}

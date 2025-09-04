@@ -51,14 +51,14 @@ app.add_middleware(
 def get_monk_skin_tones():
     """Get Monk skin tones from database."""
     try:
-        # Database connection with SSL
+        # Database connection with SSL - Updated to use Neon database
         DATABASE_URL = os.getenv(
             "DATABASE_URL", 
-            "postgresql://fashion_jvy9_user:0d2Nn5mvyw6KMBDT21l9olpHaxrTPEzh@dpg-d1vhvpbuibrs739dkn3g-a.oregon-postgres.render.com/fashion_jvy9"
+            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
         )
         
-        # Handle SSL connection for external PostgreSQL
-        if "render.com" in DATABASE_URL:
+        # Handle SSL connection - Neon requires SSL
+        if "neon.tech" in DATABASE_URL or "render.com" in DATABASE_URL:
             engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
         else:
             engine = create_engine(DATABASE_URL)
@@ -276,7 +276,7 @@ def get_color_recommendations(
         # Database connection
         DATABASE_URL = os.getenv(
             "DATABASE_URL", 
-            "postgresql://fashion_jvy9_user:0d2Nn5mvyw6KMBDT21l9olpHaxrTPEzh@dpg-d1vhvpbuibrs739dkn3g-a.oregon-postgres.render.com/fashion_jvy9"
+            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
         )
         
         engine = create_engine(DATABASE_URL)
@@ -729,7 +729,7 @@ def analyze_skin_tone_enhanced(image_array: np.ndarray) -> Dict:
         try:
             DATABASE_URL = os.getenv(
                 "DATABASE_URL", 
-                "postgresql://fashion_jvy9_user:0d2Nn5mvyw6KMBDT21l9olpHaxrTPEzh@dpg-d1vhvpbuibrs739dkn3g-a.oregon-postgres.render.com/fashion_jvy9"
+                "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
             )
             engine = create_engine(DATABASE_URL)
             SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -889,7 +889,7 @@ def get_all_colors(
         # Database connection
         DATABASE_URL = os.getenv(
             "DATABASE_URL", 
-            "postgresql://fashion_jvy9_user:0d2Nn5mvyw6KMBDT21l9olpHaxrTPEzh@dpg-d1vhvpbuibrs739dkn3g-a.oregon-postgres.render.com/fashion_jvy9"
+            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
         )
         
         engine = create_engine(DATABASE_URL)
@@ -988,7 +988,7 @@ def get_color_palettes_db(
         # Database connection
         DATABASE_URL = os.getenv(
             "DATABASE_URL", 
-            "postgresql://fashion_jvy9_user:0d2Nn5mvyw6KMBDT21l9olpHaxrTPEzh@dpg-d1vhvpbuibrs739dkn3g-a.oregon-postgres.render.com/fashion_jvy9"
+            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
         )
         
         engine = create_engine(DATABASE_URL)
