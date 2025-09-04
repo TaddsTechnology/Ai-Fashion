@@ -87,8 +87,8 @@ limiter = Limiter(key_func=get_remote_address)
 # Create FastAPI app
 app = FastAPI(
     title="AI Fashion Backend",
-    version="1.0.1",  # Updated version to trigger redeploy
-    description="AI Fashion recommendation system with skin tone analysis"
+    version="1.0.3",  # Ultra-aggressive fair skin detection
+    description="AI Fashion recommendation system with enhanced skin tone analysis"
 )
 
 # Add rate limiting middleware

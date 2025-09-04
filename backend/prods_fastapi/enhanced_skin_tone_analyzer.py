@@ -354,25 +354,33 @@ class EnhancedSkinToneAnalyzer:
             else:
                 ita = 90 if L > 50 else -90
             
-            # Enhanced logic for fair skin detection
+            # ULTRA-AGGRESSIVE fair skin detection - prioritize brightness over all other factors
             # If brightness is very high, strongly bias toward lighter tones
-            if avg_brightness > 220:  # Very fair skin
-                if L > 85:  # Very bright in LAB space too
-                    return "Monk 1", 0.95
-                elif L > 80:
-                    return "Monk 2", 0.9
+            if avg_brightness > 210:  # Very fair skin (lowered threshold)
+                if L > 82:  # Very bright in LAB space too (lowered threshold)
+                    return "Monk 1", 0.98
+                elif L > 78:
+                    return "Monk 2", 0.95
                 else:
-                    return "Monk 1", 0.85  # Default to lightest for very bright pixels
+                    return "Monk 1", 0.9  # Default to lightest for very bright pixels
             
-            elif avg_brightness > 200:  # Fair skin
-                if ita > 45 or L > 80:  # Adjusted threshold for fair skin
-                    return "Monk 1", 0.9
-                elif ita > 30 or L > 75:
-                    return "Monk 2", 0.85
-                elif ita > 15 or L > 70:
-                    return "Monk 3", 0.8
+            elif avg_brightness > 190:  # Fair skin (lowered threshold)
+                if ita > 40 or L > 76:  # More aggressive threshold for fair skin
+                    return "Monk 1", 0.95
+                elif ita > 25 or L > 72:
+                    return "Monk 2", 0.9
+                elif ita > 10 or L > 68:
+                    return "Monk 3", 0.85
                 else:
-                    return "Monk 2", 0.75  # Default to fair for high brightness
+                    return "Monk 2", 0.8  # Default to fair for high brightness
+            
+            elif avg_brightness > 170:  # Light-medium skin
+                if ita > 35 or L > 74:
+                    return "Monk 1", 0.9
+                elif ita > 20 or L > 70:
+                    return "Monk 2", 0.85
+                else:
+                    return "Monk 3", 0.8
             
             # Adjusted ITA thresholds for better fair skin detection
             elif ita > 50:  # Very Light (more generous threshold)
