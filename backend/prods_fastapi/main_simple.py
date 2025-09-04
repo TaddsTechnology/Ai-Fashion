@@ -1128,32 +1128,45 @@ def get_color_palettes_db(
             except Exception as e:
                 logger.info(f"Could not fetch from colors table: {e}")
             
-            # If we don't have enough colors, get some universal ones
+            # If we don't have enough colors, add seasonal type specific colors
             if len(all_colors) < 10:
-                cursor.execute("""
-                    SELECT DISTINCT hex_code, color_name, color_family, brightness_level
-                    FROM comprehensive_colors 
-                    WHERE color_family IN ('blue', 'green', 'red', 'purple', 'neutral', 'brown', 'pink')
-                    AND hex_code IS NOT NULL
-                    AND color_name IS NOT NULL
-                    ORDER BY color_name
-                    LIMIT 20
-                """)
-                
-                universal_results = cursor.fetchall()
-                for row in universal_results:
+                seasonal_colors = get_seasonal_type_colors(seasonal_type)
+                for color in seasonal_colors:
                     # Avoid duplicates
-                    if not any(existing["hex"].lower() == row[0].lower() for existing in all_colors):
-                        all_colors.append({
-                            "name": row[1],
-                            "hex": row[0],
-                            "source": "universal_colors",
-                            "color_family": row[2] or "unknown",
-                            "brightness_level": row[3] or "medium"
-                        })
+                    if not any(existing["hex"].lower() == color["hex"].lower() for existing in all_colors):
+                        all_colors.append(color)
                 
-                if universal_results:
-                    logger.info(f"Added {len(universal_results)} universal colors")
+                logger.info(f"Added {len(seasonal_colors)} seasonal type specific colors")
+            
+            # If still not enough, get some universal ones from database
+            if len(all_colors) < 10:
+                try:
+                    cursor.execute("""
+                        SELECT DISTINCT hex_code, color_name, color_family, brightness_level
+                        FROM comprehensive_colors 
+                        WHERE color_family IN ('blue', 'green', 'red', 'purple', 'neutral', 'brown', 'pink')
+                        AND hex_code IS NOT NULL
+                        AND color_name IS NOT NULL
+                        ORDER BY color_name
+                        LIMIT 20
+                    """)
+                    
+                    universal_results = cursor.fetchall()
+                    for row in universal_results:
+                        # Avoid duplicates
+                        if not any(existing["hex"].lower() == row[0].lower() for existing in all_colors):
+                            all_colors.append({
+                                "name": row[1],
+                                "hex": row[0],
+                                "source": "universal_colors",
+                                "color_family": row[2] or "unknown",
+                                "brightness_level": row[3] or "medium"
+                            })
+                    
+                    if universal_results:
+                        logger.info(f"Added {len(universal_results)} universal colors")
+                except Exception as db_error:
+                    logger.warning(f"Database query failed: {db_error}")
             
             # Format response to match frontend expectations
             final_colors = all_colors[:limit] if len(all_colors) > limit else all_colors
@@ -1325,6 +1338,141 @@ def get_contrast_recommendations(mst_id: int, cursor) -> str:
         return "medium"
     else:
         return "high"
+
+def get_seasonal_type_colors(seasonal_type: str) -> List[Dict]:
+    """Get colors specifically tailored to each seasonal type."""
+    seasonal_palettes = {
+        "Warm Autumn": [
+            {"name": "Rust", "hex": "#B7410E", "source": "seasonal_warm_autumn"},
+            {"name": "Burnt Orange", "hex": "#CC5500", "source": "seasonal_warm_autumn"},
+            {"name": "Golden Yellow", "hex": "#FFD700", "source": "seasonal_warm_autumn"},
+            {"name": "Olive Green", "hex": "#808000", "source": "seasonal_warm_autumn"},
+            {"name": "Deep Terracotta", "hex": "#E2725B", "source": "seasonal_warm_autumn"},
+            {"name": "Warm Brown", "hex": "#8B4513", "source": "seasonal_warm_autumn"},
+            {"name": "Mustard Yellow", "hex": "#FFDB58", "source": "seasonal_warm_autumn"},
+            {"name": "Pumpkin Orange", "hex": "#FF7518", "source": "seasonal_warm_autumn"},
+            {"name": "Camel Brown", "hex": "#C19A6B", "source": "seasonal_warm_autumn"},
+            {"name": "Deep Gold", "hex": "#B8860B", "source": "seasonal_warm_autumn"},
+            {"name": "Brick Red", "hex": "#CB4154", "source": "seasonal_warm_autumn"},
+            {"name": "Forest Green", "hex": "#228B22", "source": "seasonal_warm_autumn"}
+        ],
+        "Soft Autumn": [
+            {"name": "Muted Coral", "hex": "#F88379", "source": "seasonal_soft_autumn"},
+            {"name": "Sage Green", "hex": "#9CAF88", "source": "seasonal_soft_autumn"},
+            {"name": "Dusty Rose", "hex": "#DCAE96", "source": "seasonal_soft_autumn"},
+            {"name": "Taupe", "hex": "#483C32", "source": "seasonal_soft_autumn"},
+            {"name": "Soft Teal", "hex": "#5F8A8B", "source": "seasonal_soft_autumn"},
+            {"name": "Muted Gold", "hex": "#D4AF37", "source": "seasonal_soft_autumn"},
+            {"name": "Pewter Gray", "hex": "#899499", "source": "seasonal_soft_autumn"},
+            {"name": "Soft Burgundy", "hex": "#800020", "source": "seasonal_soft_autumn"},
+            {"name": "Mushroom Beige", "hex": "#C7B299", "source": "seasonal_soft_autumn"},
+            {"name": "Muted Olive", "hex": "#6B8E23", "source": "seasonal_soft_autumn"}
+        ],
+        "Deep Autumn": [
+            {"name": "Deep Burgundy", "hex": "#722F37", "source": "seasonal_deep_autumn"},
+            {"name": "Rich Chocolate", "hex": "#7B3F00", "source": "seasonal_deep_autumn"},
+            {"name": "Hunter Green", "hex": "#355E3B", "source": "seasonal_deep_autumn"},
+            {"name": "Burnt Sienna", "hex": "#E97451", "source": "seasonal_deep_autumn"},
+            {"name": "Deep Rust", "hex": "#B7410E", "source": "seasonal_deep_autumn"},
+            {"name": "Rich Gold", "hex": "#B8860B", "source": "seasonal_deep_autumn"},
+            {"name": "Deep Forest", "hex": "#013220", "source": "seasonal_deep_autumn"},
+            {"name": "Mahogany", "hex": "#C04000", "source": "seasonal_deep_autumn"},
+            {"name": "Dark Olive", "hex": "#556B2F", "source": "seasonal_deep_autumn"},
+            {"name": "Espresso Brown", "hex": "#362D1C", "source": "seasonal_deep_autumn"}
+        ],
+        "Clear Spring": [
+            {"name": "Bright Coral", "hex": "#FF7F50", "source": "seasonal_clear_spring"},
+            {"name": "Turquoise", "hex": "#40E0D0", "source": "seasonal_clear_spring"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_clear_spring"},
+            {"name": "Bright Yellow", "hex": "#FFFF00", "source": "seasonal_clear_spring"},
+            {"name": "Hot Pink", "hex": "#FF69B4", "source": "seasonal_clear_spring"},
+            {"name": "Royal Blue", "hex": "#4169E1", "source": "seasonal_clear_spring"},
+            {"name": "Lime Green", "hex": "#32CD32", "source": "seasonal_clear_spring"},
+            {"name": "Bright Orange", "hex": "#FF8C00", "source": "seasonal_clear_spring"},
+            {"name": "Magenta", "hex": "#FF00FF", "source": "seasonal_clear_spring"},
+            {"name": "Electric Blue", "hex": "#00BFFF", "source": "seasonal_clear_spring"}
+        ],
+        "Warm Spring": [
+            {"name": "Peach", "hex": "#FFCBA4", "source": "seasonal_warm_spring"},
+            {"name": "Golden Green", "hex": "#B8C25D", "source": "seasonal_warm_spring"},
+            {"name": "Warm Coral", "hex": "#FF6B6B", "source": "seasonal_warm_spring"},
+            {"name": "Butter Yellow", "hex": "#FFFD74", "source": "seasonal_warm_spring"},
+            {"name": "Light Orange", "hex": "#FFB347", "source": "seasonal_warm_spring"},
+            {"name": "Aqua", "hex": "#00FFFF", "source": "seasonal_warm_spring"},
+            {"name": "Warm Pink", "hex": "#FF91A4", "source": "seasonal_warm_spring"},
+            {"name": "Caramel", "hex": "#C68E17", "source": "seasonal_warm_spring"},
+            {"name": "Ivory", "hex": "#FFFFF0", "source": "seasonal_warm_spring"},
+            {"name": "Light Teal", "hex": "#77DD77", "source": "seasonal_warm_spring"}
+        ],
+        "Light Spring": [
+            {"name": "Soft Pink", "hex": "#FFB6C1", "source": "seasonal_light_spring"},
+            {"name": "Light Yellow", "hex": "#FFFFE0", "source": "seasonal_light_spring"},
+            {"name": "Mint Green", "hex": "#98FF98", "source": "seasonal_light_spring"},
+            {"name": "Baby Blue", "hex": "#89CFF0", "source": "seasonal_light_spring"},
+            {"name": "Lavender", "hex": "#E6E6FA", "source": "seasonal_light_spring"},
+            {"name": "Light Peach", "hex": "#FFCBA4", "source": "seasonal_light_spring"},
+            {"name": "Soft Coral", "hex": "#F08080", "source": "seasonal_light_spring"},
+            {"name": "Cream", "hex": "#FFFDD0", "source": "seasonal_light_spring"},
+            {"name": "Light Aqua", "hex": "#7FFFD4", "source": "seasonal_light_spring"},
+            {"name": "Soft Green", "hex": "#90EE90", "source": "seasonal_light_spring"}
+        ],
+        "Cool Winter": [
+            {"name": "Icy Blue", "hex": "#B0E0E6", "source": "seasonal_cool_winter"},
+            {"name": "Deep Navy", "hex": "#000080", "source": "seasonal_cool_winter"},
+            {"name": "Pure White", "hex": "#FFFFFF", "source": "seasonal_cool_winter"},
+            {"name": "Charcoal Gray", "hex": "#36454F", "source": "seasonal_cool_winter"},
+            {"name": "Burgundy Wine", "hex": "#722F37", "source": "seasonal_cool_winter"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_cool_winter"},
+            {"name": "Royal Purple", "hex": "#663399", "source": "seasonal_cool_winter"},
+            {"name": "Cool Pink", "hex": "#FF1493", "source": "seasonal_cool_winter"},
+            {"name": "Silver Gray", "hex": "#C0C0C0", "source": "seasonal_cool_winter"},
+            {"name": "True Red", "hex": "#FF0000", "source": "seasonal_cool_winter"}
+        ],
+        "Deep Winter": [
+            {"name": "True Black", "hex": "#000000", "source": "seasonal_deep_winter"},
+            {"name": "Pure White", "hex": "#FFFFFF", "source": "seasonal_deep_winter"},
+            {"name": "Deep Red", "hex": "#8B0000", "source": "seasonal_deep_winter"},
+            {"name": "Royal Blue", "hex": "#4169E1", "source": "seasonal_deep_winter"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_deep_winter"},
+            {"name": "Deep Purple", "hex": "#663399", "source": "seasonal_deep_winter"},
+            {"name": "Hot Pink", "hex": "#FF69B4", "source": "seasonal_deep_winter"},
+            {"name": "Bright Yellow", "hex": "#FFFF00", "source": "seasonal_deep_winter"},
+            {"name": "True Navy", "hex": "#000080", "source": "seasonal_deep_winter"},
+            {"name": "Magenta", "hex": "#FF00FF", "source": "seasonal_deep_winter"}
+        ],
+        "Clear Winter": [
+            {"name": "Bright White", "hex": "#FFFFFF", "source": "seasonal_clear_winter"},
+            {"name": "True Black", "hex": "#000000", "source": "seasonal_clear_winter"},
+            {"name": "Electric Blue", "hex": "#00BFFF", "source": "seasonal_clear_winter"},
+            {"name": "Bright Red", "hex": "#FF0000", "source": "seasonal_clear_winter"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "seasonal_clear_winter"},
+            {"name": "Fuchsia", "hex": "#FF00FF", "source": "seasonal_clear_winter"},
+            {"name": "Lemon Yellow", "hex": "#FFFF00", "source": "seasonal_clear_winter"},
+            {"name": "Royal Purple", "hex": "#7851A9", "source": "seasonal_clear_winter"},
+            {"name": "Turquoise", "hex": "#40E0D0", "source": "seasonal_clear_winter"},
+            {"name": "Hot Pink", "hex": "#FF69B4", "source": "seasonal_clear_winter"}
+        ]
+    }
+    
+    # Return colors for the specific seasonal type, or default colors if not found
+    colors = seasonal_palettes.get(seasonal_type, [])
+    
+    if not colors:
+        # Universal fallback colors for any seasonal type
+        colors = [
+            {"name": "Navy Blue", "hex": "#000080", "source": "universal_fallback"},
+            {"name": "Forest Green", "hex": "#228B22", "source": "universal_fallback"},
+            {"name": "Burgundy", "hex": "#800020", "source": "universal_fallback"},
+            {"name": "Charcoal Gray", "hex": "#36454F", "source": "universal_fallback"},
+            {"name": "Cream White", "hex": "#F5F5DC", "source": "universal_fallback"},
+            {"name": "Soft Pink", "hex": "#FFB6C1", "source": "universal_fallback"},
+            {"name": "Royal Purple", "hex": "#663399", "source": "universal_fallback"},
+            {"name": "Emerald Green", "hex": "#50C878", "source": "universal_fallback"},
+            {"name": "Deep Orange", "hex": "#FF6600", "source": "universal_fallback"},
+            {"name": "Chocolate Brown", "hex": "#8B4513", "source": "universal_fallback"}
+        ]
+    
+    return colors
 
 if __name__ == "__main__":
     import uvicorn
