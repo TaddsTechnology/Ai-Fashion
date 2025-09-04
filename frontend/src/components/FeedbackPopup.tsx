@@ -522,7 +522,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
                 <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
             ) : (
-              <div className="w-8 sm:w-16"></div> {/* Spacer for alignment */}
+              <div className="w-8 sm:w-16" />
             )}
           </div>
         </div>
