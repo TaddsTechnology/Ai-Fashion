@@ -51,6 +51,11 @@ export default defineConfig({
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
         warn(warning);
       },
+      output: {
+        manualChunks: undefined,
+      },
     },
+    outDir: 'dist',
+    assetsDir: 'assets',
   },
 });
