@@ -184,17 +184,17 @@ class EnhancedSkinToneAnalyzer:
             gray = cv2.cvtColor(rgb_corrected, cv2.COLOR_RGB2GRAY)
             mean_brightness = np.mean(gray)
             
-            # Improved gamma correction for all skin tones
+            # Improved gamma correction optimized for fair skin detection
             if mean_brightness < 70:  # Very dark image/skin
                 gamma = 1.4  # Brighten significantly for very dark skin
             elif mean_brightness < 120:  # Dark skin
                 gamma = 1.2  # Moderate brightening for dark skin
             elif mean_brightness < 160:  # Medium skin
                 gamma = 1.0  # No correction needed
-            elif mean_brightness < 200:  # Light skin
-                gamma = 0.9  # Slight darkening
-            else:  # Very light/fair skin (>200)
-                gamma = 0.8  # More aggressive darkening for overexposed fair skin
+            elif mean_brightness < 210:  # Light skin - less aggressive correction
+                gamma = 0.95  # Very slight darkening to preserve fair skin details
+            else:  # Very light/fair skin (>210) - minimal correction
+                gamma = 0.9  # Gentle correction to avoid washing out fair skin
             
             if gamma != 1.0:
                 rgb_corrected = np.power(rgb_corrected / 255.0, gamma) * 255.0
@@ -221,24 +221,49 @@ class EnhancedSkinToneAnalyzer:
         
         region_colors = []
         
+        # Check if image is very bright (likely fair skin)
+        overall_brightness = np.mean(face_image)
+        is_fair_skin = overall_brightness > 200
+        
         for region_name, (x, y, rw, rh) in regions.items():
             if x + rw <= w and y + rh <= h and x >= 0 and y >= 0:
                 region = face_image[y:y+rh, x:x+rw]
                 
                 if region.size > 100:  # Ensure enough pixels
-                    # Use skin color filtering in YCbCr space
-                    region_ycbcr = cv2.cvtColor(region, cv2.COLOR_RGB2YCrCb)
+                    if is_fair_skin:
+                        # For fair skin, use more permissive filtering
+                        # Use HSV for better fair skin detection
+                        region_hsv = cv2.cvtColor(region, cv2.COLOR_RGB2HSV)
+                        
+                        # More inclusive range for fair skin in HSV
+                        lower_skin_hsv = np.array([0, 10, 120])  # Lower saturation, higher value
+                        upper_skin_hsv = np.array([25, 150, 255])
+                        
+                        skin_mask = cv2.inRange(region_hsv, lower_skin_hsv, upper_skin_hsv)
+                        
+                        # Also include very bright pixels that might be fair skin
+                        brightness_mask = cv2.inRange(region, np.array([180, 170, 160]), np.array([255, 255, 255]))
+                        skin_mask = cv2.bitwise_or(skin_mask, brightness_mask)
+                        
+                    else:
+                        # Use traditional YCbCr filtering for non-fair skin
+                        region_ycbcr = cv2.cvtColor(region, cv2.COLOR_RGB2YCrCb)
+                        
+                        # Skin color range in YCbCr
+                        lower_skin = np.array([0, 133, 77])
+                        upper_skin = np.array([255, 173, 127])
+                        
+                        skin_mask = cv2.inRange(region_ycbcr, lower_skin, upper_skin)
                     
-                    # Skin color range in YCbCr
-                    lower_skin = np.array([0, 133, 77])
-                    upper_skin = np.array([255, 173, 127])
-                    
-                    skin_mask = cv2.inRange(region_ycbcr, lower_skin, upper_skin)
-                    
-                    if np.sum(skin_mask > 0) > 50:  # Enough skin pixels
+                    if np.sum(skin_mask > 0) > 30:  # Lowered threshold for fair skin
                         skin_pixels = region[skin_mask > 0]
-                        if len(skin_pixels) > 10:
+                        if len(skin_pixels) > 5:  # More permissive for fair skin
                             region_color = np.mean(skin_pixels, axis=0)
+                            region_colors.append(region_color)
+                    elif is_fair_skin and region.size > 0:  # Fallback for very fair skin
+                        # If no skin pixels detected but it's fair skin, use region average
+                        region_color = np.mean(region.reshape(-1, 3), axis=0)
+                        if np.mean(region_color) > 180:  # Only if reasonably bright
                             region_colors.append(region_color)
         
         return region_colors
@@ -313,6 +338,7 @@ class EnhancedSkinToneAnalyzer:
         """Advanced statistical skin tone classification using research-based thresholds."""
         try:
             r, g, b = rgb_color
+            avg_brightness = np.mean([r, g, b])
             
             # Convert to other color spaces for analysis
             hsv = colorsys.rgb_to_hsv(r/255.0, g/255.0, b/255.0)
@@ -323,21 +349,41 @@ class EnhancedSkinToneAnalyzer:
             L, a_val, b_val = lab
             
             # ITA calculation: arctan((L* - 50) / b*) * 180 / π
-            if b_val != 0:
+            if abs(b_val) > 0.1:  # Avoid division by very small numbers
                 ita = np.arctan((L - 50) / b_val) * 180 / np.pi
             else:
                 ita = 90 if L > 50 else -90
             
-            # Research-based ITA thresholds for skin tone classification
-            if ita > 55:  # Very Light
+            # Enhanced logic for fair skin detection
+            # If brightness is very high, strongly bias toward lighter tones
+            if avg_brightness > 220:  # Very fair skin
+                if L > 85:  # Very bright in LAB space too
+                    return "Monk 1", 0.95
+                elif L > 80:
+                    return "Monk 2", 0.9
+                else:
+                    return "Monk 1", 0.85  # Default to lightest for very bright pixels
+            
+            elif avg_brightness > 200:  # Fair skin
+                if ita > 45 or L > 80:  # Adjusted threshold for fair skin
+                    return "Monk 1", 0.9
+                elif ita > 30 or L > 75:
+                    return "Monk 2", 0.85
+                elif ita > 15 or L > 70:
+                    return "Monk 3", 0.8
+                else:
+                    return "Monk 2", 0.75  # Default to fair for high brightness
+            
+            # Adjusted ITA thresholds for better fair skin detection
+            elif ita > 50:  # Very Light (more generous threshold)
                 return "Monk 1", 0.9
-            elif ita > 41:  # Light
+            elif ita > 35:  # Light (lowered threshold)
                 return "Monk 2", 0.85
-            elif ita > 28:  # Intermediate
+            elif ita > 20:  # Intermediate (lowered threshold)
                 return "Monk 3", 0.8
-            elif ita > 10:  # Tan
+            elif ita > 5:  # Tan (lowered threshold)
                 return "Monk 4", 0.75
-            elif ita > -30:  # Brown
+            elif ita > -20:  # Brown (adjusted threshold)
                 if L > 65:
                     return "Monk 5", 0.7
                 elif L > 55:
@@ -354,7 +400,7 @@ class EnhancedSkinToneAnalyzer:
                     
         except Exception as e:
             logger.warning(f"ITA classification failed: {e}")
-            return "Monk 4", 0.5
+            return "Monk 2", 0.5  # Default to light instead of medium
     
     def find_closest_monk_tone_advanced(self, rgb_color: np.ndarray, 
                                       monk_tones: Dict[str, str]) -> Tuple[str, float]:
@@ -398,27 +444,48 @@ class EnhancedSkinToneAnalyzer:
                 monk_brightness = np.mean(monk_rgb)
                 brightness_diff = abs(avg_brightness - monk_brightness)
                 
-                # Enhanced fair skin bias
-                if avg_brightness > 200:  # Very fair skin
-                    if monk_brightness < 190:
-                        brightness_penalty = brightness_diff * 2.5
-                    else:
-                        brightness_penalty = brightness_diff * 0.3
+                # Enhanced fair skin bias with stronger penalties for mismatched brightness
+                if avg_brightness > 220:  # Very fair skin - strongest bias
+                    if monk_brightness < 180:  # Penalize dark tones heavily
+                        brightness_penalty = brightness_diff * 5.0
+                    elif monk_brightness < 200:  # Moderate penalty for medium tones
+                        brightness_penalty = brightness_diff * 2.0
+                    else:  # Slight penalty for light tones
+                        brightness_penalty = brightness_diff * 0.2
                     
                     combined_distance = (
-                        rgb_distance * 0.2 +
-                        lab_distance * 0.2 +
+                        rgb_distance * 0.1 +
+                        lab_distance * 0.1 +
                         hue_distance * 0.05 +
-                        brightness_penalty * 0.55
+                        brightness_penalty * 0.75  # Heavily weight brightness for very fair skin
                     )
-                elif avg_brightness > 180:  # Fair skin
+                elif avg_brightness > 200:  # Fair skin - strong bias
+                    if monk_brightness < 170:  # Heavy penalty for dark tones
+                        brightness_penalty = brightness_diff * 3.5
+                    elif monk_brightness < 190:  # Moderate penalty
+                        brightness_penalty = brightness_diff * 1.8
+                    else:  # Light penalty for light tones
+                        brightness_penalty = brightness_diff * 0.4
+                    
                     combined_distance = (
-                        rgb_distance * 0.35 +
-                        lab_distance * 0.35 +
-                        hue_distance * 0.1 +
-                        brightness_diff * 0.2
+                        rgb_distance * 0.15 +
+                        lab_distance * 0.15 +
+                        hue_distance * 0.05 +
+                        brightness_penalty * 0.65
                     )
-                else:  # Standard processing
+                elif avg_brightness > 180:  # Moderately fair skin
+                    if monk_brightness < 150:  # Penalize very dark tones
+                        brightness_penalty = brightness_diff * 2.0
+                    else:
+                        brightness_penalty = brightness_diff * 0.8
+                    
+                    combined_distance = (
+                        rgb_distance * 0.25 +
+                        lab_distance * 0.25 +
+                        hue_distance * 0.1 +
+                        brightness_penalty * 0.4
+                    )
+                else:  # Standard processing for medium to dark skin
                     combined_distance = (
                         rgb_distance * 0.4 +
                         lab_distance * 0.4 +
