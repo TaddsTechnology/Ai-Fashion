@@ -34,6 +34,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
   const [writtenFeedback, setWrittenFeedback] = useState('');
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastSessionId, setLastSessionId] = useState<string | undefined>(undefined);
 
   // Reset state when modal opens
   useEffect(() => {
@@ -46,6 +47,21 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
       setIsSubmitting(false);
     }
   }, [isVisible]);
+
+  // Reset state when user context changes (new photo uploaded)
+  useEffect(() => {
+    if (userContext?.sessionId && userContext.sessionId !== lastSessionId) {
+      // This is a new session - reset all feedback state
+      console.log('New photo session detected, resetting feedback state');
+      setLastSessionId(userContext.sessionId);
+      setCurrentSlide(0);
+      setAnswers({});
+      setShowThankYou(false);
+      setWrittenFeedback('');
+      setRating(0);
+      setIsSubmitting(false);
+    }
+  }, [userContext?.sessionId, lastSessionId]);
 
   if (!isVisible) return null;
 
@@ -283,73 +299,120 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, userC
           
           {isWrittenFeedbackSlide ? (
             // Written feedback slide content
-            <div className="space-y-4">
-              {/* Quick rating */}
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-3">How would you rate these recommendations overall?</p>
-                <div className="flex justify-center space-x-2 mb-6">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => setRating(star)}
-                      className={`p-1 transition-colors hover:scale-110 transform duration-200 ${
-                        star <= rating ? 'text-yellow-500' : 'text-gray-300 hover:text-yellow-400'
-                      }`}
-                    >
-                      <Star className="w-8 h-8 fill-current" />
-                    </button>
-                  ))}
+            <div className="space-y-6">
+              {/* Quick rating with improved design */}
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
+                <div className="text-center">
+                  <div className="mb-4">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                      <Star className="w-6 h-6 text-white" />
+                    </div>
+                    <h5 className="text-lg font-semibold text-gray-800 mb-2">Rate Your Experience</h5>
+                    <p className="text-sm text-gray-600">How would you rate these recommendations overall?</p>
+                  </div>
+                  <div className="flex justify-center space-x-1 mb-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setRating(star)}
+                        className={`p-2 transition-all duration-200 hover:scale-110 transform rounded-lg ${
+                          star <= rating 
+                            ? 'text-yellow-500 bg-yellow-50 shadow-sm' 
+                            : 'text-gray-300 hover:text-yellow-400 hover:bg-yellow-50'
+                        }`}
+                      >
+                        <Star className="w-7 h-7 fill-current" />
+                      </button>
+                    ))}
+                  </div>
+                  {rating > 0 && (
+                    <p className="text-xs text-purple-600 font-medium animate-fade-in">
+                      {rating === 5 ? '🌟 Amazing!' : rating === 4 ? '✨ Great!' : rating === 3 ? '👍 Good!' : rating === 2 ? '👌 Okay' : '🤔 Needs work'}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {/* Text area */}
-              <div>
-                <textarea
-                  value={writtenFeedback}
-                  onChange={(e) => setWrittenFeedback(e.target.value)}
-                  placeholder="Share your thoughts... What did you love? What could be better? Any specific colors you'd want to see? (Optional)"
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-purple-400 focus:ring-2 focus:ring-purple-200 transition-colors resize-none h-32 text-gray-700 placeholder-gray-400"
-                  maxLength={500}
-                />
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-xs text-gray-500">
-                    {writtenFeedback.length}/500 characters
-                  </span>
-                  <span className="text-xs text-gray-500">Optional</span>
+              {/* Text area with improved design */}
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100">
+                <div className="mb-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
+                      <MessageSquare className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h5 className="text-lg font-semibold text-gray-800">Share Your Thoughts</h5>
+                      <p className="text-sm text-gray-600">Help us improve your experience</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="relative">
+                  <textarea
+                    value={writtenFeedback}
+                    onChange={(e) => setWrittenFeedback(e.target.value)}
+                    placeholder="💭 What did you love about these colors? Any suggestions for improvement? Specific colors you'd like to see? Feel free to share anything that comes to mind!"
+                    className="w-full p-4 border-2 border-white/60 rounded-xl focus:border-purple-300 focus:ring-4 focus:ring-purple-100 transition-all duration-300 resize-none h-36 text-gray-700 placeholder-gray-400 bg-white/70 backdrop-blur-sm shadow-sm hover:shadow-md"
+                    maxLength={500}
+                  />
+                  <div className="absolute bottom-3 right-3 opacity-60">
+                    <div className="text-xs text-gray-500 bg-white/80 px-2 py-1 rounded-full">
+                      {writtenFeedback.length}/500
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center mt-3">
+                  <div className="flex items-center gap-2 text-xs text-indigo-600">
+                    <Sparkles className="w-3 h-3" />
+                    <span>Optional - but your insights are valuable!</span>
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {writtenFeedback.length > 0 ? `${500 - writtenFeedback.length} characters left` : ''}
+                  </div>
                 </div>
               </div>
 
-              {/* Submit button */}
-              <button
-                onClick={submitFeedback}
-                disabled={isSubmitting}
-                className={`w-full mt-6 p-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] ${
-                  isSubmitting
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 shadow-lg hover:shadow-xl'
-                }`}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Sending feedback...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <Send className="w-5 h-5" />
-                    <span>Submit Feedback</span>
-                  </div>
-                )}
-              </button>
+              {/* Action buttons with improved design */}
+              <div className="space-y-3">
+                <button
+                  onClick={submitFeedback}
+                  disabled={isSubmitting}
+                  className={`w-full p-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden ${
+                    isSubmitting
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 hover:from-purple-600 hover:via-pink-600 hover:to-indigo-600 shadow-lg hover:shadow-xl active:scale-[0.98]'
+                  }`}
+                >
+                  {/* Animated background effect */}
+                  {!isSubmitting && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
+                  )}
+                  
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-base">Sending your feedback...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center gap-3 relative z-10">
+                      <Send className="w-5 h-5" />
+                      <span className="text-base font-semibold">Submit Feedback</span>
+                      <div className="w-2 h-2 bg-white/60 rounded-full animate-pulse"></div>
+                    </div>
+                  )}
+                </button>
 
-              {/* Skip option */}
-              <button
-                onClick={() => submitFeedback()}
-                disabled={isSubmitting}
-                className="w-full mt-2 p-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                Skip and finish
-              </button>
+                {/* Skip option with subtle design */}
+                <button
+                  onClick={() => submitFeedback()}
+                  disabled={isSubmitting}
+                  className="w-full p-3 text-sm text-gray-500 hover:text-gray-700 transition-all duration-200 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 group"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <span>Skip and finish</span>
+                    <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-200" />
+                  </div>
+                </button>
+              </div>
             </div>
           ) : (
             // Regular quiz slide content

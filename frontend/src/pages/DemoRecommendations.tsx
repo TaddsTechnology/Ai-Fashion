@@ -83,14 +83,32 @@ interface DatabaseColor {
 
 const DemoRecommendations = () => {
   const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
+  const [feedbackShown, setFeedbackShown] = useState(false);
+  const [lastPhotoTimestamp, setLastPhotoTimestamp] = useState<string | null>(null);
 
+  // Show feedback popup after analysis is complete and products are loaded
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowFeedbackPopup(true);
-    }, 4000); // Show popup after 4 seconds
+    if (!loading && !error && products.length > 0 && !feedbackShown) {
+      const timer = setTimeout(() => {
+        setShowFeedbackPopup(true);
+        setFeedbackShown(true);
+      }, 4000); // Show popup after 4 seconds of analysis completion
 
-    return () => clearTimeout(timer);
-  }, []);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, error, products.length, feedbackShown]);
+
+  // Reset feedback state when skin analysis changes (new photo uploaded)
+  useEffect(() => {
+    const currentTimestamp = new Date().toISOString();
+    
+    // Check if this is a new photo analysis session
+    if (skinAnalysis && lastPhotoTimestamp !== currentTimestamp) {
+      setLastPhotoTimestamp(currentTimestamp);
+      setFeedbackShown(false); // Reset feedback shown flag for new photo
+      setShowFeedbackPopup(false); // Hide any currently shown popup
+    }
+  }, [skinAnalysis, skinHex, monkSkinTone]);
 
   const handleFeedbackClose = () => {
     setShowFeedbackPopup(false);
