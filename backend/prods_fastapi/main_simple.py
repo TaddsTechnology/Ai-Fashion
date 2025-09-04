@@ -647,33 +647,53 @@ def calculate_confidence_score(image_array: np.ndarray, final_color: np.ndarray,
         return 0.5  # Default confidence
 
 def find_closest_monk_tone_enhanced(rgb_color: np.ndarray) -> tuple:
-    """Enhanced Monk tone matching with better detection for all skin tones."""
+    """ULTRA-AGGRESSIVE Enhanced Monk tone matching with bias toward fair skin detection."""
     min_distance = float('inf')
-    closest_monk = "Monk 5"  # Default to medium tone
+    closest_monk = "Monk 2"  # Default to lighter tone instead of medium
     
     # Calculate average brightness
     avg_brightness = np.mean(rgb_color)
     
-    # Enhanced distance calculation for all skin tones
+    # ULTRA-AGGRESSIVE fair skin detection thresholds (more aggressive than before)
     for monk_name, hex_color in MONK_SKIN_TONES.items():
         monk_rgb = np.array(hex_to_rgb(hex_color))
+        monk_brightness = np.mean(monk_rgb)
         
         # Standard Euclidean distance
         euclidean_distance = np.sqrt(np.sum((rgb_color - monk_rgb) ** 2))
         
         # Brightness-weighted distance (favor similar brightness levels)
-        brightness_diff = abs(avg_brightness - np.mean(monk_rgb))
+        brightness_diff = abs(avg_brightness - monk_brightness)
         
-        # Adaptive weighting based on brightness ranges
-        if avg_brightness > 220:  # Very light skin
-            combined_distance = euclidean_distance * 0.3 + brightness_diff * 1.5
-        elif avg_brightness > 180:  # Light skin
-            combined_distance = euclidean_distance * 0.6 + brightness_diff * 1.0
-        elif avg_brightness > 120:  # Medium skin
-            combined_distance = euclidean_distance * 0.8 + brightness_diff * 0.8
+        # ULTRA-AGGRESSIVE weighting - heavily favor light tones for bright skin
+        if avg_brightness > 200:  # Very light/fair skin - ULTRA AGGRESSIVE
+            # Massive penalty for dark tones when skin is bright
+            if monk_brightness < 150:  # Penalize dark tones heavily
+                dark_penalty = 500 * (150 - monk_brightness) / 150
+            else:
+                dark_penalty = 0
+            combined_distance = euclidean_distance * 0.1 + brightness_diff * 2.0 + dark_penalty
+            
+        elif avg_brightness > 170:  # Light skin - MORE AGGRESSIVE
+            # Heavy penalty for medium-dark tones
+            if monk_brightness < 120:
+                dark_penalty = 300 * (120 - monk_brightness) / 120
+            else:
+                dark_penalty = 0
+            combined_distance = euclidean_distance * 0.3 + brightness_diff * 1.5 + dark_penalty
+            
+        elif avg_brightness > 140:  # Light-medium skin
+            if monk_brightness < 100:
+                dark_penalty = 150 * (100 - monk_brightness) / 100
+            else:
+                dark_penalty = 0
+            combined_distance = euclidean_distance * 0.5 + brightness_diff * 1.2 + dark_penalty
+            
+        elif avg_brightness > 110:  # Medium skin
+            combined_distance = euclidean_distance * 0.7 + brightness_diff * 0.9
         elif avg_brightness > 80:   # Dark skin
             combined_distance = euclidean_distance * 0.9 + brightness_diff * 0.5
-        else:  # Very dark skin (black)
+        else:  # Very dark skin
             combined_distance = euclidean_distance * 1.0 + brightness_diff * 0.3
         
         if combined_distance < min_distance:
@@ -786,7 +806,7 @@ def analyze_skin_tone_enhanced(image_array: np.ndarray) -> Dict:
 
 # Keep the simple version as fallback
 def analyze_skin_tone_simple(image_array: np.ndarray) -> Dict:
-    """Simplified skin tone analysis (fallback method)."""
+    """Simplified skin tone analysis with ULTRA-AGGRESSIVE fair skin bias (fallback method)."""
     try:
         # Get average color of the image center
         h, w = image_array.shape[:2]
@@ -794,17 +814,47 @@ def analyze_skin_tone_simple(image_array: np.ndarray) -> Dict:
         
         # Calculate average RGB
         avg_color = np.mean(center_region.reshape(-1, 3), axis=0)
+        avg_brightness = np.mean(avg_color)
         
-        # Find closest Monk skin tone
+        # Find closest Monk skin tone with ULTRA-AGGRESSIVE fair skin bias
         min_distance = float('inf')
         closest_monk = "Monk 2"  # Default to lighter tone
         
         for monk_name, hex_color in MONK_SKIN_TONES.items():
             monk_rgb = np.array(hex_to_rgb(hex_color))
-            distance = np.sqrt(np.sum((avg_color - monk_rgb) ** 2))
+            monk_brightness = np.mean(monk_rgb)
             
-            if distance < min_distance:
-                min_distance = distance
+            # Standard distance
+            euclidean_distance = np.sqrt(np.sum((avg_color - monk_rgb) ** 2))
+            brightness_diff = abs(avg_brightness - monk_brightness)
+            
+            # ULTRA-AGGRESSIVE fair skin bias (same as enhanced version)
+            if avg_brightness > 200:  # Very light/fair skin - ULTRA AGGRESSIVE
+                if monk_brightness < 150:  # Penalize dark tones heavily
+                    dark_penalty = 500 * (150 - monk_brightness) / 150
+                else:
+                    dark_penalty = 0
+                combined_distance = euclidean_distance * 0.1 + brightness_diff * 2.0 + dark_penalty
+                
+            elif avg_brightness > 170:  # Light skin - MORE AGGRESSIVE
+                if monk_brightness < 120:
+                    dark_penalty = 300 * (120 - monk_brightness) / 120
+                else:
+                    dark_penalty = 0
+                combined_distance = euclidean_distance * 0.3 + brightness_diff * 1.5 + dark_penalty
+                
+            elif avg_brightness > 140:  # Light-medium skin
+                if monk_brightness < 100:
+                    dark_penalty = 150 * (100 - monk_brightness) / 100
+                else:
+                    dark_penalty = 0
+                combined_distance = euclidean_distance * 0.5 + brightness_diff * 1.2 + dark_penalty
+            else:
+                # Standard distance for darker skin tones
+                combined_distance = euclidean_distance
+            
+            if combined_distance < min_distance:
+                min_distance = combined_distance
                 closest_monk = monk_name
         
         # Format response
