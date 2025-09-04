@@ -33,20 +33,17 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://localhost:5173", 
+        "http://localhost:5173",
         "https://app.taddstechnology.com",
-        "https://ai-fashion-backend-d9nj.onrender.com"
+        "https://ai-fashion-backend-d9nj.onrender.com",
+        # Frontend on Render
+        "https://ai-fashion-5lho.onrender.com",
+        # Hugging Face Space runtime domain
+        "https://taddsteam-ai-fashion.hf.space"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=[
-        "accept",
-        "accept-language",
-        "content-language", 
-        "content-type",
-        "authorization",
-        "x-requested-with"
-    ],
+    allow_headers=["*"] ,
     max_age=3600  # Cache preflight for 1 hour
 )
 
@@ -217,6 +214,52 @@ def get_apparel(
         "total_items": total_items,
         "total_pages": total_pages
     }
+
+# New endpoint: analyze skin tone from uploaded image to match frontend expectation
+@app.post("/analyze-skin-tone")
+async def analyze_skin_tone_endpoint(image: UploadFile = File(...)):
+    try:
+        # Read and process image
+        img = Image.open(image.file).convert("RGB")
+        arr = np.array(img)
+        h, w = arr.shape[:2]
+        center = arr[h//4:3*h//4, w//4:3*w//4]
+        avg = np.mean(center.reshape(-1, 3), axis=0)
+
+        # Minimal Monk tones
+        MONK = {
+            'Monk 1': '#f6ede4','Monk 2': '#f3e7db','Monk 3': '#f7ead0','Monk 4': '#eadaba','Monk 5': '#d7bd96',
+            'Monk 6': '#a07e56','Monk 7': '#825c43','Monk 8': '#604134','Monk 9': '#3a312a','Monk 10': '#292420'
+        }
+
+        closest = "Monk 5"
+        min_d = 1e9
+        for name, hx in MONK.items():
+            r, g, b = hex_to_rgb(hx)
+            d = float(np.sqrt(((avg[0]-r)**2)+((avg[1]-g)**2)+((avg[2]-b)**2)))
+            if d < min_d:
+                min_d = d
+                closest = name
+
+        monk_num = closest.split()[1]
+        monk_id = f"Monk{int(monk_num):02d}"
+        try:
+            derived_hex = rgb_to_hex((int(avg[0]), int(avg[1]), int(avg[2])))
+        except Exception:
+            derived_hex = MONK[closest]
+
+        return {
+            "monk_skin_tone": monk_id,
+            "monk_tone_display": closest,
+            "monk_hex": MONK[closest],
+            "derived_hex_code": derived_hex,
+            "dominant_rgb": [int(avg[0]), int(avg[1]), int(avg[2])],
+            "confidence": 0.8,
+            "success": True
+        }
+    except Exception as e:
+        logger.error(f"/analyze-skin-tone failed: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/color-recommendations")
 def get_color_recommendations(

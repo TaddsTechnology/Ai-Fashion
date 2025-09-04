@@ -3,9 +3,9 @@ title: AI Fashion Backend API
 emoji: 🎨
 colorFrom: blue
 colorTo: purple
-sdk: docker
+sdk: gradio
+sdk_version: 4.44.0
 app_file: app.py
-app_port: 7860
 pinned: false
 license: mit
 short_description: AI Fashion Backend - FastAPI for beauty recommendations

@@ -46,8 +46,7 @@ def main():
         files_to_upload = [
             "app.py",
             "requirements.txt", 
-            "README.md",
-            "Dockerfile"
+            "README.md"
         ]
         
         # Folders to upload
