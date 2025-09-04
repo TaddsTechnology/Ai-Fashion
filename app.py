@@ -16,7 +16,7 @@ os.environ.setdefault("DATABASE_URL", "postgresql://neondb_owner:npg_OUMg09DpBur
 
 # Import the comprehensive FastAPI app with full functionality
 try:
-    from prods_fastapi.main_simple import app
+    from prods_fastapi.main import app
     print("✅ Successfully imported comprehensive FastAPI backend from prods_fastapi.main")
 except ImportError as e:
     print(f"⚠️ Main import failed: {e}, trying fallback to main_simple")
