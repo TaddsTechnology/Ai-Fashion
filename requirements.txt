@@ -28,5 +28,28 @@ sqlalchemy>=2.0.0
 requests>=2.25.0
 python-dotenv>=1.0.0
 
+# Rate Limiting
+slowapi>=0.1.9
+
+# Caching and Redis
+redis>=5.0.1
+aioredis>=2.0.1
+
+# Database ORM and Migration
+alembic>=1.13.1
+asyncpg>=0.29.0
+
+# Background Tasks
+dramatiq>=1.14.2
+
+# System Monitoring
+psutil>=5.9.8
+
+# Cloud Services
+cloudinary>=1.40.0
+
+# Monitoring and Error Tracking
+sentry-sdk[fastapi]>=1.45.0
+
 # Deployment Support
 huggingface-hub>=0.17.0
