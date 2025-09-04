@@ -1,3 +1,16 @@
+---
+title: Ai Fashion
+emoji: 👁
+colorFrom: blue
+colorTo: blue
+sdk: gradio
+sdk_version: 5.44.1
+app_file: app.py
+pinned: false
+license: mit
+short_description: AI Fashion Solutions - Revolutionizing Beauty & Style
+---
+
 # HueMatch: Personalized Color Recommendations
 
 HueMatch is an AI-powered application that analyzes your skin tone and provides personalized color recommendations for clothing, makeup, and accessories. The application uses the Monk Skin Tone (MST) scale to identify your skin tone and suggests colors that complement your natural complexion.
@@ -193,3 +206,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support, open an issue on GitHub or contact us at support@huematch.example.com.
 
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
