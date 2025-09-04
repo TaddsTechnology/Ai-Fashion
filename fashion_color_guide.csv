@@ -1,0 +1,150 @@
+skin_tone,color_name,hex_code,category,usage,recommendation
+Fair,Ivory,#FFFFF0,neutral,formal/casual/ethnic,best
+Fair,Powder Blue,#B0E0E6,pastel,shirts/dresses,best
+Fair,Emerald Green,#50C878,jewel,formal/ethnic,best
+Fair,Soft Lavender,#E6E6FA,pastel,casual/ethnic,best
+Fair,Peach Pink,#FFCBA4,pastel,casual/formal,best
+Fair,Soft White,#F8F8FF,neutral,formal/casual,recommended
+Fair,Light Gray,#D3D3D3,neutral,casual/formal,recommended
+Fair,Mint Green,#98FB98,pastel,casual/festive,recommended
+Fair,Baby Blue,#89CFF0,pastel,casual/formal,recommended
+Fair,Rose Gold,#E8B4B8,pastel,festive/ethnic,recommended
+Fair,Champagne,#F7E7CE,neutral,formal/festive,recommended
+Fair,Blush Pink,#FE828C,pastel,casual/festive,recommended
+Fair,Periwinkle,#C5C5FF,pastel,casual/formal,recommended
+Fair,Sage Green,#9CAF88,earth,casual/ethnic,recommended
+Fair,Dusty Rose,#DCAE96,earth,casual/formal,recommended
+Fair,Pearl White,#F8F6F0,neutral,formal/ethnic,recommended
+Fair,Ice Blue,#B6D0E2,pastel,formal/casual,recommended
+Fair,Cream,#FFFDD0,neutral,casual/formal,recommended
+Fair,Silver Gray,#C0C0C0,neutral,formal/casual,recommended
+Fair,Soft Yellow,#FFFFE0,pastel,casual/festive,recommended
+Fair,Neon Orange,#FF6600,vibrant,avoid,avoid
+Fair,Ashy Beige,#A8A8A0,neutral,avoid,avoid
+Fair,Lime Green,#32CD32,vibrant,avoid,avoid
+Fair,Bright Yellow,#FFFF00,vibrant,avoid,avoid
+Fair,Tomato Red,#FF6347,vibrant,avoid,avoid
+Fair,Hot Pink,#FF69B4,vibrant,avoid,avoid
+Fair,Electric Blue,#7DF9FF,vibrant,avoid,avoid
+Fair,Neon Green,#39FF14,vibrant,avoid,avoid
+Fair,Orange Red,#FF4500,vibrant,avoid,avoid
+Fair,Magenta,#FF00FF,vibrant,avoid,avoid
+Medium,Turquoise,#40E0D0,jewel,ethnic/festive,best
+Medium,Coral,#FF7F50,vibrant,casual/formal,best
+Medium,Tan,#D2B48C,earth,casual/formal,best
+Medium,Olive Green,#808000,earth,casual/ethnic,best
+Medium,Mustard Yellow,#FFDB58,earth,casual/ethnic,best
+Medium,Stone Gray,#928E85,neutral,formal/casual,recommended
+Medium,Charcoal,#36454F,neutral,formal/casual,recommended
+Medium,Taupe,#483C32,neutral,casual/formal,recommended
+Medium,Blush,#DE5D83,pastel,casual/festive,recommended
+Medium,Light Brown,#CD853F,earth,casual/ethnic,recommended
+Medium,Terracotta,#E2725B,earth,casual/ethnic,recommended
+Medium,Brick Red,#CB4154,earth,ethnic/formal,recommended
+Medium,Sapphire,#0F52BA,jewel,formal/ethnic,recommended
+Medium,Emerald,#009775,jewel,formal/ethnic,recommended
+Medium,Ruby Red,#E0115F,jewel,formal/festive,recommended
+Medium,Vivid Red,#C21807,vibrant,festive/ethnic,recommended
+Medium,Electric Blue,#0073E6,vibrant,casual/festive,recommended
+Medium,Forest Green,#228B22,earth,casual/ethnic,recommended
+Medium,Bronze,#CD7F32,earth,casual/ethnic,recommended
+Medium,Copper,#B87333,earth,casual/ethnic,recommended
+Medium,Maroon,#800000,cultural,ethnic/formal,recommended
+Medium,Henna Red,#A0522D,cultural,ethnic/festive,recommended
+Medium,Burnt Sienna,#E97451,earth,casual/ethnic,recommended
+Medium,Deep Orange,#FF8C00,vibrant,festive/casual,recommended
+Medium,Royal Blue,#4169E1,jewel,formal/ethnic,recommended
+Medium,Neon Green,#39FF14,vibrant,avoid,avoid
+Medium,Pale Pink,#FFB6C1,pastel,avoid,avoid
+Medium,Ashy Gray,#B2BEB5,neutral,avoid,avoid
+Medium,Bright White,#FFFFFF,neutral,avoid,avoid
+Medium,Acid Lime,#CCFF00,vibrant,avoid,avoid
+Olive,Berry Red,#B22222,vibrant,formal/ethnic,best
+Olive,Warm Burgundy,#722F37,earth,formal/ethnic,best
+Olive,Plum,#8E4585,jewel,casual/ethnic,best
+Olive,Deep Teal,#004D40,jewel,formal/casual,best
+Olive,Bronze,#CD7F32,earth,casual/ethnic,best
+Olive,Warm Beige,#F5E1A4,neutral,casual/formal,recommended
+Olive,Forest Green,#228B22,earth,casual/ethnic,recommended
+Olive,Soft Pink,#F8BBD9,pastel,casual/festive,recommended
+Olive,Lilac,#C8A2C8,pastel,casual/festive,recommended
+Olive,Clay,#B66325,earth,casual/ethnic,recommended
+Olive,Moss Green,#8A9A5B,earth,casual/ethnic,recommended
+Olive,Garnet,#722D37,jewel,formal/ethnic,recommended
+Olive,Turquoise,#40E0D0,jewel,ethnic/festive,recommended
+Olive,Fuchsia,#FF00FF,vibrant,festive/casual,recommended
+Olive,Cobalt Blue,#0047AB,vibrant,formal/casual,recommended
+Olive,Rust,#B7410E,earth,casual/ethnic,recommended
+Olive,Ochre,#CC7722,earth,casual/ethnic,recommended
+Olive,Mehendi Green,#6A5B35,cultural,ethnic/festive,recommended
+Olive,Deep Brown,#654321,earth,casual/ethnic,recommended
+Olive,Amber,#FFBF00,earth,casual/festive,recommended
+Olive,Burnt Orange,#CC5500,earth,casual/ethnic,recommended
+Olive,Sage,#9CAF88,earth,casual/ethnic,recommended
+Olive,Camel,#C19A6B,earth,casual/formal,recommended
+Olive,Chocolate,#7B3F00,earth,casual/ethnic,recommended
+Olive,Washed Mint,#C0D6C0,pastel,avoid,avoid
+Olive,Pale Yellow,#FFFF99,pastel,avoid,avoid
+Olive,Bright Neon Pink,#FF1493,vibrant,avoid,avoid
+Olive,Light Beige,#F5F5DC,neutral,avoid,avoid
+Olive,Pale Lavender,#DDA0DD,pastel,avoid,avoid
+Dark,Rich Plum,#673147,jewel,formal/ethnic,best
+Dark,Deep Burgundy,#722F37,jewel,formal/ethnic,best
+Dark,Sapphire Blue,#0F52BA,jewel,formal/casual,best
+Dark,Emerald,#009775,jewel,formal/ethnic,best
+Dark,Chocolate Brown,#7B3F00,earth,casual/ethnic,best
+Dark,Black,#000000,neutral,formal/casual,recommended
+Dark,Ivory,#FFFFF0,neutral,formal/casual,recommended
+Dark,Pure White,#FFFFFF,neutral,formal/ethnic,recommended
+Dark,Taupe,#483C32,neutral,casual/formal,recommended
+Dark,Lilac,#C8A2C8,pastel,casual/festive,recommended
+Dark,Powder Blue,#B0E0E6,pastel,casual/formal,recommended
+Dark,Soft Pink,#F8BBD9,pastel,casual/festive,recommended
+Dark,Rust,#B7410E,earth,casual/ethnic,recommended
+Dark,Burnt Umber,#8A3324,earth,casual/ethnic,recommended
+Dark,Terracotta,#E2725B,earth,casual/ethnic,recommended
+Dark,Royal Blue,#4169E1,jewel,formal/ethnic,recommended
+Dark,Amethyst,#9966CC,jewel,formal/festive,recommended
+Dark,Ruby,#E0115F,jewel,formal/festive,recommended
+Dark,Scarlet,#FF2400,vibrant,festive/ethnic,recommended
+Dark,Bright Green,#00FF00,vibrant,festive/casual,recommended
+Dark,Crimson,#DC143C,vibrant,festive/ethnic,recommended
+Dark,Peacock Blue,#005F69,cultural,ethnic/formal,recommended
+Dark,Henna Red,#A0522D,cultural,ethnic/festive,recommended
+Dark,Golden Yellow,#FFD700,vibrant,festive/ethnic,recommended
+Dark,Deep Purple,#301934,jewel,formal/ethnic,recommended
+Dark,Bright Yellow,#FFFF00,vibrant,avoid,avoid
+Dark,Light Ash,#B2BEB5,neutral,avoid,avoid
+Dark,Baby Pink,#FFB6C1,pastel,avoid,avoid
+Dark,Neon Orange,#FF6600,vibrant,avoid,avoid
+Dark,Pale Khaki,#EEE8AA,earth,avoid,avoid
+Deep,Cobalt Blue,#0047AB,vibrant,formal/casual,best
+Deep,True Red,#FF0000,vibrant,formal/festive,best
+Deep,Dark Olive,#556B2F,earth,casual/ethnic,best
+Deep,Forest Green,#228B22,earth,casual/ethnic,best
+Deep,Charcoal Gray,#36454F,neutral,formal/casual,best
+Deep,Slate Gray,#708090,neutral,formal/casual,recommended
+Deep,Black,#000000,neutral,formal/casual,recommended
+Deep,Pure White,#FFFFFF,neutral,formal/ethnic,recommended
+Deep,Taupe,#483C32,neutral,casual/formal,recommended
+Deep,Navy Blue,#000080,neutral,formal/casual,recommended
+Deep,Powder Lavender,#DDA0DD,pastel,casual/festive,recommended
+Deep,Soft Purple,#B19CD9,pastel,casual/festive,recommended
+Deep,Sap Green,#507D2A,earth,casual/ethnic,recommended
+Deep,Deep Ochre,#CC7722,earth,casual/ethnic,recommended
+Deep,Burnt Sienna,#E97451,earth,casual/ethnic,recommended
+Deep,Fuchsia,#FF00FF,vibrant,festive/casual,recommended
+Deep,Royal Purple,#663399,jewel,formal/ethnic,recommended
+Deep,Emerald,#009775,jewel,formal/ethnic,recommended
+Deep,Ruby Red,#E0115F,jewel,formal/festive,recommended
+Deep,Crimson,#DC143C,vibrant,festive/ethnic,recommended
+Deep,Vibrant Teal,#008080,vibrant,casual/festive,recommended
+Deep,Electric Purple,#8F00FF,vibrant,festive/casual,recommended
+Deep,Turmeric Yellow,#E1AD01,cultural,ethnic/festive,recommended
+Deep,Sangria Red,#92000A,cultural,ethnic/formal,recommended
+Deep,Deep Turquoise,#00CED1,jewel,ethnic/festive,recommended
+Deep,Light Yellow,#FFFFE0,pastel,avoid,avoid
+Deep,Pale Ice Blue,#D6EAF8,pastel,avoid,avoid
+Deep,Chalky White,#F5F5F5,neutral,avoid,avoid
+Deep,Soft Beige,#F5F5DC,neutral,avoid,avoid
+Deep,Muted Pink,#C8A8C8,pastel,avoid,avoid

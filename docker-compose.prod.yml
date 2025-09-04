@@ -1,0 +1,50 @@
+version: '3.8'
+
+# Production overrides for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+services:
+  backend:
+    # Production optimizations
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+    # Remove development volume mounts
+    volumes: []
+    # Production environment variables
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - ENV=production
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+  frontend:
+    # Production optimizations
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    # Remove development volume mounts
+    volumes: []
+    # Production environment variables
+    environment:
+      - VITE_API_URL=https://ai-fashion-backend-d9nj.onrender.com
+      - NODE_ENV=production
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  ai-fashion-network:
+    driver: bridge

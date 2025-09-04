@@ -1,0 +1,13 @@
+Class,F1,Jaccard
+background     ,0.97259,0.94849
+skin           ,0.94535,0.89980
+left eyebrow   ,0.55470,0.41518
+right eyebrow  ,0.60111,0.46519
+left eye       ,0.55648,0.41848
+right eye      ,0.56165,0.42519
+nose           ,0.91613,0.85186
+upper lip      ,0.69397,0.54920
+inner mouth    ,0.49528,0.39525
+lower lip      ,0.72589,0.59049
+hair           ,0.86952,0.79818
+Mean           ,0.71751,0.61430

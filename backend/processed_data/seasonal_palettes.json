@@ -1,0 +1,362 @@
+{
+  "Light Spring": {
+    "recommended": [
+      {
+        "color": "#FFF9D7",
+        "name": "Light Yellow"
+      },
+      {
+        "color": "#F1EB9C",
+        "name": "Pale Yellow"
+      },
+      {
+        "color": "#F5E1A4",
+        "name": "Cream Yellow"
+      },
+      {
+        "color": "#F8CFA9",
+        "name": "Peach"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#5C068C",
+        "name": "Deep Purple"
+      }
+    ]
+  },
+  "Warm Spring": {
+    "recommended": [
+      {
+        "color": "#FCE300",
+        "name": "Bright Yellow"
+      },
+      {
+        "color": "#FDD26E",
+        "name": "Golden Yellow"
+      },
+      {
+        "color": "#FFCD00",
+        "name": "Sunflower Yellow"
+      },
+      {
+        "color": "#FFB81C",
+        "name": "Amber"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#003DA5",
+        "name": "Navy Blue"
+      }
+    ]
+  },
+  "Clear Spring": {
+    "recommended": [
+      {
+        "color": "#FFF9D7",
+        "name": "Light Yellow"
+      },
+      {
+        "color": "#FCE300",
+        "name": "Bright Yellow"
+      },
+      {
+        "color": "#FDD26E",
+        "name": "Golden Yellow"
+      },
+      {
+        "color": "#FFCD00",
+        "name": "Sunflower Yellow"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#5C462B",
+        "name": "Dark Brown"
+      }
+    ]
+  },
+  "Light Summer": {
+    "recommended": [
+      {
+        "color": "#C6DAE7",
+        "name": "Powder Blue"
+      },
+      {
+        "color": "#99D6EA",
+        "name": "Light Blue"
+      },
+      {
+        "color": "#9BCBEB",
+        "name": "Sky Blue"
+      },
+      {
+        "color": "#B8C9E1",
+        "name": "Periwinkle"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#5C068C",
+        "name": "Deep Purple"
+      }
+    ]
+  },
+  "Cool Summer": {
+    "recommended": [
+      {
+        "color": "#F395C7",
+        "name": "Pink"
+      },
+      {
+        "color": "#F57EB6",
+        "name": "Rose"
+      },
+      {
+        "color": "#E277CD",
+        "name": "Orchid"
+      },
+      {
+        "color": "#C964CF",
+        "name": "Lilac"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#FF8200",
+        "name": "Orange"
+      }
+    ]
+  },
+  "Soft Summer": {
+    "recommended": [
+      {
+        "color": "#F1BDC8",
+        "name": "Soft Pink"
+      },
+      {
+        "color": "#FFA3B5",
+        "name": "Coral Pink"
+      },
+      {
+        "color": "#9BCBEB",
+        "name": "Soft Blue"
+      },
+      {
+        "color": "#6DCDB8",
+        "name": "Seafoam Green"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#FF8200",
+        "name": "Orange"
+      }
+    ]
+  },
+  "Soft Autumn": {
+    "recommended": [
+      {
+        "color": "#F5E1A4",
+        "name": "Soft Yellow"
+      },
+      {
+        "color": "#FCD299",
+        "name": "Peach"
+      },
+      {
+        "color": "#DFD1A7",
+        "name": "Beige"
+      },
+      {
+        "color": "#BBC592",
+        "name": "Sage"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#FF1493",
+        "name": "Hot Pink"
+      }
+    ]
+  },
+  "Warm Autumn": {
+    "recommended": [
+      {
+        "color": "#FFCD00",
+        "name": "Golden Yellow"
+      },
+      {
+        "color": "#B4A91F",
+        "name": "Mustard"
+      },
+      {
+        "color": "#A09958",
+        "name": "Olive"
+      },
+      {
+        "color": "#A6631B",
+        "name": "Rust"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#000000",
+        "name": "Black"
+      },
+      {
+        "color": "#FF1493",
+        "name": "Hot Pink"
+      }
+    ]
+  },
+  "Deep Autumn": {
+    "recommended": [
+      {
+        "color": "#A6631B",
+        "name": "Rust"
+      },
+      {
+        "color": "#946037",
+        "name": "Copper"
+      },
+      {
+        "color": "#7C4D3A",
+        "name": "Brown"
+      },
+      {
+        "color": "#9A3324",
+        "name": "Brick Red"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#F395C7",
+        "name": "Pastel Pink"
+      },
+      {
+        "color": "#99D6EA",
+        "name": "Light Blue"
+      }
+    ]
+  },
+  "Clear Winter": {
+    "recommended": [
+      {
+        "color": "#FEFEFE",
+        "name": "Pure White"
+      },
+      {
+        "color": "#00A3E1",
+        "name": "Bright Blue"
+      },
+      {
+        "color": "#0077C8",
+        "name": "Cobalt Blue"
+      },
+      {
+        "color": "#E40046",
+        "name": "True Red"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#F5E1A4",
+        "name": "Cream Yellow"
+      },
+      {
+        "color": "#A09958",
+        "name": "Moss Green"
+      }
+    ]
+  },
+  "Cool Winter": {
+    "recommended": [
+      {
+        "color": "#FEFEFE",
+        "name": "Pure White"
+      },
+      {
+        "color": "#0057B8",
+        "name": "Royal Blue"
+      },
+      {
+        "color": "#004B87",
+        "name": "Navy Blue"
+      },
+      {
+        "color": "#84329B",
+        "name": "Purple"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#F5E1A4",
+        "name": "Cream Yellow"
+      },
+      {
+        "color": "#A09958",
+        "name": "Moss Green"
+      }
+    ]
+  },
+  "Deep Winter": {
+    "recommended": [
+      {
+        "color": "#FEFEFE",
+        "name": "Pure White"
+      },
+      {
+        "color": "#0057B8",
+        "name": "Royal Blue"
+      },
+      {
+        "color": "#004B87",
+        "name": "Navy Blue"
+      },
+      {
+        "color": "#002D72",
+        "name": "Deep Blue"
+      }
+    ],
+    "avoid": [
+      {
+        "color": "#F5E1A4",
+        "name": "Cream Yellow"
+      },
+      {
+        "color": "#FCC89B",
+        "name": "Light Peach"
+      }
+    ]
+  }
+}

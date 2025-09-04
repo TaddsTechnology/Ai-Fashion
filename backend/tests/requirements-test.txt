@@ -1,0 +1,32 @@
+# Testing dependencies for AI Fashion Backend
+
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+httpx>=0.24.0
+requests-mock>=1.11.0
+
+# For API testing
+fastapi[all]>=0.104.1
+
+# For database testing
+sqlalchemy>=2.0.23
+alembic>=1.12.0
+
+# For mocking and fixtures
+factory-boy>=3.3.0
+faker>=19.0.0
+
+# Coverage reporting
+coverage>=7.3.0
+
+# Performance testing (optional)
+pytest-benchmark>=4.0.0
+
+# Async testing utilities
+asyncio-pool>=0.6.0
+
+# Test utilities
+freezegun>=1.2.2  # For time-based testing
+responses>=0.23.0  # For mocking HTTP requests

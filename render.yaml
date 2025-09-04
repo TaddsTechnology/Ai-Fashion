@@ -1,0 +1,35 @@
+services:
+  # Static Site for Frontend
+  - type: web
+    name: ai-fashion-frontend
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    # Ensure SPA routing works for all paths
+    redirects:
+      - source: /*
+        destination: /index.html
+        type: rewrite
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: https://taddsTeam-ai-fashion.hf.space
+    autoDeploy: true
