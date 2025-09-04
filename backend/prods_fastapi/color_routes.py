@@ -1,8 +1,12 @@
-# Color routes for the Fashion AI backend
-from fastapi import APIRouter, HTTPException, Query
-from typing import List, Optional
+# Enhanced Color routes using MST Master Palette data
+from fastapi import APIRouter, HTTPException, Query, Depends
+from typing import List, Optional, Dict, Any
 import psycopg2
 from pydantic import BaseModel
+from services.mst_color_recommendation_service import MSTColorRecommendationService
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Create router for color endpoints
 color_router = APIRouter(prefix="/api/colors", tags=["colors"])
@@ -17,6 +21,10 @@ DB_CONFIG = {
     'port': '5432',
     'sslmode': 'require'  # External database needs SSL
 }
+
+# Initialize MST Color Recommendation Service
+def get_mst_service() -> MSTColorRecommendationService:
+    return MSTColorRecommendationService()
 
 # Pydantic models
 class ColorRecommendation(BaseModel):
@@ -527,4 +535,123 @@ async def get_color_palettes_db(
             "message": f"Showing {len(basic_colors)} basic colors due to database error: {str(e)}",
             "database_source": False
         }
+
+
+# Enhanced MST-based endpoints using the new service
+
+@color_router.get("/mst-comprehensive/{skin_tone}")
+async def get_mst_comprehensive_recommendations(
+    skin_tone: str,
+    occasion: Optional[str] = Query(None, description="Occasion filter: work, casual, festive_wedding, formal_black_tie"),
+    preference: Optional[str] = Query(None, description="Style preference: bright, neutral, pastels, bold"),
+    limit: int = Query(50, description="Maximum colors per category")
+):
+    """Get comprehensive MST-based color recommendations with all categories"""
+    try:
+        mst_service = get_mst_service()
+        recommendations = await mst_service.get_comprehensive_color_recommendations(
+            skin_tone=skin_tone,
+            occasion=occasion,
+            preference=preference,
+            limit=limit
+        )
+        return recommendations
+    except Exception as e:
+        logger.error(f"Error in MST comprehensive recommendations: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting recommendations: {str(e)}")
+
+@color_router.get("/mst-occasion/{skin_tone}/{occasion}")
+async def get_mst_occasion_colors(
+    skin_tone: str,
+    occasion: str,
+    limit: int = Query(20, description="Maximum colors to return")
+):
+    """Get MST-based occasion-specific color recommendations"""
+    try:
+        mst_service = get_mst_service()
+        recommendations = await mst_service.get_occasion_specific_colors(
+            skin_tone=skin_tone,
+            occasion=occasion,
+            limit=limit
+        )
+        return recommendations
+    except Exception as e:
+        logger.error(f"Error in MST occasion recommendations: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting occasion recommendations: {str(e)}")
+
+@color_router.get("/mst-harmony/{skin_tone}")
+async def get_mst_color_harmony(
+    skin_tone: str,
+    base_color: str = Query(..., description="Base hex color for harmony calculation"),
+    harmony_type: str = Query("complementary", description="Harmony type: complementary, triadic, analogous")
+):
+    """Get MST-based color harmony suggestions"""
+    try:
+        mst_service = get_mst_service()
+        harmony = await mst_service.get_color_harmony_suggestions(
+            skin_tone=skin_tone,
+            base_color=base_color,
+            harmony_type=harmony_type
+        )
+        return harmony
+    except Exception as e:
+        logger.error(f"Error in MST color harmony: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting color harmony: {str(e)}")
+
+@color_router.get("/mst-simple/{skin_tone}")
+async def get_mst_simple_recommendations(
+    skin_tone: str,
+    limit: int = Query(25, description="Maximum colors to return")
+):
+    """Get simplified MST-based color recommendations (compatible with existing frontend)"""
+    try:
+        mst_service = get_mst_service()
+        comprehensive = await mst_service.get_comprehensive_color_recommendations(
+            skin_tone=skin_tone,
+            limit=limit
+        )
+        
+        # Convert to simple format for compatibility
+        colors_that_suit = []
+        
+        # Combine primary and accent colors
+        for color in comprehensive.get("primary_colors", []):
+            colors_that_suit.append({
+                "name": color.get("name", "Unknown"),
+                "hex": color.get("hex", "#000000")
+            })
+        
+        for color in comprehensive.get("accent_colors", []):
+            colors_that_suit.append({
+                "name": color.get("name", "Unknown"), 
+                "hex": color.get("hex", "#000000")
+            })
+        
+        # Add some neutrals
+        for color in comprehensive.get("neutral_lights", [])[:3]:
+            colors_that_suit.append({
+                "name": color.get("name", "Unknown"),
+                "hex": color.get("hex", "#000000")
+            })
+        
+        return {
+            "colors_that_suit": colors_that_suit[:limit],
+            "colors_to_avoid": [
+                {
+                    "name": color.get("name", "Unknown"),
+                    "hex": color.get("hex", "#000000")
+                }
+                for color in comprehensive.get("colors_to_avoid", [])[:5]
+            ],
+            "seasonal_type": comprehensive.get("seasonal_types", ["Unknown"])[0] if comprehensive.get("seasonal_types") else "Unknown",
+            "monk_skin_tone": skin_tone,
+            "message": f"MST-based recommendations for {skin_tone} using comprehensive palette data",
+            "styling_guidance": comprehensive.get("styling_guidance", {}),
+            "recommended_metals": comprehensive.get("recommended_metals", []),
+            "denim_recommendations": comprehensive.get("denim_recommendations", [])
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in MST simple recommendations: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting simple recommendations: {str(e)}")
 
