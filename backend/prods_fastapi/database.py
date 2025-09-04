@@ -4,10 +4,10 @@ from sqlalchemy.orm import sessionmaker
 import os
 from typing import Optional
 
-# Database URL - Use environment variable with Neon database default
+# Database URL - Use environment variable with external database default
 DATABASE_URL = os.getenv(
     "DATABASE_URL", 
-    "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
+    "postgresql://fashion_jvy9_user:0d2Nn5mvyw6KMBDT21l9olpHaxrTPEzh@dpg-d1vhvpbuibrs739dkn3g-a.oregon-postgres.render.com/fashion_jvy9"
 )
 
 # Create SQLAlchemy engine (force synchronous driver)

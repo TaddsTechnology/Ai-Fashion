@@ -15,135 +15,59 @@ from webcolors import hex_to_rgb, rgb_to_hex
 import logging
 import mediapipe as mp
 import asyncio
-import time
 # import dlib  # Removed to avoid compilation issues
 # face_recognition also removed to avoid dlib compilation issues
 # Using MediaPipe and OpenCV for face detection instead
 from enhanced_skin_tone_analyzer import EnhancedSkinToneAnalyzer
-
-# Configure logging FIRST before any other imports
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-    ]
-)
-logger = logging.getLogger(__name__)
-
-# Try to import the improved analyzer
-try:
-    from improved_skin_tone_analyzer import ImprovedSkinToneAnalyzer
-    IMPROVED_ANALYZER_AVAILABLE = True
-    logger.info("✅ Improved skin tone analyzer imported")
-except ImportError as e:
-    logger.warning(f"⚠️ Improved skin tone analyzer not available: {e}")
-    IMPROVED_ANALYZER_AVAILABLE = False
 
 # Import services
 from services.cloudinary_service import cloudinary_service
 from services.sentry_service import EnhancedSentryService
 from config import settings
 
-# Enable debug logging in development
-import os
-if os.getenv('ENVIRONMENT', '').lower() in ['development', 'dev']:
-    logging.getLogger().setLevel(logging.DEBUG)
-    logger.info('🔧 DEBUG logging enabled for development')
+# Import performance optimizations
+from performance import (
+    init_performance_systems,
+    cleanup_performance_systems,
+    get_performance_stats,
+    get_db_pool,
+    get_cache_manager,
+    get_image_optimizer
+)
 
-# Import performance optimizations - CONDITIONALLY
-try:
-    from performance import (
-        init_performance_systems,
-        cleanup_performance_systems,
-        get_performance_stats,
-        get_db_pool,
-        get_cache_manager,
-        get_image_optimizer
-    )
-    PERFORMANCE_AVAILABLE = True
-    logger.info("✅ Performance systems imported")
-except ImportError as e:
-    logger.warning(f"⚠️ Performance systems not available: {e}")
-    PERFORMANCE_AVAILABLE = False
+# Import comprehensive error handling
+from error_handling import (
+    setup_error_handling,
+    get_error_stats,
+    enhanced_health_check,
+    circuit_breaker_context,
+    ErrorCategory
+)
+from health_checks import register_all_health_checks
 
-# Import comprehensive error handling - CONDITIONALLY  
-try:
-    from error_handling import (
-        setup_error_handling,
-        get_error_stats,
-        enhanced_health_check,
-        circuit_breaker_context,
-        ErrorCategory
-    )
-    ERROR_HANDLING_AVAILABLE = True
-    logger.info("✅ Error handling systems imported")
-except ImportError as e:
-    logger.warning(f"⚠️ Error handling systems not available: {e}")
-    ERROR_HANDLING_AVAILABLE = False
-    
-    # Create dummy circuit breaker context for compatibility
-    from contextlib import nullcontext
-    circuit_breaker_context = lambda *args, **kwargs: nullcontext()
-    
-    # Create dummy enhanced_health_check
-    async def enhanced_health_check(app):
-        return {"status": "healthy", "message": "Basic health check"}
+# Import enhanced monitoring system
+from monitoring_enhanced import (
+    setup_monitoring,
+    setup_monitoring_middleware,
+    cleanup_monitoring,
+    setup_database_health_check,
+    setup_cache_health_check,
+    setup_custom_health_check,
+    get_health_status,
+    get_metrics,
+    get_traces,
+    get_trace_details,
+    get_alerts,
+    get_system_stats
+)
 
-try:
-    from health_checks import register_all_health_checks
-    HEALTH_CHECKS_AVAILABLE = True
-    logger.info("✅ Health checks imported")
-except ImportError as e:
-    logger.warning(f"⚠️ Health checks not available: {e}")
-    HEALTH_CHECKS_AVAILABLE = False
-
-# Import enhanced monitoring system - CONDITIONALLY
-try:
-    from monitoring_enhanced import (
-        setup_monitoring,
-        setup_monitoring_middleware,
-        cleanup_monitoring,
-        setup_database_health_check,
-        setup_cache_health_check,
-        setup_custom_health_check,
-        get_health_status,
-        get_metrics,
-        get_traces,
-        get_trace_details,
-        get_alerts,
-        get_system_stats
-    )
-    MONITORING_AVAILABLE = True
-    logger.info("✅ Monitoring systems imported")
-except ImportError as e:
-    logger.warning(f"⚠️ Monitoring systems not available: {e}")
-    MONITORING_AVAILABLE = False
-    
-    # Create dummy functions for compatibility
-    def get_metrics(): return {"error": "Monitoring not available"}
-    def get_traces(limit=20): return {"error": "Monitoring not available"}
-    def get_trace_details(trace_id): return {"error": "Monitoring not available"}
-    def get_alerts(): return {"error": "Monitoring not available"}
-    def get_system_stats(): return {"error": "Monitoring not available"}
-    async def get_health_status(): return {"status": "unknown", "error": "Monitoring not available"}
-
-# Import datetime
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 from datetime import datetime
 
 # Initialize enhanced skin tone analyzer
 enhanced_analyzer = EnhancedSkinToneAnalyzer()
-
-# Initialize improved skin tone analyzer if available
-if IMPROVED_ANALYZER_AVAILABLE:
-    try:
-        improved_analyzer = ImprovedSkinToneAnalyzer()
-        logger.info("✅ Improved skin tone analyzer initialized successfully")
-    except Exception as e:
-        logger.warning(f"⚠️ Failed to initialize improved skin tone analyzer: {e}")
-        improved_analyzer = None
-else:
-    improved_analyzer = None
 
 # Initialize database on startup
 try:
@@ -156,7 +80,6 @@ except Exception as e:
 
 # Import color router
 from color_routes import color_router, palette_router
-from enhanced_color_routes import enhanced_router
 
 # Initialize rate limiter
 limiter = Limiter(key_func=get_remote_address)
@@ -177,36 +100,21 @@ app.add_middleware(SlowAPIMiddleware)
 if settings.sentry_dsn:
     app.add_middleware(SentryAsgiMiddleware)
 
-# Setup comprehensive error handling system - CONDITIONALLY
-if ERROR_HANDLING_AVAILABLE:
-    try:
-        setup_error_handling(app)
-        logger.info("✅ Error handling setup complete")
-    except Exception as e:
-        logger.warning(f"⚠️ Error handling setup failed: {e}")
-else:
-    logger.info("ℹ️ Error handling not available, using basic error handling")
+# Setup comprehensive error handling system
+setup_error_handling(app)
 
-# Add performance middleware before startup - CONDITIONALLY
-if PERFORMANCE_AVAILABLE:
-    try:
-        from performance import add_performance_middleware_early
-        add_performance_middleware_early(app)
-        logger.info("✅ Performance middleware added")
-    except Exception as e:
-        logger.warning(f"⚠️ Failed to add performance middleware: {e}")
-else:
-    logger.info("ℹ️ Performance middleware not available")
+# Add performance middleware before startup
+from performance import add_performance_middleware_early
+try:
+    add_performance_middleware_early(app)
+except Exception as e:
+    logger.warning(f"Failed to add performance middleware: {e}")
 
-# Add monitoring middleware before startup - CONDITIONALLY
-if MONITORING_AVAILABLE:
-    try:
-        setup_monitoring_middleware(app)
-        logger.info("✅ Monitoring middleware added")
-    except Exception as e:
-        logger.warning(f"⚠️ Failed to add monitoring middleware: {e}")
-else:
-    logger.info("ℹ️ Monitoring middleware not available")
+# Add monitoring middleware before startup
+try:
+    setup_monitoring_middleware(app)
+except Exception as e:
+    logger.warning(f"Failed to add monitoring middleware: {e}")
 
 # Setup enhanced monitoring system will be done in startup event
 
@@ -217,9 +125,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:5173", 
         "https://app.taddstechnology.com",
-        "https://devfashion.onrender.com",
-        "https://devfrontend-pmjx.onrender.com",  # Add the actual frontend URL
-        "https://devfashion.onrender.com",  # Add the backend URL as well
+        "https://ai-fashion-backend-d9nj.onrender.com",
         "http://localhost:8000",  # For local development
         "https://localhost:8000",  # For HTTPS local development
     ],
@@ -244,43 +150,15 @@ app.add_middleware(
     max_age=3600  # Cache preflight for 1 hour
 )
 
-# Add request logging middleware for debugging
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    start_time = time.time()
-    
-    # Log incoming request details
-    logger.info(f"📥 {request.method} {request.url} from {request.client.host if request.client else 'unknown'}")
-    logger.info(f"Headers: {dict(request.headers)}")
-    
-    # Log query parameters if any
-    if request.query_params:
-        logger.info(f"Query params: {dict(request.query_params)}")
-    
-    try:
-        response = await call_next(request)
-        process_time = time.time() - start_time
-        
-        # Log response details
-        logger.info(f"📤 Response: {response.status_code} in {process_time:.4f}s")
-        
-        return response
-    except Exception as e:
-        process_time = time.time() - start_time
-        logger.error(f"❌ Request failed: {e} in {process_time:.4f}s")
-        raise
-
 # Add explicit OPTIONS handler for CORS preflight requests
 @app.options("/{path:path}")
 async def handle_options(path: str):
     """Handle CORS preflight requests for all paths"""
-    logger.info(f"🔧 CORS preflight request for path: {path}")
     return {"message": "OK"}
 
 # Include the color routers
 app.include_router(color_router)
 app.include_router(palette_router)
-app.include_router(enhanced_router)
 
 # Monk skin tone scale - now loaded from database
 def get_monk_skin_tones():
@@ -312,58 +190,40 @@ def get_monk_skin_tones():
 # Initialize monk tones on startup
 MONK_SKIN_TONES = get_monk_skin_tones()
 
-# Application lifecycle events - DISABLED to prevent startup hanging on Render
-# The startup events are causing uvicorn to hang at "Waiting for application startup"
-# We'll initialize these systems synchronously instead
+# Application lifecycle events
+@app.on_event("startup")
+async def startup_event():
+    """Initialize performance systems on startup"""
+    logger.info("🚀 Starting AI Fashion Backend...")
+    try:
+        # Initialize performance systems
+        await init_performance_systems(app)
+        
+        # Setup enhanced monitoring system
+        await setup_monitoring(app)
+        
+        # Register health check dependencies
+        register_all_health_checks(app.state.health_manager)
+        
+        # Setup additional health checks for monitoring
+        setup_database_health_check(lambda: {"status": "healthy", "message": "Database is responding"})
+        setup_cache_health_check(lambda: {"status": "healthy", "message": "Cache is responding"})
+        
+        logger.info("✅ All systems initialized successfully")
+    except Exception as e:
+        logger.error(f"❌ Startup failed: {e}")
+        raise
 
-try:
-    logger.info("🚀 Initializing systems synchronously for Render deployment...")
-    
-    # Initialize basic monitoring (synchronous)
-    logger.info("📊 Setting up basic monitoring...")
-    
-    # Initialize basic health checks (synchronous)
-    logger.info("🏥 Setting up basic health checks...")
-    
-    logger.info("✅ Basic systems initialized successfully")
-except Exception as e:
-    logger.warning(f"⚠️ Some systems failed to initialize: {e}")
-    logger.info("🚀 Continuing with basic FastAPI server...")
-
-# Commented out the problematic async startup events
-# @app.on_event("startup")
-# async def startup_event():
-#     """Initialize performance systems on startup"""
-#     logger.info("🚀 Starting AI Fashion Backend...")
-#     try:
-#         # Initialize performance systems
-#         await init_performance_systems(app)
-#         
-#         # Setup enhanced monitoring system
-#         await setup_monitoring(app)
-#         
-#         # Register health check dependencies
-#         register_all_health_checks(app.state.health_manager)
-#         
-#         # Setup additional health checks for monitoring
-#         setup_database_health_check(lambda: {"status": "healthy", "message": "Database is responding"})
-#         setup_cache_health_check(lambda: {"status": "healthy", "message": "Cache is responding"})
-#         
-#         logger.info("✅ All systems initialized successfully")
-#     except Exception as e:
-#         logger.error(f"❌ Startup failed: {e}")
-#         raise
-
-# @app.on_event("shutdown")
-# async def shutdown_event():
-#     """Clean up resources on shutdown"""
-#     logger.info("🔄 Shutting down AI Fashion Backend...")
-#     try:
-#         await cleanup_performance_systems(app)
-#         await cleanup_monitoring(app)
-#         logger.info("✅ Cleanup completed")
-#     except Exception as e:
-#         logger.error(f"❌ Shutdown cleanup failed: {e}")
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Clean up resources on shutdown"""
+    logger.info("🔄 Shutting down AI Fashion Backend...")
+    try:
+        await cleanup_performance_systems(app)
+        await cleanup_monitoring(app)
+        logger.info("✅ Cleanup completed")
+    except Exception as e:
+        logger.error(f"❌ Shutdown cleanup failed: {e}")
 
 
 def apply_lighting_correction(image_array: np.ndarray) -> np.ndarray:
@@ -452,42 +312,6 @@ def calculate_confidence_score(image_array: np.ndarray, final_color: np.ndarray,
         return 0.5
 
 
-# Placeholder function for Gradio ML model integration
-async def call_gradio_skin_tone_model(image_data: bytes, filename: str = None) -> Dict:
-    """Call external Gradio ML model for skin tone analysis (placeholder).
-    
-    Args:
-        image_data: Raw image bytes
-        filename: Original filename for reference
-    
-    Returns:
-        Dict with skin tone analysis results or None if unavailable
-    """
-    try:
-        logger.info(f"🤖 Placeholder call to Gradio ML model for {filename}")
-        
-        # TODO: Replace this with actual Gradio client integration
-        # Example integration would look like:
-        # from gradio_client import Client
-        # client = Client("your-gradio-app-url")
-        # result = await client.predict(image_data, api_name="/predict")
-        # return result
-        
-        logger.warning("⚠️ Gradio ML model not yet integrated - this is a placeholder")
-        return {
-            "success": False,
-            "error": "Gradio ML model integration not implemented yet",
-            "placeholder": True
-        }
-        
-    except Exception as e:
-        logger.error(f"❌ Gradio ML model call failed: {e}")
-        return {
-            "success": False,
-            "error": f"Gradio ML model error: {str(e)}",
-            "placeholder": True
-        }
-
 def find_closest_monk_tone_enhanced(rgb_color: np.ndarray) -> tuple:
     """Enhanced Monk tone matching with better light skin detection."""
     min_distance = float('inf')
@@ -513,38 +337,6 @@ def find_closest_monk_tone_enhanced(rgb_color: np.ndarray) -> tuple:
 
     return closest_monk, min_distance
 
-
-# Improved skin tone analysis function
-def analyze_skin_tone_with_improved_analyzer(image_array: np.ndarray) -> Dict:
-    """Analyze skin tone using the improved analyzer with enhanced algorithms."""
-    if improved_analyzer is None:
-        logger.warning("Improved analyzer not available, using enhanced analyzer")
-        return enhanced_analyzer.analyze_skin_tone(image_array, MONK_SKIN_TONES)
-    
-    try:
-        logger.info("Using improved skin tone analyzer with landmark detection")
-        result = improved_analyzer.analyze_skin_tone_enhanced(image_array, MONK_SKIN_TONES)
-        
-        # Log improvement metrics
-        if result.get('success'):
-            confidence = result.get('confidence', 0)
-            landmarks_detected = result.get('landmarks_detected', False)
-            clustering_confidence = result.get('clustering_confidence', 0)
-            regions_analyzed = result.get('regions_analyzed', 0)
-            
-            logger.info(
-                f"Improved analysis complete: "
-                f"confidence={confidence:.2f}, "
-                f"landmarks={landmarks_detected}, "
-                f"clustering_conf={clustering_confidence:.2f}, "
-                f"regions={regions_analyzed}"
-            )
-        
-        return result
-        
-    except Exception as e:
-        logger.warning(f"Improved analyzer failed: {e}, falling back to enhanced analyzer")
-        return enhanced_analyzer.analyze_skin_tone(image_array, MONK_SKIN_TONES)
 
 # Old dlib-based function removed - now using enhanced_analyzer
 
@@ -777,26 +569,10 @@ def get_api_color_recommendations(
     request: Request,
     skin_tone: str = Query(None),
     hex_color: str = Query(None),
-    limit: int = Query(50, ge=10, le=100, description="Maximum number of colors to return"),
-    occasion: str = Query("casual", description="Occasion type: work, casual, party, formal"),
-    use_mst: bool = Query(True, description="Use MST master palette data if available")
+    limit: int = Query(50, ge=10, le=100, description="Maximum number of colors to return")
 ):
-    """Enhanced color recommendations with MST master palette integration."""
-    logger.info(f"Color recommendations request: skin_tone={skin_tone}, hex_color={hex_color}, occasion={occasion}, use_mst={use_mst}")
-    
-    # Try MST database first if requested and skin_tone is provided
-    if use_mst and skin_tone:
-        try:
-            from mst_database_service import get_mst_color_recommendations
-            mst_result = get_mst_color_recommendations(skin_tone, occasion, limit)
-            
-            if "error" not in mst_result:
-                logger.info(f"Returning MST-based recommendations for {skin_tone}")
-                return mst_result
-            else:
-                logger.info(f"MST lookup failed for {skin_tone}, falling back to standard method")
-        except Exception as e:
-            logger.warning(f"MST database lookup failed: {e}, falling back to standard method")
+    """Enhanced color recommendations combining multiple database tables - based on main_simple.py."""
+    logger.info(f"Color recommendations request: skin_tone={skin_tone}, hex_color={hex_color}")
     
     try:
         # Database connection - use environment variable or fallback to known URL
@@ -807,7 +583,7 @@ def get_api_color_recommendations(
         
         DATABASE_URL = os.getenv(
             "DATABASE_URL", 
-            "postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
+            "postgresql://localhost:5432/ai_fashion_dev"
         )
         
         # Force synchronous driver
@@ -1121,43 +897,11 @@ def analyze_skin_tone_info():
 @limiter.limit("10/minute")
 async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
     """Analyze skin tone from uploaded image with optimization."""
-    # CRITICAL: Always ensure we return JSON, even on errors
-    default_response = {
-        'monk_skin_tone': 'Monk04',
-        'monk_tone_display': 'Monk 4',
-        'monk_hex': '#eadaba',
-        'derived_hex_code': '#eadaba',
-        'dominant_rgb': [234, 218, 186],
-        'confidence': 0.5,
-        'success': False,
-        'error': 'Processing failed'
-    }
-    
     try:
-        logger.info(f"🔍 Starting skin tone analysis for file: {file.filename if file else 'unknown'}")
-        
-        # Validate file
-        if not file:
-            logger.error("No file provided")
-            response = default_response.copy()
-            response['error'] = 'No file provided'
-            return response
-            
-        if not file.content_type or not file.content_type.startswith("image/"):
-            logger.error(f"Invalid file type: {file.content_type}")
-            return {
-                'monk_skin_tone': 'Monk04',
-                'monk_tone_display': 'Monk 4',
-                'monk_hex': '#eadaba',
-                'derived_hex_code': '#eadaba',
-                'dominant_rgb': [234, 218, 186],
-                'confidence': 0.5,
-                'success': False,
-                'error': f'Invalid file type: {file.content_type}. Must be an image.'
-            }
+        if not file.content_type.startswith("image/"):
+            raise HTTPException(status_code=400, detail="File must be an image")
 
         image_data = await file.read()
-        logger.info(f"📁 File read successfully, size: {len(image_data)} bytes")
         
         # Optimize image for faster processing
         try:
@@ -1196,56 +940,17 @@ async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
         except Exception as e:
             logger.warning(f"Failed to store image in Cloudinary: {e}")
 
-        # Call Gradio ML model for skin tone analysis
         try:
-            logger.info("🤖 Calling Gradio ML model for skin tone analysis...")
-            
-            # Convert numpy array back to PIL Image for sending to Gradio
-            pil_image = Image.fromarray(image_array)
-            
-            # Save image to bytes for sending to Gradio
-            img_byte_arr = io.BytesIO()
-            pil_image.save(img_byte_arr, format='JPEG', quality=95)
-            img_byte_arr = img_byte_arr.getvalue()
-            
-            # Call your Gradio ML model
-            gradio_result = await call_gradio_skin_tone_model(img_byte_arr, file.filename)
-            
-            if gradio_result and gradio_result.get('success'):
-                logger.info(f"✅ Gradio model returned: {gradio_result.get('monk_skin_tone')}")
-                
+            result = enhanced_analyzer.analyze_skin_tone(image_array, MONK_SKIN_TONES)
+            if result['success']:
                 # Add Cloudinary URL to response if upload was successful
                 if upload_result and upload_result.get('success'):
-                    gradio_result['cloudinary_url'] = upload_result.get('url')
-                    gradio_result['image_public_id'] = upload_result.get('public_id')
-                    
-                return gradio_result
-            else:
-                logger.warning(f"Gradio model failed or returned invalid result: {gradio_result}")
-                
+                    result['cloudinary_url'] = upload_result.get('url')
+                    result['image_public_id'] = upload_result.get('public_id')
+                return result
         except Exception as e:
-            logger.warning(f"Gradio ML model failed: {e}, trying improved analyzer")
+            logger.warning(f"Enhanced analysis failed: {e}, falling back to simple analysis")
             
-        # Try improved analyzer as fallback
-        try:
-            logger.info("📊 Trying improved skin tone analyzer...")
-            analyzer_result = analyze_skin_tone_with_improved_analyzer(image_array)
-            
-            if analyzer_result and analyzer_result.get('success'):
-                logger.info(f"✅ Improved analyzer returned: {analyzer_result.get('monk_skin_tone')}")
-                
-                # Add Cloudinary URL to response if upload was successful
-                if upload_result and upload_result.get('success'):
-                    analyzer_result['cloudinary_url'] = upload_result.get('url')
-                    analyzer_result['image_public_id'] = upload_result.get('public_id')
-                    
-                return analyzer_result
-            else:
-                logger.warning(f"Improved analyzer failed or returned invalid result: {analyzer_result}")
-                
-        except Exception as e:
-            logger.warning(f"Improved analyzer failed: {e}, falling back to database default")
-        
         # Fallback - get a random monk tone from database
         try:
             from database import SessionLocal, SkinToneMapping
@@ -1329,37 +1034,5 @@ async def analyze_skin_tone(request: Request, file: UploadFile = File(...)):
 if __name__ == "__main__":
     import uvicorn
     import os
-    import logging
-    
-    # Setup logging
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-    
-    # Get port from environment with validation
-    try:
-        port = int(os.environ.get("PORT", 10000))
-        if port <= 0 or port > 65535:
-            logger.warning(f"Invalid port {port}, using default 10000")
-            port = 10000
-    except (ValueError, TypeError) as e:
-        logger.error(f"Error parsing PORT environment variable: {e}, using default 10000")
-        port = 10000
-    
-    host = "0.0.0.0"
-    
-    logger.info(f"🚀 Starting AI Fashion Backend (production) on {host}:{port}")
-    logger.info(f"Environment: {os.environ.get('ENVIRONMENT', 'production')}")
-    
-    try:
-        uvicorn.run(
-            app, 
-            host=host, 
-            port=port,
-            log_level="info",
-            access_log=True,
-            reload=False,  # Disable reload in production
-            workers=1  # Single worker for free tier
-        )
-    except Exception as e:
-        logger.error(f"Failed to start server: {e}")
-        raise
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

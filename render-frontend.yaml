@@ -14,7 +14,7 @@ services:
   - key: NODE_ENV
     value: production
   - key: VITE_API_URL
-    value: https://devfashion.onrender.com
+    value: https://ai-fashion-backend-d9nj.onrender.com
   - key: PORT
     value: "3000"
   autoDeploy: true

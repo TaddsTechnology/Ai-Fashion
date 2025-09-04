@@ -60,53 +60,8 @@ const [skinAnalysisResult, setSkinAnalysisResult] = useState<SkinAnalysisResult 
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       
-      // Get the response text first to debug JSON parsing issues
-      const responseText = await response.text();
-      console.log('Raw response text:', responseText);
-      console.log('Response text length:', responseText.length);
-      
-      if (!responseText || responseText.trim() === '') {
-        console.error('❌ Empty response received from server');
-        throw new Error('Empty response from server - please try again');
-      }
-      
-      let result;
-      try {
-        result = JSON.parse(responseText);
-        
-        // Validate that we got a proper response structure
-        if (!result || typeof result !== 'object') {
-          throw new Error('Invalid response structure');
-        }
-        
-        // Enhanced logging for complete visibility
-        console.log('🎯 === SKIN ANALYSIS COMPLETE === 🎯');
-        console.log('📊 Full Analysis Result:', JSON.stringify(result, null, 2));
-        console.log('🎨 Skin Tone Details:');
-        console.log('  - Monk Skin Tone:', result.monk_skin_tone);
-        console.log('  - Display Name:', result.monk_tone_display);
-        console.log('  - Monk Hex:', result.monk_hex);
-        console.log('  - Derived Hex:', result.derived_hex_code);
-        console.log('  - Dominant RGB:', result.dominant_rgb);
-        console.log('  - Confidence:', result.confidence);
-        console.log('  - Success:', result.success);
-        if (result.analysis_method) {
-          console.log('  - Analysis Method:', result.analysis_method);
-        }
-        if (result.regions_analyzed) {
-          console.log('  - Regions Analyzed:', result.regions_analyzed);
-        }
-        if (result.error) {
-          console.log('  - Error Info:', result.error);
-        }
-        console.log('🎯 ================================ 🎯');
-        
-      } catch (jsonError) {
-        console.error('❌ JSON Parse Error:', jsonError);
-        console.error('📄 Response text that failed to parse:', responseText);
-        console.error('🔢 Response text character codes:', responseText.split('').map(c => c.charCodeAt(0)));
-        throw new Error(`Failed to parse JSON response: ${jsonError.message}. Raw response: ${responseText.substring(0, 200)}...`);
-      }
+      const result = await response.json();
+      console.log("Skin analysis result:", result);
       
       // Format the result to match the expected interface
       const formattedResult: SkinAnalysisResult = {

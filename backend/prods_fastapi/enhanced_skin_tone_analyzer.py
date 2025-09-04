@@ -8,7 +8,6 @@ try:
 except ImportError:
     dlib = None
     DLIB_AVAILABLE = False
-
 import mediapipe as mp
 from sklearn.cluster import KMeans
 from scipy import stats
@@ -26,8 +25,6 @@ class EnhancedSkinToneAnalyzer:
         # MediaPipe face detection
         self.mp_face_detection = mp.solutions.face_detection
         self.mp_face_mesh = mp.solutions.face_mesh
-        self.mediapipe_available = True
-        logger.info("MediaPipe face detection initialized successfully")
         
         # Face recognition library removed to avoid compilation issues
         self.face_recognition_available = False
@@ -54,9 +51,6 @@ class EnhancedSkinToneAnalyzer:
     
     def detect_face_mediapipe(self, image: np.ndarray) -> Optional[Tuple[int, int, int, int]]:
         """Detect face using MediaPipe and return bounding box."""
-        if not self.mediapipe_available:
-            return None
-        
         try:
             with self.mp_face_detection.FaceDetection(
                 model_selection=1, min_detection_confidence=0.7) as face_detection:
