@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { Star, Sparkles, Crown, Shirt, Palette } from 'lucide-react';
-import ProductRecommendations from '../components/ProductRecommendations';
+import ProductRecommendations from '../components/EnhancedProductRecommendations';
 import FeedbackPopup from '../components/FeedbackPopup';
 import { API_BASE_URL, API_ENDPOINTS, buildApiUrl } from '../config/api';
 import { monkSkinTones } from '../lib/data/monkSkinTones';
@@ -379,16 +379,13 @@ const DemoRecommendations = () => {
           }
           
           console.log(`Fetching makeup products with params: ${queryParams.toString()}`);
-          // TODO: Temporarily commented out for future re-enable
-          // response = await fetch(buildApiUrl(API_ENDPOINTS.MAKEUP_DATA, Object.fromEntries(queryParams)));
-          // 
-          // if (!response.ok) {
-          //   throw new Error(`Unable to load makeup recommendations: ${response.status} ${response.statusText}`);
-          // }
+          response = await fetch(buildApiUrl(API_ENDPOINTS.MAKEUP_DATA, Object.fromEntries(queryParams)));
+          
+          if (!response.ok) {
+            throw new Error(`Unable to load makeup recommendations: ${response.status} ${response.statusText}`);
+          }
 
-          // const data = await response.json();
-          // Temporary placeholder data for makeup
-          const data = { data: [], total_items: 0, total_pages: 0 };
+          const data = await response.json();
           transformedProducts = data.data.map((item: ApiProduct) => ({
             id: Math.random(),
             name: item.product_name || item.Product_Name || item.name || '',
@@ -454,16 +451,13 @@ const DemoRecommendations = () => {
           }
           
           console.log(`Fetching outfits with params: ${colorParams.toString()}`);
-          // TODO: Temporarily commented out for future re-enable
-          // response = await fetch(`${API_BASE_URL}/apparel?${colorParams.toString()}`);
-          // 
-          // if (!response.ok) {
-          //   throw new Error(`Unable to load outfit recommendations: ${response.status} ${response.statusText}`);
-          // }
+          response = await fetch(`${API_BASE_URL}/apparel?${colorParams.toString()}`);
+          
+          if (!response.ok) {
+            throw new Error(`Unable to load outfit recommendations: ${response.status} ${response.statusText}`);
+          }
 
-          // const data = await response.json();
-          // Temporary placeholder data for outfits
-          const data = { data: [], total_items: 0, total_pages: 0 };
+          const data = await response.json();
           
           if (data.error) {
             throw new Error(data.error);
@@ -495,8 +489,7 @@ const DemoRecommendations = () => {
         setLoading(false);
       } catch (err) {
         console.error('Error:', err);
-        // TODO: Uncomment when proper data is available
-        // setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : 'An error occurred');
         setLoading(false);
         setProducts([]); // Clear products on error
       }
@@ -764,44 +757,25 @@ const DemoRecommendations = () => {
             </div>
           ) : (
             <>
-              {activeTab === 'makeup' ? (
-                // Coming Soon banner for makeup
-                <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-8 text-white text-center shadow-xl">
-                  <div className="max-w-2xl mx-auto">
-                    <Sparkles className="h-16 w-16 mx-auto mb-4 opacity-90" />
-                    <h2 className="text-3xl font-bold mb-4">Beauty Recommendations</h2>
-                    <div className="bg-white bg-opacity-20 rounded-lg px-6 py-3 inline-block mb-4">
-                      <span className="text-xl font-semibold">Coming Soon!</span>
-                    </div>
-                    <p className="text-lg mb-6">
-                      We're working on bringing you personalized makeup recommendations based on your unique skin tone. 
-                      Our beauty experts are curating the perfect products just for you!
-                    </p>
-                    <div className="flex justify-center items-center space-x-2 text-sm opacity-90">
-                      <Crown className="h-4 w-4" />
-                      <span>Premium makeup recommendations launching soon</span>
-                    </div>
-                  </div>
-                </div>
-              ) : activeTab === 'outfit' ? (
-                // Coming Soon banner for outfits
-                <div className="bg-gradient-to-r from-green-500 to-teal-500 rounded-xl p-8 text-white text-center shadow-xl">
-                  <div className="max-w-2xl mx-auto">
-                    <Shirt className="h-16 w-16 mx-auto mb-4 opacity-90" />
-                    <h2 className="text-3xl font-bold mb-4">Outfit Recommendations</h2>
-                    <div className="bg-white bg-opacity-20 rounded-lg px-6 py-3 inline-block mb-4">
-                      <span className="text-xl font-semibold">Coming Soon!</span>
-                    </div>
-                    <p className="text-lg mb-6">
-                      We're curating personalized outfit recommendations that perfectly match your skin tone analysis. 
-                      Get ready for style suggestions that will make you look and feel amazing!
-                    </p>
-                    <div className="flex justify-center items-center space-x-2 text-sm opacity-90">
-                      <Sparkles className="h-4 w-4" />
-                      <span>Personalized outfit styling launching soon</span>
-                    </div>
-                  </div>
-                </div>
+              {activeTab === 'makeup' || activeTab === 'outfit' ? (
+                <ProductRecommendations
+                  products={products}
+                  loading={loading}
+                  error={error}
+                  activeTab={activeTab}
+                  skinTone={skinAnalysis?.seasonal_type || 'Universal'}
+                  monkTone={monkSkinTone}
+                  colorRecommendations={colorRecommendations}
+                  totalItems={totalItems}
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={handlePageChange}
+                  availableFilters={availableFilters}
+                  selectedFilters={selectedFilters}
+                  onFilterChange={handleFilterChange}
+                  className="space-y-6"
+                />
               ) : (
                 // Color Palettes Tab - Simplified to only show colors that suit
                 <div className="space-y-8">

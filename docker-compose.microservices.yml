@@ -1,0 +1,175 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-fashion-postgres
+    environment:
+      - POSTGRES_DB=ai_fashion
+      - POSTGRES_USER=ai_fashion_user
+      - POSTGRES_PASSWORD=Q4uF4B1PcjLL6mha1SNjdaQXDARzfT7T
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_fashion_user -d ai_fashion"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ai-fashion-redis
+    command: redis-server --appendonly yes --requirepass R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Detection Service (Port 8001)
+  detection-service:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.detection
+    container_name: ai-fashion-detection
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://ai_fashion_user:Q4uF4B1PcjLL6mha1SNjdaQXDARzfT7T@postgres:5432/ai_fashion
+      - REDIS_URL=redis://:R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU@redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Palette Service (Port 8002)
+  palette-service:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.palette
+    container_name: ai-fashion-palette
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://ai_fashion_user:Q4uF4B1PcjLL6mha1SNjdaQXDARzfT7T@postgres:5432/ai_fashion
+      - REDIS_URL=redis://:R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU@redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Recommendation Service (Port 8003)
+  recommendation-service:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.recommendation
+    container_name: ai-fashion-recommendation
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://ai_fashion_user:Q4uF4B1PcjLL6mha1SNjdaQXDARzfT7T@postgres:5432/ai_fashion
+      - REDIS_URL=redis://:R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU@redis:6379/0
+      - PALETTE_SERVICE_URL=http://palette-service:8002
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      palette-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # API Gateway (Port 8000) - Routes to microservices
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.gateway
+    container_name: ai-fashion-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - DETECTION_SERVICE_URL=http://detection-service:8001
+      - PALETTE_SERVICE_URL=http://palette-service:8002
+      - RECOMMENDATION_SERVICE_URL=http://recommendation-service:8003
+    depends_on:
+      detection-service:
+        condition: service_healthy
+      palette-service:
+        condition: service_healthy
+      recommendation-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-fashion-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - NODE_ENV=production
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+networks:
+  ai-fashion-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

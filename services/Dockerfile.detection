@@ -1,0 +1,38 @@
+# Detection Service Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies for computer vision
+RUN apt-get update && apt-get install -y \
+    curl \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY services/requirements-detection.txt .
+RUN pip install --no-cache-dir -r requirements-detection.txt
+
+# Copy service files and backend dependencies
+COPY services/detection_service.py .
+COPY backend/prods_fastapi/enhanced_skin_tone_analyzer.py ./backend/prods_fastapi/
+COPY backend/prods_fastapi/database.py ./backend/prods_fastapi/
+COPY backend/prods_fastapi/__init__.py ./backend/prods_fastapi/
+
+# Create backend directory structure
+RUN mkdir -p backend/prods_fastapi
+
+# Expose port
+EXPOSE 8001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8001/health || exit 1
+
+# Run the detection service
+CMD ["python", "-m", "uvicorn", "detection_service:app", "--host", "0.0.0.0", "--port", "8001"]

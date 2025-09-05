@@ -1,0 +1,196 @@
+version: '3.8'
+
+services:
+  # Redis Cache for microservices
+  redis:
+    image: redis:7-alpine
+    container_name: ai-fashion-redis-prod
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU}
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+
+  # Detection Service (Port 8001)
+  detection-service:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.detection
+    container_name: ai-fashion-detection-prod
+    ports:
+      - "8001:8001"
+    environment:
+      # Use Neon database directly
+      - DATABASE_URL=postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU}@redis:6379/0
+      - ENV=production
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+
+  # Palette Service (Port 8002)  
+  palette-service:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.palette
+    container_name: ai-fashion-palette-prod
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU}@redis:6379/0
+      - ENV=production
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 512M
+
+  # Recommendation Service (Port 8003)
+  recommendation-service:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.recommendation
+    container_name: ai-fashion-recommendation-prod
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://neondb_owner:npg_OUMg09DpBurh@ep-rough-thunder-adqlho94-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-R9bPHQGAMffjLz2bUrmjPVYyuFHoSQKU}@redis:6379/0
+      - PALETTE_SERVICE_URL=http://palette-service:8002
+      - ENV=production
+    depends_on:
+      redis:
+        condition: service_healthy
+      palette-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+
+  # API Gateway (Port 8000) - Routes to microservices
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/Dockerfile.gateway
+    container_name: ai-fashion-gateway-prod
+    ports:
+      - "8000:8000"
+    environment:
+      - DETECTION_SERVICE_URL=http://detection-service:8001
+      - PALETTE_SERVICE_URL=http://palette-service:8002
+      - RECOMMENDATION_SERVICE_URL=http://recommendation-service:8003
+      - ENV=production
+    depends_on:
+      detection-service:
+        condition: service_healthy
+      palette-service:
+        condition: service_healthy
+      recommendation-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 512M
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: ai-fashion-frontend-prod
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - NODE_ENV=production
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 512M
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: ai-fashion-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - api-gateway
+    restart: unless-stopped
+    networks:
+      - ai-fashion-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 256M
+
+networks:
+  ai-fashion-network:
+    driver: bridge
+
+# No volumes needed since we're using Neon cloud database

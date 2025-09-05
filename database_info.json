@@ -1197,5 +1197,764 @@
     ],
     "sample_data": null,
     "row_count": 0
+  },
+  "colors": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('colors_id_seq'::regclass)"
+      },
+      {
+        "name": "hex_code",
+        "type": "VARCHAR(7)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "color_name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "seasonal_palette",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "category",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": "'recommended'::character varying"
+      },
+      {
+        "name": "suitable_skin_tone",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "sample_data": null,
+    "row_count": 0
+  },
+  "perfect_unified_outfits": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('perfect_unified_outfits_id_seq'::regclass)"
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "brand",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "category",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "subcategory",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "hex_color",
+        "type": "VARCHAR(7)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "price",
+        "type": "NUMERIC(10, 2)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "currency",
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "default": "'USD'::character varying"
+      },
+      {
+        "name": "gender",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "occasion",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "season",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "size_range",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "image_url",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "product_url",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "availability",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "true"
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "sample_data": [
+      {
+        "id": 1,
+        "name": "Zippered Criss Cross Back Sports Bra",
+        "brand": "Savana",
+        "category": "Sports Bra",
+        "subcategory": "Underwear",
+        "color": "Light Blue",
+        "hex_color": null,
+        "price": 17250.0,
+        "currency": null,
+        "gender": "Female",
+        "occasion": "casual",
+        "season": "NaN",
+        "material": null,
+        "size_range": null,
+        "description": "NaN",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/123f2f28bf5f437b98f3e0fee1624c81UR_w540_h720_q85_watermark.webp",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:57:24.489511",
+        "updated_at": "2025-09-05 09:57:24.489511"
+      },
+      {
+        "id": 2,
+        "name": "Pocket High Waist Straight Leg Jeans",
+        "brand": "Savana",
+        "category": "Jeans",
+        "subcategory": "Pants",
+        "color": "Light Blue",
+        "hex_color": null,
+        "price": 49000.0,
+        "currency": null,
+        "gender": "Female",
+        "occasion": "casual",
+        "season": "NaN",
+        "material": null,
+        "size_range": null,
+        "description": "NaN",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/452b71267d764628b9999ed73277780cUR_w540_h720_q85_watermark.webp",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:57:24.489511",
+        "updated_at": "2025-09-05 09:57:24.489511"
+      },
+      {
+        "id": 3,
+        "name": "Drawstring Straight Leg Pants",
+        "brand": "Savana",
+        "category": "Pants",
+        "subcategory": "Pants",
+        "color": "Multicolor",
+        "hex_color": null,
+        "price": 16000.0,
+        "currency": null,
+        "gender": "Unisex",
+        "occasion": "casual",
+        "season": "NaN",
+        "material": null,
+        "size_range": null,
+        "description": "NaN",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/26f08c68653e4cc4bc1e71eb1b85dd26_w540_h720_q85_watermark.webp",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:57:24.489511",
+        "updated_at": "2025-09-05 09:57:24.489511"
+      },
+      {
+        "id": 4,
+        "name": "Ripped High Waist Straight Leg Jeans",
+        "brand": "Savana",
+        "category": "Jeans",
+        "subcategory": "Pants",
+        "color": "Blue",
+        "hex_color": null,
+        "price": 34000.0,
+        "currency": null,
+        "gender": "Unisex",
+        "occasion": "casual",
+        "season": "NaN",
+        "material": null,
+        "size_range": null,
+        "description": "NaN",
+        "image_url": "https://img104.mfrcdn.com/savana-iq-merch/goods-pic/9716d1121a88439cb8253a17e0683eb4UR_w540_h720_q85_watermark.webp",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:57:24.489511",
+        "updated_at": "2025-09-05 09:57:24.489511"
+      },
+      {
+        "id": 5,
+        "name": "Colour Block Pullover T-Shirt",
+        "brand": "Savana",
+        "category": "T-Shirt",
+        "subcategory": "Tops",
+        "color": "Black",
+        "hex_color": null,
+        "price": 10000.0,
+        "currency": null,
+        "gender": "Unisex",
+        "occasion": "casual",
+        "season": "NaN",
+        "material": null,
+        "size_range": null,
+        "description": "NaN",
+        "image_url": "https://static.mfrcdn.com/images/v/501de09300b0d0cc7cb34e1e1dd75b18.png",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:57:24.489511",
+        "updated_at": "2025-09-05 09:57:24.489511"
+      }
+    ],
+    "row_count": 513
+  },
+  "perfect_unified_makeup": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('perfect_unified_makeup_id_seq'::regclass)"
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "brand",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "category",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "subcategory",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "hex_color",
+        "type": "VARCHAR(7)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "price",
+        "type": "NUMERIC(10, 2)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "currency",
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "default": "'USD'::character varying"
+      },
+      {
+        "name": "undertone",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "finish",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "coverage",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "skin_type",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "ingredients",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "shade_name",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "shade_number",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "image_url",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "product_url",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "availability",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "true"
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "sample_data": [
+      {
+        "id": 1,
+        "name": "L'Or\u00e9al Lumi Le Glass and Glow Highlighter Stick",
+        "brand": "L'Or\u00e9al",
+        "category": "Highlighter",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#0AE644",
+        "price": 12.99,
+        "currency": "NaN",
+        "undertone": "neutral",
+        "finish": "natural",
+        "coverage": null,
+        "skin_type": null,
+        "ingredients": null,
+        "shade_name": null,
+        "shade_number": null,
+        "description": "Beautiful l'or\u00e9al lumi le glass and glow highlighter stick for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2632761?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:59:22.079061",
+        "updated_at": "2025-09-05 09:59:22.079061"
+      },
+      {
+        "id": 2,
+        "name": "L'Or\u00e9al Infallible 24H Fresh Wear Foundation In A Powder",
+        "brand": "L'Or\u00e9al",
+        "category": "Foundation",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#06F43D",
+        "price": 16.99,
+        "currency": "NaN",
+        "undertone": "neutral",
+        "finish": "natural",
+        "coverage": null,
+        "skin_type": null,
+        "ingredients": null,
+        "shade_name": null,
+        "shade_number": null,
+        "description": "Beautiful l'or\u00e9al infallible 24h fresh wear foundation in a powder for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2575169?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:59:22.079061",
+        "updated_at": "2025-09-05 09:59:22.079061"
+      },
+      {
+        "id": 3,
+        "name": "L'Or\u00e9al Colour Riche Original Satin Lipstick",
+        "brand": "L'Or\u00e9al",
+        "category": "Lipstick",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#123665",
+        "price": 11.49,
+        "currency": "NaN",
+        "undertone": "neutral",
+        "finish": "natural",
+        "coverage": null,
+        "skin_type": null,
+        "ingredients": null,
+        "shade_name": null,
+        "shade_number": null,
+        "description": "Beautiful l'or\u00e9al colour riche original satin lipstick for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2117568?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:59:22.079061",
+        "updated_at": "2025-09-05 09:59:22.079061"
+      },
+      {
+        "id": 4,
+        "name": "L'Or\u00e9al Infallible Matte Resistance Liquid Lipstick",
+        "brand": "L'Or\u00e9al",
+        "category": "Lipstick",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#E391AC",
+        "price": 13.99,
+        "currency": "NaN",
+        "undertone": "neutral",
+        "finish": "natural",
+        "coverage": null,
+        "skin_type": null,
+        "ingredients": null,
+        "shade_name": null,
+        "shade_number": null,
+        "description": "Beautiful l'or\u00e9al infallible matte resistance liquid lipstick for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2610775?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:59:22.079061",
+        "updated_at": "2025-09-05 09:59:22.079061"
+      },
+      {
+        "id": 5,
+        "name": "L'Or\u00e9al Infallible Up to 32 Hour Fresh Wear Foundation",
+        "brand": "L'Or\u00e9al",
+        "category": "Foundation",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#1F57F1",
+        "price": 16.99,
+        "currency": "NaN",
+        "undertone": "neutral",
+        "finish": "natural",
+        "coverage": null,
+        "skin_type": null,
+        "ingredients": null,
+        "shade_name": null,
+        "shade_number": null,
+        "description": "Beautiful l'or\u00e9al infallible up to 32 hour fresh wear foundation for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2538170?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "created_at": "2025-09-05 09:59:22.079061",
+        "updated_at": "2025-09-05 09:59:22.079061"
+      }
+    ],
+    "row_count": 2571
+  },
+  "perfect_unified_products": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "nextval('perfect_unified_products_id_seq'::regclass)"
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "brand",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "category",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "subcategory",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "hex_color",
+        "type": "VARCHAR(7)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "price",
+        "type": "NUMERIC(10, 2)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "currency",
+        "type": "VARCHAR(10)",
+        "nullable": true,
+        "default": "'USD'::character varying"
+      },
+      {
+        "name": "type",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "attributes",
+        "type": "JSONB",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "image_url",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "product_url",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "availability",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "true"
+      },
+      {
+        "name": "tags",
+        "type": "ARRAY",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "sample_data": [
+      {
+        "id": 1,
+        "name": "L'Or\u00e9al Lumi Le Glass and Glow Highlighter Stick",
+        "brand": "L'Or\u00e9al",
+        "category": "uncategorized",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#0AE644",
+        "price": 12.99,
+        "currency": null,
+        "type": "Highlighter",
+        "attributes": null,
+        "description": "Beautiful l'or\u00e9al lumi le glass and glow highlighter stick for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2632761?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "tags": null,
+        "created_at": "2025-09-05 10:09:09.132369",
+        "updated_at": "2025-09-05 10:09:09.132369"
+      },
+      {
+        "id": 2,
+        "name": "L'Or\u00e9al Infallible 24H Fresh Wear Foundation In A Powder",
+        "brand": "L'Or\u00e9al",
+        "category": "uncategorized",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#06F43D",
+        "price": 16.99,
+        "currency": null,
+        "type": "Foundation",
+        "attributes": null,
+        "description": "Beautiful l'or\u00e9al infallible 24h fresh wear foundation in a powder for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2575169?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "tags": null,
+        "created_at": "2025-09-05 10:09:09.132369",
+        "updated_at": "2025-09-05 10:09:09.132369"
+      },
+      {
+        "id": 3,
+        "name": "L'Or\u00e9al Colour Riche Original Satin Lipstick",
+        "brand": "L'Or\u00e9al",
+        "category": "uncategorized",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#123665",
+        "price": 11.49,
+        "currency": null,
+        "type": "Lipstick",
+        "attributes": null,
+        "description": "Beautiful l'or\u00e9al colour riche original satin lipstick for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2117568?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "tags": null,
+        "created_at": "2025-09-05 10:09:09.132369",
+        "updated_at": "2025-09-05 10:09:09.132369"
+      },
+      {
+        "id": 4,
+        "name": "L'Or\u00e9al Infallible Matte Resistance Liquid Lipstick",
+        "brand": "L'Or\u00e9al",
+        "category": "uncategorized",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#E391AC",
+        "price": 13.99,
+        "currency": null,
+        "type": "Lipstick",
+        "attributes": null,
+        "description": "Beautiful l'or\u00e9al infallible matte resistance liquid lipstick for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2610775?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "tags": null,
+        "created_at": "2025-09-05 10:09:09.132369",
+        "updated_at": "2025-09-05 10:09:09.132369"
+      },
+      {
+        "id": 5,
+        "name": "L'Or\u00e9al Infallible Up to 32 Hour Fresh Wear Foundation",
+        "brand": "L'Or\u00e9al",
+        "category": "uncategorized",
+        "subcategory": null,
+        "color": null,
+        "hex_color": "#1F57F1",
+        "price": 16.99,
+        "currency": null,
+        "type": "Foundation",
+        "attributes": null,
+        "description": "Beautiful l'or\u00e9al infallible up to 32 hour fresh wear foundation for a flawless finish",
+        "image_url": "https://media.ulta.com/i/ulta/2538170?w=400&$ProductCardNeutralBGLight$&fmt=auto",
+        "product_url": null,
+        "availability": true,
+        "tags": null,
+        "created_at": "2025-09-05 10:09:09.132369",
+        "updated_at": "2025-09-05 10:09:09.132369"
+      }
+    ],
+    "row_count": 3084
   }
 }
